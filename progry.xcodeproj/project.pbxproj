@@ -16,6 +16,7 @@
 		0A3D991028078A4E00C0708A /* progryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3D990F28078A4E00C0708A /* progryTests.swift */; };
 		0A3D991A28078A4E00C0708A /* progryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3D991928078A4E00C0708A /* progryUITests.swift */; };
 		0A3D991C28078A4E00C0708A /* progryUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3D991B28078A4E00C0708A /* progryUITestsLaunchTests.swift */; };
+		0A3D993828079A4C00C0708A /* Antlr4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A3D9930280799C200C0708A /* Antlr4.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,27 @@
 			remoteGlobalIDString = 0A3D98F428078A4D00C0708A;
 			remoteInfo = progry;
 		};
+		0A3D992F280799C200C0708A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A3D9928280799C200C0708A /* Antlr4.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "Antlr4::Antlr4::Product";
+			remoteInfo = Antlr4;
+		};
+		0A3D9931280799C200C0708A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A3D9928280799C200C0708A /* Antlr4.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "Antlr4::Antlr4Tests::Product";
+			remoteInfo = Antlr4Tests;
+		};
+		0A3D993528079A3A00C0708A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A3D9928280799C200C0708A /* Antlr4.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = "Antlr4::Antlr4";
+			remoteInfo = Antlr4;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +71,7 @@
 		0A3D991528078A4E00C0708A /* progryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = progryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3D991928078A4E00C0708A /* progryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = progryUITests.swift; sourceTree = "<group>"; };
 		0A3D991B28078A4E00C0708A /* progryUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = progryUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		0A3D9928280799C200C0708A /* Antlr4.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Antlr4.xcodeproj; path = ../antlr4/Antlr4.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A3D993828079A4C00C0708A /* Antlr4.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +103,12 @@
 		0A3D98EC28078A4D00C0708A = {
 			isa = PBXGroup;
 			children = (
+				0A3D9928280799C200C0708A /* Antlr4.xcodeproj */,
 				0A3D98F728078A4D00C0708A /* progry */,
 				0A3D990E28078A4E00C0708A /* progryTests */,
 				0A3D991828078A4E00C0708A /* progryUITests */,
 				0A3D98F628078A4D00C0708A /* Products */,
+				0A3D993728079A4C00C0708A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -127,6 +153,22 @@
 			path = progryUITests;
 			sourceTree = "<group>";
 		};
+		0A3D9929280799C200C0708A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A3D9930280799C200C0708A /* Antlr4.framework */,
+				0A3D9932280799C200C0708A /* Antlr4Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A3D993728079A4C00C0708A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -141,6 +183,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0A3D993628079A3A00C0708A /* PBXTargetDependency */,
 			);
 			name = progry;
 			productName = progry;
@@ -217,6 +260,12 @@
 			mainGroup = 0A3D98EC28078A4D00C0708A;
 			productRefGroup = 0A3D98F628078A4D00C0708A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0A3D9929280799C200C0708A /* Products */;
+					ProjectRef = 0A3D9928280799C200C0708A /* Antlr4.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0A3D98F428078A4D00C0708A /* progry */,
@@ -225,6 +274,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0A3D9930280799C200C0708A /* Antlr4.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Antlr4.framework;
+			remoteRef = 0A3D992F280799C200C0708A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A3D9932280799C200C0708A /* Antlr4Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = file;
+			path = Antlr4Tests.xctest;
+			remoteRef = 0A3D9931280799C200C0708A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0A3D98F328078A4D00C0708A /* Resources */ = {
@@ -293,6 +359,11 @@
 			isa = PBXTargetDependency;
 			target = 0A3D98F428078A4D00C0708A /* progry */;
 			targetProxy = 0A3D991628078A4E00C0708A /* PBXContainerItemProxy */;
+		};
+		0A3D993628079A3A00C0708A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Antlr4;
+			targetProxy = 0A3D993528079A3A00C0708A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -445,6 +516,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -473,6 +545,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
