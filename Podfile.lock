@@ -1,0 +1,16 @@
+PODS:
+  - SOPullUpView (1.1.0)
+
+DEPENDENCIES:
+  - SOPullUpView
+
+SPEC REPOS:
+  trunk:
+    - SOPullUpView
+
+SPEC CHECKSUMS:
+  SOPullUpView: a18cab4bdce7cc07c227e705cc4270e0a36ca2fa
+
+PODFILE CHECKSUM: 45d2a07bde8e9727bba144c824db55cc3113738f
+
+COCOAPODS: 1.11.2
