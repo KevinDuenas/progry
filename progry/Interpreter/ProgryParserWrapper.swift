@@ -49,7 +49,7 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func enterVars(_ ctx: ProgryParser.VarsContext) {
-            <#code#>
+            
         }
         
         
