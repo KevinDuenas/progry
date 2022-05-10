@@ -44,6 +44,13 @@ class Quadruples {
     }
     
     
-    
+    public func print(){
+        
+        for (index, quadruple) in list.enumerated() {
+            
+            Swift.print("\(index) - \(quadruple.op) - \(quadruple.opLeft) - \(quadruple.opLeft) - \(quadruple.result?.quadruple) ")
+        }
+        
+    }
     
 }

@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum MemoryType {
+    case GLOBAL
+    case TEMPORAL
+}
+
 
 class Memory {
     
@@ -41,7 +46,24 @@ class Memory {
     }
     
 
-    
+    public func pushNumber(number : Int, scope: MemoryType) -> Int{
+        
+        switch scope {
+        case .GLOBAL :
+            globalNumbers.append(number)
+            globalNumbersCounter += 1;
+            return globalNumbersCounter;
+            
+        case .TEMPORAL :
+            tempNumbers.append(number)
+            tempNumbersCounter += 1;
+            return tempNumbersCounter;
+            
+        default:
+            break
+        }
+        
+    }
     
     
 }

@@ -49,7 +49,7 @@ struct Interpreter {
 
         do {
             instructions = try parser.parseExpression(input)
-            print("instrunctions ->", instructions)
+            //print("instrunctions ->", instructions)
         }
         catch {
             return .failure(.syntax(error))

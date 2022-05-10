@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9DA64666855445F369880827C54B2D9D"
-               BuildableName = "SOPullUpView.framework"
+               BuildableName = "libSOPullUpView.a"
                BlueprintName = "SOPullUpView"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

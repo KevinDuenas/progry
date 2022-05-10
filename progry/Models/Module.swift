@@ -13,12 +13,14 @@ class Module{
     var type: String;
     var varsTable = HashTable<Variable>(bucketSize: 100)
     var key: String;
+    var quadrupleIndex : Int;
     var nextNode: Module?
     
-    init(name: String, type: String, key : String){
+    init(name: String, type: String, key : String, forQuadruple index : Int){
         self.name = name;
         self.type = type;
         self.key = key
+        self.quadrupleIndex = index
     }
     
 }

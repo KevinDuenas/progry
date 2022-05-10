@@ -7,7 +7,7 @@
 
 struct VirtualMachine : VirtualMachineType {
     var modules = HashTable<Module>(bucketSize: 15)
-    let memory = Memory()
+    //let memory = Memory()
     let matchTable = TypeMatch()
     let quadruples = Quadruples()
    
@@ -15,14 +15,14 @@ struct VirtualMachine : VirtualMachineType {
     func execute(_ instructions: [InstructionType]) throws -> Double  {
         
         
-        print("curr", matchTable.validate(left: 1, right: 1, op: 3))
+        //print("curr", matchTable.validate(left: 1, right: 1, op: 3))
 
         for instruction in instructions {
             //try instruction.execute()
         }
         //Resolver Cuadruplos
         
-        modules.printHashTable()
+        //modules.printHashTable()
         
         
         return 0

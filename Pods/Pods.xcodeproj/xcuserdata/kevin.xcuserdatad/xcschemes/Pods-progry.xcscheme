@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4ECD19B92B5A51D2E9362FEA04283492"
-               BuildableName = "Pods_progry.framework"
+               BuildableName = "libPods-progry.a"
                BlueprintName = "Pods-progry"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

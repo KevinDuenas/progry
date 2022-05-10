@@ -1,4 +1,4 @@
-framework module Pods_progry {
+module Pods_progry {
   umbrella header "Pods-progry-umbrella.h"
 
   export *

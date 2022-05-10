@@ -5,8 +5,12 @@
 
 import PackageDescription
 
+
 let package = Package(
     name: "Antlr4",
+    dependecies: [
+.package(name: "Antlr4", url: "https://github.com/antlr/antlr4", from: "4.10.1",
+]
     products: [
         .library(
             name: "Antlr4",
