@@ -21,6 +21,12 @@ struct ProgryParserWrapper : ParserType {
         private(set) var quadruples = Quadruples()
         private(set) var memory = Memory()
         
+        private(set) var operands : [String] = []
+        private(set) var poper : [MemoryDirection] = []
+        private(set) var pTypes : [Types] = []
+        
+        
+        
         
         //Context variables
         var jumpsStack = [Int]()
@@ -32,6 +38,8 @@ struct ProgryParserWrapper : ParserType {
             let goToMain = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection())
             quadruples.list.append(goToMain)
             quadruples.print()
+            
+            print(matchTable.validate(left: 0, right: 1, op: 0))
         }
         
         override func enterMain(_ ctx: ProgryParser.MainContext) {
@@ -66,6 +74,43 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        override func enterIf(_ ctx: ProgryParser.IfContext) {
+            
+            jumpsStack.append(quadruples.list.count - 1) //Migajita de pan
+            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
+            let goToF = Quadruple(op: .GOTOF, opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goToF)
+            
+            //Expresiones
+            
+            
+            let goToFIndex = jumpsStack.popLast()
+            
+            let goTo = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goTo)
+            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
+            
+            
+            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+            
+            
+        }
+        
+        override func exitIf(_ ctx: ProgryParser.IfContext) {
+            
+            
+            
+            let goToFIndex = jumpsStack.popLast()
+            
+            let goTo = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goTo)
+            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
+            
+            
+            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+            
+        }
+        
         override func enterFor(_ ctx: ProgryParser.ForContext) {
             
             
@@ -97,13 +142,13 @@ struct ProgryParserWrapper : ParserType {
         
         override func enterExpr(_ ctx: ProgryParser.ExprContext) {
             
-            let stack = []
-            
-            
-            let gt = ctx.t_expr().self.
-            
-            
-            let gexp = ctx.g_exp
+//            let stack = []
+//            
+//            
+//            let gt = ctx.t_expr().self.
+//            
+//            
+//            let gexp = ctx.g_exp
             
             
             
@@ -114,6 +159,26 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func enterG_expr(_ ctx: ProgryParser.G_exprContext) {
+            
+        }
+        
+        override func enterF(_ ctx: ProgryParser.FContext) {
+            
+            
+            //Empujar al stack de operands
+            if let id = ctx.ID()?.getText() {
+                //validar si tiene square brackets
+                if ctx.OPEN_SBRACKET() !== nil {
+                    
+                }
+                
+                
+                
+            }else if let constant = ctx.cte()?.getText(){
+                let memoryConstant = MemoryDirection(data: <#T##String?#>, type: <#T##Types?#>, address: <#T##Int?#>, quadruple: <#T##Int?#>)
+                
+            }
+            
             
         }
         
