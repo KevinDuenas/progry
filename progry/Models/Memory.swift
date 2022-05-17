@@ -15,48 +15,92 @@ enum MemoryType {
 
 class Memory {
     
+    let start : Int?
+    let end : Int?
+    let type : MemoryType?
     
-    var numbers = [Int]()
-    var texts = [String]()
-    var decimals = [Double]()
-    var flags = [Bool]()
+//    let startNumber : Int?
+//    let startDecimal : Int?
+//    let startText : Int?
+//    let startFlag : Int?
+//    
+//    
+//    var numberMemory : [Int]?
+//    var decimalMemory : [Double]?
+//    var textMemory : [String]?
+//    var flagMemory : [Bool]?
     
-    // Global
-//    var globalNumbersCounter = 0
-//    var globalTextsCounter = 0
-//    var globalFlagsCounter = 0
-//    var globalDecimalsCounter = 0
-//
-//    var globalNumbers = [Int]()
-//    var globalTexts = [String]()
-//    var globalFlags = [Bool]()
-//    var globalDecimals = [Double]()
-//
-//    // Temporal
-//
-//    var tempNumbersCounter = 0;
-//    var tempTextsCounter = 0;
-//    var tempFlagsCounter = 0;
-//    var tempDecimalsCounter = 0;
-//
-//    var tempNumbers = [Int]()
-//    var tempTexts = [String]()
-//    var tempFlags = [Bool]()
-//    var tempDecimals = [Double]()
+        
     
-    //
-    
-    
-    init(){
+    init(start : Int, end :Int, type: MemoryType){
+        
+        self.start = start
+        self.end = end
+        self.type = type
+        
+//        switch type {
+//        case .GLOBAL:
+//            let size = end - start + 1
+//            let arraySize = size / 4
+//            startNumber = start;
+//            numberMemory = []
+//            startDecimal  = arraySize + startNumber!;
+//            decimalMemory = []
+//            startText = arraySize + startDecimal!;
+//            textMemory = []
+//            startFlag = arraySize + startText!;
+//            flagMemory = []
+//            
+//        case .TEMPORAL:
+//            let size = end - start + 1
+//            let arraySize = size / 2
+//            startNumber = start;
+//            numberMemory = []
+//            startDecimal  = arraySize + startNumber!;
+//            decimalMemory = []
+//        }
         
     }
     
 
-    public func pushNumber(number : Int, scope: MemoryType) -> Int{
-        
-
-        return 0
-    }
-    
+//    public func pushNumber(number : Int) -> Int{
+//
+//        numberMemory?.append(number)
+//
+//        let direction = startNumber! + numberMemory!.count - 1;
+//
+//        return direction
+//    }
+//
+//    public func pushDecimal(decimal : Double) -> Int {
+//
+//        decimalMemory?.append(decimal)
+//
+//        let direction = startDecimal! + decimalMemory!.count - 1;
+//
+//        return direction
+//
+//    }
+//
+//    public func pushText(text : String) -> Int {
+//
+//        textMemory?.append(text)
+//
+//        let direction = startText! + textMemory!.count - 1;
+//
+//        return direction
+//
+//    }
+//
+//    public func pushFlag(flag : Bool) -> Int {
+//
+//        flagMemory?.append(flag)
+//
+//        let direction = startFlag! + flagMemory!.count - 1;
+//
+//        return direction
+//
+//    }
+//
     
 }

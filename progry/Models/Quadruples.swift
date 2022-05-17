@@ -24,12 +24,13 @@ enum QuadrupleOp {
     case GOTOV
     case GOTO
     case EQUAL
+    case ASSIGNATION
 }
 
 struct Quadruple {
     var op : String?
-    var opLeft : String?
-    var opRight : String?
+    var opLeft : MemoryDirection?
+    var opRight : MemoryDirection?
     var result : MemoryDirection?
 }
 
@@ -39,7 +40,7 @@ class Quadruples {
     var list = [Quadruple]()
     
     init(){
-        let initQuadruple = Quadruple.init(op: "START", opLeft: nil, opRight: nil, result: nil)
+        let initQuadruple = Quadruple.init(op: "start", opLeft: nil, opRight: nil, result: nil)
         list.append(initQuadruple)
     }
     

@@ -13,6 +13,7 @@ enum Types {
     case Text
     case Flag
     case ERROR
+    case VOID
 }
 
 
