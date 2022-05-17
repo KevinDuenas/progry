@@ -20,7 +20,7 @@ struct ProgryParserWrapper : ParserType {
         private(set) var modules = HashTable<Module>(bucketSize: 15)
         private(set) var matchTable = TypeMatch()
         private(set) var quadruples = Quadruples()
-        private(set) var memory = Memory()
+        //private(set) var memory = Memory()
         
         private(set) var operands : [String] = []
         private(set) var operators : [String] = []
@@ -28,6 +28,7 @@ struct ProgryParserWrapper : ParserType {
         
         var i: Int = 0
         
+        private(set) var currentModule = ""
         
         
         
@@ -42,7 +43,9 @@ struct ProgryParserWrapper : ParserType {
             quadruples.list.append(goToMain)
             quadruples.print()
             
-            print(matchTable.validate(left: 0, right: 1, op: 0))
+            let globalModule = Module(name: "global", returnType: .VOID, key: "global", forQuadruple: 0)
+            modules.addElement(globalModule, forKey: "global")
+            currentModule = "global";
         }
         
         override func enterMain(_ ctx: ProgryParser.MainContext) {
@@ -50,6 +53,13 @@ struct ProgryParserWrapper : ParserType {
             //
             let quadrupleIndex = jumpsStack.popLast()
             quadruples.list[quadrupleIndex!].result?.quadruple = quadrupleIndex! + 1
+            quadruples.print()
+            
+            
+            //Ingresamos el modulo main
+            let mainModule = Module(name: "main", returnType: .VOID, key: "main", forQuadruple: quadruples.list.count)
+            modules.addElement(mainModule, forKey: "main")
+            currentModule = "main"
             
         }
         
@@ -62,85 +72,112 @@ struct ProgryParserWrapper : ParserType {
                 return //regresar errror
             }
             
-            modules.addElement(Module(name: id, type: "void", key: id, forQuadruple: quadruples.list.count), forKey: id)
             
+            let newModule = Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count)
             
-            //print("quadruple size", quadruples.list.count)
-            //print("MODULE", id)
+            let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
             
-            //revisar que no este repetido
+            if (result == .collision){
+                print("El id del modulo ya esta declarado.")
+            }
             
+            currentModule = id
             
+    
+            
+        }
+        
+        override func exitModule(_ ctx: ProgryParser.ModuleContext) {
+            currentModule = ""
+            
+        }
+        
+        
+    
+        
+        override func enterIfs(_ ctx: ProgryParser.IfsContext) {
+            
+            jumpsStack.append(quadruples.list.count - 1) //Migajita de pan
+            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
+            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goToF)
+            
+            //Expresiones
             
             
             
         }
         
-        //        override func enterIf(_ ctx: ProgryParser.IfContext) {
-        //
-        //            jumpsStack.append(quadruples.list.count - 1) //Migajita de pan
-        //            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
-        //            let goToF = Quadruple(op: "GOTOF", opLeft:"LASTEMPORAL", opRight: nil, result: MemoryDirection())
-        //            quadruples.list.append(goToF)
-        //
-        //            //Expresiones
-        //
-        //
-        //            let goToFIndex = jumpsStack.popLast()
-        //
-        //            let goTo = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection())
-        //            quadruples.list.append(goTo)
-        //            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
-        //
-        //
-        //            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
-        //
-        //
-        //        }
-        //
-        //        override func exitIf(_ ctx: ProgryParser.IfContext) {
-        //
-        //
-        //
-        //            let goToFIndex = jumpsStack.popLast()
-        //
-        //            let goTo = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection())
-        //            quadruples.list.append(goTo)
-        //            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
-        //
-        //
-        //            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
-        //
-        //        }
         
         
+        override func exitIfs(_ ctx: ProgryParser.IfsContext) {
+            
+            
+            
+            let goToFIndex = jumpsStack.popLast()
+            
+            let goTo = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goTo)
+            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
+            
+            
+            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+            
+        }
         
         override func enterFors(_ ctx: ProgryParser.ForsContext) {
             
             
         }
-        
         override func enterVars(_ ctx: ProgryParser.VarsContext) {
             
-            //            guard let type = ctx.type()?.getText() else{
-            //                return //regresar errror
-            //            }
+            guard let type = ctx.type()?.getText() else{
+                return //regresar errror
+            }
             
             guard let id = ctx.ID()?.getText() else {
                 return
             }
             
+            //Le añadimos uno al tipo de variable en la funcion
+            let curr =  modules.getElement(forKey: currentModule)
+            let globalModule = modules.getElement(forKey: "global")
+            var localInsertion : InsertionStatus?
+            var globalSearch : Variable?
+            let _ = modules.deleteElementForKey(currentModule)
             
-            var memoryDirection = -1
+            switch type {
+            case "number":
+                curr?.numbers += 1
+                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: 0), forKey: id)
+                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+            case "decimal":
+                curr?.decimals += 1
+                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: 0), forKey: id)
+                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+            case "text":
+                curr?.texts += 1
+                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: 0), forKey: id)
+                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+            case "flag":
+                curr?.flags += 1
+                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: 0), forKey: id)
+                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                
+            default:
+                print("no type found it")
+            }
             
             
-            //            switch type {
-            //            case "number":
-            //                memory.pushNumber(number: <#T##Int#>, scope: <#T##MemoryType#>)
-            //            }
+            if((localInsertion == .collision || globalSearch != nil) && currentModule != "global"){
+                //Ya existe el id o localmente o globalmente
+                print("id repetido", id , "en", currentModule)
+                return
+            }
             
             
-            //print("var detected", type, id)
+            let _ = modules.addElement(curr!, forKey: currentModule)
+            
             
         }
         
@@ -150,9 +187,7 @@ struct ProgryParserWrapper : ParserType {
             } else if let cte = ctx.cte()?.getText() {
                 operands.append(cte)
             }
-            
             // PENDEINTE VALIDACION DE TYPES
-            
             //            switch operandType {
             //            case "number":
             //                types.append(0)
@@ -169,91 +204,127 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
-        override func exitT(_ ctx: ProgryParser.TContext) {
-            if let newOperator = ctx.MULT()?.getText() {
-                operators.append(newOperator)
-            } else if let newOperator = ctx.DIV()?.getText() {
-                operators.append(newOperator)
-            }
+        override func enterExpr(_ ctx: ProgryParser.ExprContext) {
             
             
             
-            if operators.last == "*" || operators.last == "/" {
-                let lastOperator = operators.popLast()
-                let rightOperand = operands.popLast()
-                let leftOperand = operands.popLast()
-                
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
-                quadruples.list.append(newQuadruple)
-                operands.append("res")
-            }
             
         }
         
-        override func exitM_expr(_ ctx: ProgryParser.M_exprContext) {
-            
-            if let newOperator = ctx.PLUS()?.getText() {
-                operators.append(newOperator)
-            } else if let newOperator = ctx.MINUS()?.getText() {
-                operators.append(newOperator)
+//        override func exitT(_ ctx: ProgryParser.TContext) {
+//            if let newOperator = ctx.MULT()?.getText() {
+//                operators.append(newOperator)
+//            } else if let newOperator = ctx.DIV()?.getText() {
+//                operators.append(newOperator)
+//            }
+//
+//
+//
+//            if operators.last == "*" || operators.last == "/" {
+//                let lastOperator = operators.popLast()
+//                let rightOperand = operands.popLast()
+//                let leftOperand = operands.popLast()
+//
+//                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
+//                quadruples.list.append(newQuadruple)
+//                operands.append("res")
+//            }
+//
+//        }
+        
+//        override func exitM_expr(_ ctx: ProgryParser.M_exprContext) {
+//            
+//            if let newOperator = ctx.PLUS()?.getText() {
+//                operators.append(newOperator)
+//            } else if let newOperator = ctx.MINUS()?.getText() {
+//                operators.append(newOperator)
+//            }
+//            
+//            if operators.last == "+" || operators.last == "-" {
+//                print(operands)
+//                print(operators)
+//                let lastOperator = operators.popLast()
+//                let rightOperand = operands.popLast()
+//                let leftOperand = operands.popLast()
+//                
+//                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
+//                quadruples.list.append(newQuadruple)
+//                operands.append("res")
+//            }
+//            
+//            
+//        }
+        
+
+        
+        override func exitAsignation(_ ctx: ProgryParser.AsignationContext) {
+            guard let id = ctx.ID()?.getText() else {
+                return
             }
             
-            if operators.last == "+" || operators.last == "-" {
-                print(operands)
-                print(operators)
-                let lastOperator = operators.popLast()
-                let rightOperand = operands.popLast()
-                let leftOperand = operands.popLast()
+            
+            let currModule = modules.getElement(forKey: currentModule)
+            let currModuleResult = currModule?.varsTable.getElement(forKey: id)
+            let globalModule = modules.getElement(forKey: "global")
+            let globalModuleResult = globalModule?.varsTable.getElement(forKey: id)
+            let lastResult = quadruples.list[quadruples.list.count-1].result
+            var assignQuadruple = Quadruple()
+            assignQuadruple.op = "="
+            assignQuadruple.opLeft = lastResult
+            
+            if (currModuleResult != nil){ //localmente
                 
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
-                quadruples.list.append(newQuadruple)
-                operands.append("res")
+                assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: currModuleResult?.memoryDirection, quadruple: nil)
+                
+            }else if (globalModuleResult != nil){ //globalmente
+                assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: globalModuleResult?.memoryDirection, quadruple: nil)
             }
+            
+            quadruples.list.append(assignQuadruple)
+            
+            
         }
-        
-        //        override func enterWhile(_ ctx: ProgryParser.WhileContext) {
-        //
-        //
-        //            //Migajita de pan
-        //            jumpsStack.append(quadruples.list.count)
-        //
-        //
-        //            //Evalua la expresion del while
-        //
-        //            //Si es falsa la expresion Brinca los estatutos
-        //            jumpsStack.append(quadruples.list.count)
-        //
-        //            //tomamos la direccion del temporal de la expresio
-        //            let exprResultOp = quadruples.list[quadruples.list.count-1].result
-        //
-        //            //Agregamos el cuadruplo goToF
-        //            let goToF = Quadruple(op: .GOTOF, opLeft: exprResultOp, opRight: nil, result: MemoryDirection())
-        //            quadruples.list.append(goToF)
-        //
-        //
-        //            //Realiza todos los estatuos
-        //
-        //
-        //
-        //
-        //            //sacamos el inice del goToF que tenemos pendiente
-        //            let goToFalseIndex = jumpsStack.popLast()
-        //
-        //            // Insertamos el GoTo para verificar de nuevo la condicion del while
-        //            let goToIndex = jumpsStack.popLast()
-        //            let goTo = Quadruple(op: .GOTO, opLeft: nil, opRight: nil, result: MemoryDirection(data: nil, type: nil, address: nil, quadruple: goToIndex))
-        //            quadruples.list.append(goTo)
-        //
-        //            //Rellenamos el goToF con el siguiente quadruplo
-        //            quadruples.list[goToFalseIndex!].result?.quadruple = quadruples.list.count + 1
-        //
-        //
-        //
-        //        }
-        
-        
-        
-        
+    
+        override func enterWhiles(_ ctx: ProgryParser.WhilesContext) {
+            
+            
+            //Migajita de pan
+            jumpsStack.append(quadruples.list.count)
+            
+            
+            //Evalua la expresion del while
+            
+            //Si es falsa la expresion Brinca los estatutos
+            jumpsStack.append(quadruples.list.count)
+            
+            //tomamos la direccion del temporal de la expresio
+            let exprResultOp = quadruples.list[quadruples.list.count-1].result
+            
+            //Agregamos el cuadruplo goToF
+            let goToF = Quadruple(op: "GOTOF", opLeft: exprResultOp, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goToF)
+            
+            
+            //Realiza todos los estatuos
+            
+            
+            
+            
+        }
+      
+        override func exitWhiles(_ ctx: ProgryParser.WhilesContext) {
+            //sacamos el inice del goToF que tenemos pendiente
+            let goToFalseIndex = jumpsStack.popLast()
+            
+            // Insertamos el GoTo para verificar de nuevo la condicion del while
+            let goToIndex = jumpsStack.popLast()
+            let goTo = Quadruple(op:"GOTO", opLeft: nil, opRight: nil, result: MemoryDirection(data: nil, type: nil, address: nil, quadruple: goToIndex))
+            quadruples.list.append(goTo)
+            
+            //Rellenamos el goToF con el siguiente quadruplo
+            quadruples.list[goToFalseIndex!].result?.quadruple = quadruples.list.count + 1
+        }
+
         
         override func enterStatute(_ ctx: ProgryParser.StatuteContext) {
         }
