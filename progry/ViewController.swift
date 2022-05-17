@@ -16,17 +16,9 @@ class ViewController: UIViewController, UITextViewDelegate{
     let input = """
      PROGRAM_START;
 
-     module myModule  {
-        var number pelos;
-     }
-    
-    module anotherModule  {
-        var number pelos;
-    }
-
-
      main {
-        var number pelos;
+        4 * 5 + 3 - ( 4 * 3 / 3 )
+    
      }
     
      PROGRAM_END;
