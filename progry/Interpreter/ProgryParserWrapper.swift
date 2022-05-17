@@ -211,6 +211,55 @@ struct ProgryParserWrapper : ParserType {
             }
         }
         
+        override func exitG_expr(_ ctx: ProgryParser.G_exprContext) {
+            if let newOperator = ctx.MORE_THAN()?.getText(){
+                operators.append(newOperator)
+            } else if let newOperator = ctx.LESS_THEN()?.getText() {
+                operators.append(newOperator)
+            } else if let newOperator = ctx.DIFERENT_THAN()?.getText() {
+                operators.append(newOperator)
+            } else if let newOperator = ctx.EQUAL_THAN()?.getText() {
+                operators.append(newOperator)
+            } else if let newOperator = ctx.MORE_AND_THAN()?.getText() {
+                operators.append(newOperator)
+            } else if let newOperator = ctx.LESS_AND_THAN()?.getText() {
+                operators.append(newOperator)
+            }
+            
+            if operators.last == "<" || operators.last == ">" || operators.last == "!=" || operators.last == "==" || operators.last == ">=" || operators.last == "<="{
+                print(operands)
+                print(operators)
+                let lastOperator = operators.popLast()
+                let rightOperand = operands.popLast()
+                let leftOperand = operands.popLast()
+                
+                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
+                quadruples.list.append(newQuadruple)
+                operands.append("res")
+            }
+            
+        }
+        
+        override func exitExpr(_ ctx: ProgryParser.ExprContext) {
+            if let newOperator = ctx.OR()?.getText() {
+                operators.append(newOperator)
+            } else if let newOperator = ctx.AND()?.getText() {
+                operators.append(newOperator)
+            }
+            
+            if operators.last == "&&" || operators.last == "||" {
+                print(operands)
+                print(operators)
+                let lastOperator = operators.popLast()
+                let rightOperand = operands.popLast()
+                let leftOperand = operands.popLast()
+                
+                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: MemoryDirection())
+                quadruples.list.append(newQuadruple)
+                operands.append("res")
+            }
+        }
+        
         //        override func enterWhile(_ ctx: ProgryParser.WhileContext) {
         //
         //

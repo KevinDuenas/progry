@@ -17,7 +17,7 @@ class ViewController: UIViewController, UITextViewDelegate{
      PROGRAM_START;
 
      main {
-        4 * 5 + 3 - ( 4 * 3 / 3 )
+        4 * 5 + 3 && ( 4 * 3 / 3 )
     
      }
     
