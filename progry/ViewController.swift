@@ -16,13 +16,13 @@ class ViewController: UIViewController, UITextViewDelegate{
     let input = """
      PROGRAM_START;
     
-    
-    module pelitos {
-         var text name2;
-    }
      main {
         var number pelos;
         var text name4;
+        var number x;
+    
+        pelos * ( 3 / 2) + 15
+    
      }
     
      PROGRAM_END;
