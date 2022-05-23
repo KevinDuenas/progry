@@ -41,7 +41,6 @@ struct ProgryParserWrapper : ParserType {
             jumpsStack.append(quadruples.list.count) //migajita de pan
             let goToMain = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
             quadruples.list.append(goToMain)
-            quadruples.print()
             
             let globalModule = Module(name: "global", returnType: .VOID, key: "global", forQuadruple: 0)
             modules.addElement(globalModule, forKey: "global")
@@ -53,7 +52,7 @@ struct ProgryParserWrapper : ParserType {
             //
             let quadrupleIndex = jumpsStack.popLast()
             quadruples.list[quadrupleIndex!].result?.quadruple = quadrupleIndex! + 1
-            quadruples.print()
+            
             
             
             //Ingresamos el modulo main
@@ -63,14 +62,19 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        
+        
+        
         override func enterModule(_ ctx: ProgryParser.ModuleContext) {
             
             // Necesitamos guardar en la tabla de funciones que
             // esta en el cuadruplo
             
-            guard let id = ctx.ID()?.getText() else{
+            guard let id = ctx.ID(0)?.getText() else{
                 return //regresar errror
             }
+            
+            print(id)
             
             
             let newModule = Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count)
@@ -83,12 +87,16 @@ struct ProgryParserWrapper : ParserType {
             
             currentModule = id
             
-    
+            print("ENTRA MODULO")
             
         }
         
         override func exitModule(_ ctx: ProgryParser.ModuleContext) {
             currentModule = ""
+            
+
+            let newQuadruple = Quadruple(op: "ENDFUNC", opLeft: MemoryDirection(), opRight: MemoryDirection(), result: MemoryDirection())
+            quadruples.list.append(newQuadruple)
             
         }
         
@@ -180,6 +188,8 @@ struct ProgryParserWrapper : ParserType {
             
             
         }
+        
+        
         
         override func enterF(_ ctx: ProgryParser.FContext) {
             if let operand = ctx.ID()?.getText() {
@@ -293,6 +303,20 @@ struct ProgryParserWrapper : ParserType {
         }
         
         
+        override func exitRead(_ ctx: ProgryParser.ReadContext) {
+            if let newOperator = ctx.READ()?.getText() {
+                let leftOperand = ctx.ID()?.getText()
+                
+                let newQuadruple = Quadruple(op: newOperator, opLeft: MemoryDirection(data: leftOperand), opRight: nil, result: MemoryDirection())
+                
+                quadruples.list.append(newQuadruple)
+            }
+            
+        }
+        
+        override func exitWrite(_ ctx: ProgryParser.WriteContext) {
+        
+        }
 
         
         override func exitAsignation(_ ctx: ProgryParser.AsignationContext) {

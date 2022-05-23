@@ -16,13 +16,15 @@ class ViewController: UIViewController, UITextViewDelegate{
     let input = """
      PROGRAM_START;
     
-     main {
-        var number pelos;
-        var text name4;
+     module uno : void() {
         var number x;
+                
+        read y;
+     }
     
-        pelos * ( 3 / 2) + 15
-    
+     main {
+        read x;
+        
      }
     
      PROGRAM_END;
