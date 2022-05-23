@@ -29,10 +29,10 @@
 		0A8DA9082827A32E00EF783A /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8DA9072827A32E00EF783A /* Memory.swift */; };
 		0AAD704E281B2350003EC1A9 /* TypeMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAD704D281B2350003EC1A9 /* TypeMatch.swift */; };
 		9EF1FF6DBDC529677A753B9C /* libPods-progry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0338E21BF5452E5B839E9CC7 /* libPods-progry.a */; };
-		FAF13A90283BD2720002D384 /* ProgryListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF13A8C283BD2720002D384 /* ProgryListener.swift */; };
-		FAF13A91283BD2720002D384 /* ProgryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF13A8D283BD2720002D384 /* ProgryParser.swift */; };
-		FAF13A92283BD2720002D384 /* ProgryBaseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF13A8E283BD2720002D384 /* ProgryBaseListener.swift */; };
-		FAF13A93283BD2720002D384 /* ProgryLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF13A8F283BD2720002D384 /* ProgryLexer.swift */; };
+		FA029E1E283C303C008B590A /* ProgryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA029E1A283C303C008B590A /* ProgryParser.swift */; };
+		FA029E1F283C303C008B590A /* ProgryBaseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA029E1B283C303C008B590A /* ProgryBaseListener.swift */; };
+		FA029E20283C303C008B590A /* ProgryLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA029E1C283C303C008B590A /* ProgryLexer.swift */; };
+		FA029E21283C303C008B590A /* ProgryListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA029E1D283C303C008B590A /* ProgryListener.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,10 +64,10 @@
 		E510234E12405F7957BFAC0C /* Pods-progry-progryUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progry-progryUITests.debug.xcconfig"; path = "Target Support Files/Pods-progry-progryUITests/Pods-progry-progryUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		F44802A5CDE738C9468C7778 /* Pods-progry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progry.release.xcconfig"; path = "Target Support Files/Pods-progry/Pods-progry.release.xcconfig"; sourceTree = "<group>"; };
 		F5D919CA54539BA766D2A649 /* Pods-progry-progryUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progry-progryUITests.release.xcconfig"; path = "Target Support Files/Pods-progry-progryUITests/Pods-progry-progryUITests.release.xcconfig"; sourceTree = "<group>"; };
-		FAF13A8C283BD2720002D384 /* ProgryListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgryListener.swift; path = ../../../../../Desktop/Autogen/ProgryListener.swift; sourceTree = "<group>"; };
-		FAF13A8D283BD2720002D384 /* ProgryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgryParser.swift; path = ../../../../../Desktop/Autogen/ProgryParser.swift; sourceTree = "<group>"; };
-		FAF13A8E283BD2720002D384 /* ProgryBaseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgryBaseListener.swift; path = ../../../../../Desktop/Autogen/ProgryBaseListener.swift; sourceTree = "<group>"; };
-		FAF13A8F283BD2720002D384 /* ProgryLexer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgryLexer.swift; path = ../../../../../Desktop/Autogen/ProgryLexer.swift; sourceTree = "<group>"; };
+		FA029E1A283C303C008B590A /* ProgryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgryParser.swift; sourceTree = "<group>"; };
+		FA029E1B283C303C008B590A /* ProgryBaseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgryBaseListener.swift; sourceTree = "<group>"; };
+		FA029E1C283C303C008B590A /* ProgryLexer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgryLexer.swift; sourceTree = "<group>"; };
+		FA029E1D283C303C008B590A /* ProgryListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgryListener.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,11 +153,11 @@
 			children = (
 				0A67C0E4281110D10084A77F /* Interpreter.swift */,
 				0A67C0E6281111220084A77F /* Instruction.swift */,
-				FAF13A8E283BD2720002D384 /* ProgryBaseListener.swift */,
-				FAF13A8F283BD2720002D384 /* ProgryLexer.swift */,
-				FAF13A8C283BD2720002D384 /* ProgryListener.swift */,
-				FAF13A8D283BD2720002D384 /* ProgryParser.swift */,
 				0A67C0EA281129F30084A77F /* RuntimeError.swift */,
+				FA029E1B283C303C008B590A /* ProgryBaseListener.swift */,
+				FA029E1C283C303C008B590A /* ProgryLexer.swift */,
+				FA029E1D283C303C008B590A /* ProgryListener.swift */,
+				FA029E1A283C303C008B590A /* ProgryParser.swift */,
 				0A67C0EC28112A1B0084A77F /* VirtualMachine.swift */,
 				0A67C0EE28112A930084A77F /* ProgryParserWrapper.swift */,
 			);
@@ -282,24 +282,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A67C0F7281130EA0084A77F /* Autogen in Sources */,
+				FA029E1E283C303C008B590A /* ProgryParser.swift in Sources */,
 				0A0B0FBB281274FF009AF53C /* ConsoleViewController.swift in Sources */,
 				0A67C0E7281111220084A77F /* Instruction.swift in Sources */,
 				0A67C0E5281110D10084A77F /* Interpreter.swift in Sources */,
+				FA029E20283C303C008B590A /* ProgryLexer.swift in Sources */,
+				FA029E1F283C303C008B590A /* ProgryBaseListener.swift in Sources */,
 				0A67C0ED28112A1B0084A77F /* VirtualMachine.swift in Sources */,
 				0A3D98FD28078A4D00C0708A /* ViewController.swift in Sources */,
 				0A8DA9082827A32E00EF783A /* Memory.swift in Sources */,
-				FAF13A91283BD2720002D384 /* ProgryParser.swift in Sources */,
 				0A3D98F928078A4D00C0708A /* AppDelegate.swift in Sources */,
 				0A67C0EF28112A930084A77F /* ProgryParserWrapper.swift in Sources */,
+				FA029E21283C303C008B590A /* ProgryListener.swift in Sources */,
 				0A8D07C4281E0F9400CFDECA /* Quadruples.swift in Sources */,
 				0A67C0DD2810E3030084A77F /* Module.swift in Sources */,
 				0A3D98FB28078A4D00C0708A /* SceneDelegate.swift in Sources */,
 				0A67C0D52810D93E0084A77F /* Variable.swift in Sources */,
-				FAF13A92283BD2720002D384 /* ProgryBaseListener.swift in Sources */,
-				FAF13A93283BD2720002D384 /* ProgryLexer.swift in Sources */,
 				0A67C0EB281129F30084A77F /* RuntimeError.swift in Sources */,
 				0A013979281233C200392CD9 /* HashTable.swift in Sources */,
-				FAF13A90283BD2720002D384 /* ProgryListener.swift in Sources */,
 				0AAD704E281B2350003EC1A9 /* TypeMatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
