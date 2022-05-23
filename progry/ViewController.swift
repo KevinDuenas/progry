@@ -29,7 +29,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
      PROGRAM_END;
 
-    """;
+        """;
     
     let pullUpController = SOPullUpControl()
     
@@ -47,22 +47,30 @@ class ViewController: UIViewController, UITextViewDelegate{
         setUpTextView()
         
         textView.text = """
-        PROGRAM_START;
-        
-        module myModule  {
-           var number pelos;
-        }
-        
-            module anotherModule  {
-           var number pelos;
-           }
+         PROGRAM_START;
 
+         main {
+            var number pelos
+            var text name4
+            var number x
         
-        main {
-           var number pelos;
-        }
+            pelos * ( 3 / 2) + 15
         
-        PROGRAM_END
+            if(5>4){
+                5 * 4 / 23
+                var text myAge;
+            }
+        
+            while (3>2) do {
+                20 * 4;
+                var text myName;
+        
+            }
+        
+         }
+        
+         PROGRAM_END;
+
         """
     }
     
