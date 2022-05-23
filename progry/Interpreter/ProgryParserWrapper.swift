@@ -20,7 +20,9 @@ struct ProgryParserWrapper : ParserType {
         private(set) var modules = HashTable<Module>(bucketSize: 15)
         private(set) var matchTable = TypeMatch()
         private(set) var quadruples = Quadruples()
-        //private(set) var memory = Memory()
+        private(set) var globalMemory = Memory(start: 1000, end: 4000, type: .GLOBAL)
+        private(set) var temporalMemory = Memory(start: 4000, end: 8000, type: .TEMPORAL)
+        
         
         private(set) var operands : [String] = []
         private(set) var operators : [String] = []
@@ -29,6 +31,7 @@ struct ProgryParserWrapper : ParserType {
         var i: Int = 0
         
         private(set) var currentModule = ""
+        private(set) var currentCicle = ""
         
         
         
@@ -37,7 +40,7 @@ struct ProgryParserWrapper : ParserType {
         
         
         override func enterProgram(_ ctx: ProgryParser.ProgramContext){
-            
+           
             jumpsStack.append(quadruples.list.count) //migajita de pan
             let goToMain = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
             quadruples.list.append(goToMain)
@@ -97,22 +100,22 @@ struct ProgryParserWrapper : ParserType {
         
         override func enterIfs(_ ctx: ProgryParser.IfsContext) {
             
-            jumpsStack.append(quadruples.list.count - 1) //Migajita de pan
-            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
-            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
-            quadruples.list.append(goToF)
             
             //Expresiones
-            
+//            jumpsStack.append(quadruples.list.count ) //Migajita de pan
+//            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
+//            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
+//            quadruples.list.append(goToF)
             
             
         }
         
         
         
+        
         override func exitIfs(_ ctx: ProgryParser.IfsContext) {
             
-            
+    
             
             let goToFIndex = jumpsStack.popLast()
             
@@ -120,9 +123,18 @@ struct ProgryParserWrapper : ParserType {
             quadruples.list.append(goTo)
             jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
             
+            let newQuadrupleCount = quadruples.list.count
+            quadruples.list[goToFIndex!].result?.quadruple = newQuadrupleCount
             
-            quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+        }
+        
+        override func enterDos(_ ctx: ProgryParser.DosContext) {
             
+            
+            jumpsStack.append(quadruples.list.count ) //Migajita de pan
+            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
+            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goToF)
         }
         
         override func enterFors(_ ctx: ProgryParser.ForsContext) {
@@ -149,12 +161,16 @@ struct ProgryParserWrapper : ParserType {
             switch type {
             case "number":
                 curr?.numbers += 1
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: 0), forKey: id)
+
+                let memory = globalMemory.pushNumber()
+                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memory), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                
             case "decimal":
                 curr?.decimals += 1
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: 0), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                
             case "text":
                 curr?.texts += 1
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: 0), forKey: id)
@@ -325,6 +341,11 @@ struct ProgryParserWrapper : ParserType {
     
         override func enterWhiles(_ ctx: ProgryParser.WhilesContext) {
             
+            //            jumpsStack.append(quadruples.list.count ) //Migajita de pan
+            //            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
+            //            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
+            //            quadruples.list.append(goToF)
+            
             
             //Migajita de pan
             jumpsStack.append(quadruples.list.count)
@@ -333,14 +354,14 @@ struct ProgryParserWrapper : ParserType {
             //Evalua la expresion del while
             
             //Si es falsa la expresion Brinca los estatutos
-            jumpsStack.append(quadruples.list.count)
+            //jumpsStack.append(quadruples.list.count)
             
             //tomamos la direccion del temporal de la expresio
-            let exprResultOp = quadruples.list[quadruples.list.count-1].result
+            //let exprResultOp = quadruples.list[quadruples.list.count-1].result
             
             //Agregamos el cuadruplo goToF
-            let goToF = Quadruple(op: "GOTOF", opLeft: exprResultOp, opRight: nil, result: MemoryDirection())
-            quadruples.list.append(goToF)
+            //let goToF = Quadruple(op: "GOTOF", opLeft: exprResultOp, opRight: nil, result: MemoryDirection())
+            //quadruples.list.append(goToF)
             
             
             //Realiza todos los estatuos
@@ -360,7 +381,8 @@ struct ProgryParserWrapper : ParserType {
             quadruples.list.append(goTo)
             
             //Rellenamos el goToF con el siguiente quadruplo
-            quadruples.list[goToFalseIndex!].result?.quadruple = quadruples.list.count + 1
+            let goToFalseNewIndex = quadruples.list.count 
+            quadruples.list[goToFalseIndex!].result?.quadruple = goToFalseNewIndex
         }
 
         
