@@ -71,7 +71,7 @@ struct ProgryParserWrapper : ParserType {
             // Necesitamos guardar en la tabla de funciones que
             // esta en el cuadruplo
             
-            guard let id = ctx.ID()?.getText() else{
+            guard let id = ctx.ID(0)?.getText() else{
                 return //regresar errror
             }
             
