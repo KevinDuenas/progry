@@ -7,12 +7,12 @@
 
 protocol ParserType {
 
-    func parseExpression(_ input: String) throws -> [Instruction]
+    func parseExpression(_ input: String) throws -> [Quadruple]
 }
 
 protocol VirtualMachineType {
 
-    func execute(_ instructions: [InstructionType]) throws -> Double
+    func execute(_ quadruples: [Quadruple], withMemory memory : Memory) throws -> Double
 }
 
 protocol InstructionType {
@@ -45,18 +45,18 @@ struct Interpreter {
     /// Evaluates the input string and returns resulting number or an error
     func evaluate(_ input: String) -> Result<Double, Error> {
         
-        let instructions: [Instruction]
+        let quadruples: [Quadruple]
 
         do {
-            instructions = try parser.parseExpression(input)
-            //print("instrunctions ->", instructions)
+            quadruples = try parser.parseExpression(input)
+
         }
         catch {
             return .failure(.syntax(error))
         }
 
         do {
-            let resultValue = try virtualMachine.execute(instructions)
+            let resultValue = try virtualMachine.execute(quadruples, withMemory: Memory(start: 10, end: 200, type: .GLOBAL)) //mandar la memoria
             return .success(resultValue)
         }
         catch {

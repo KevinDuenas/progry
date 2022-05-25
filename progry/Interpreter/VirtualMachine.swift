@@ -6,24 +6,57 @@
 //
 
 struct VirtualMachine : VirtualMachineType {
-    var modules = HashTable<Module>(bucketSize: 15)
-    //let memory = Memory()
-    let matchTable = TypeMatch()
-    let quadruples = Quadruples()
+
    
-
-    func execute(_ instructions: [InstructionType]) throws -> Double  {
+    func execute(_ quadruples: [Quadruple], withMemory memory : Memory) throws -> Double  {
         
         
-        //print("curr", matchTable.validate(left: 1, right: 1, op: 3))
 
-        for instruction in instructions {
-            //try instruction.execute()
+        for quadruple in quadruples {
+            
+            let left = quadruple.opLeft
+            let right = quadruple.opRight
+            let result = quadruple.result
+  
+            
+            switch quadruple.op{
+            
+            case "START":
+                
+                print("START QUADRUPLE")
+                
+            case "=":
+                print("= QUADRUPLE")
+                
+            case "+":
+                print("+ QUADRUPLE")
+                
+            case "-":
+                print("- QUADRUPLE")
+                
+            case "/":
+                print("/ QUADRUPLE")
+            
+            case "*":
+                print("* QUADRUPLE")
+                
+            case "GOTO":
+                print("GOTO QUADRUPLE")
+                
+            case "GOTOF":
+                print("GOTOF QUADRUPLE")
+            
+            default:
+                
+                print("NOT FOUND => \(quadruple.op ?? " ")")
+                
+            
+            }
+            
+            
         }
-        //Resolver Cuadruplos
-        
-        //modules.printHashTable()
-        
+
+    
         
         return 0
     }
