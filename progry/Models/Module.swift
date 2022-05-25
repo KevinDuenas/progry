@@ -36,4 +36,8 @@ class Module{
         paramaters = []
     }
     
+    func print() {
+        Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex)")
+    }
+    
 }
