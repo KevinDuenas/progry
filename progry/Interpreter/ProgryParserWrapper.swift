@@ -57,9 +57,9 @@ struct ProgryParserWrapper : ParserType {
             quadruples.list[quadrupleIndex!].result?.quadruple = quadrupleIndex! + 1
             
             //Ingresamos el modulo main
-            let mainModule = Module(name: "main", returnType: .VOID, key: "main", forQuadruple: quadruples.list.count)
-            modules.addElement(mainModule, forKey: "main")
-            currentModule = "main"
+            //let mainModule = Module(name: "main", returnType: .VOID, key: "main", forQuadruple: quadruples.list.count)
+           // modules.addElement(mainModule, forKey: "main")
+            currentModule = "global"
             
         }
         
@@ -87,6 +87,7 @@ struct ProgryParserWrapper : ParserType {
                     
                     let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
                     
+                    currentModule = id
                     if (result == .collision){
                         print("El id del modulo ya esta declarado.")
                         return
@@ -470,31 +471,39 @@ struct ProgryParserWrapper : ParserType {
                 
             } else if let cte = ctx.cte()?.getText() {
                 
-                
-                
-                if let number = ctx.cte()?.DIGIT(0)?.getText() {
+                if let number = ctx.cte()?.DIGIT(0) {
+                  
                     let newMemoryDirection = constanteMemory.newNumberDirection()
-                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(number)!)
+                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(cte)!)
                     opDirection = MemoryDirection(data: nil, type: .Number, address: newMemoryDirection, quadruple: nil)
-                    
+                
                 }else if let decimal = ctx.cte()?.DECIMAL()?.getText(){
+                    
                     let newMemoryDirection = constanteMemory.newDecimalDirection()
                     let _ = constanteMemory.assignDecimal(dir: newMemoryDirection, value: Double(decimal)!)
                     opDirection = MemoryDirection(data: nil, type: .Decimal, address: newMemoryDirection, quadruple: nil)
-                    
+                   
                 }else if let text = ctx.cte()?.TEXT()?.getText(){
+                 
                     let newMemoryDirection = constanteMemory.newTextDirection()
                     let _ = constanteMemory.assignText(dir: newMemoryDirection, value: text)
                     opDirection = MemoryDirection(data: nil, type: .Text, address: newMemoryDirection, quadruple: nil)
+                   
                 }else if let flag = ctx.cte()?.FLAG()?.getText(){
+                
                     let newMemoryDirection = constanteMemory.newFlagDirection()
                     let _ = constanteMemory.assignFlag(dir: newMemoryDirection, value: Bool(flag)!)
                     opDirection = MemoryDirection(data: nil, type: .Flag, address: newMemoryDirection, quadruple: nil)
+                    
                 }else{
+                   
                     //No concuerda con ningun tipo
                 }
                 
             
+            }else{
+                //parenthesis
+                return
             }
             
             operands.append(opDirection!)

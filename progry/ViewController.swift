@@ -14,26 +14,24 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     
     let input = """
-         PROGRAM_START;
         
-         module pelos : number (number x, decimal las) {
-            var number y;
-            x = 594;
+        PROGRAM_START;
+                
+                var number ten;
         
-            return
-         }
-        
+               module testUno : void (number x, decimal y) {
+                    var decimal z;
+                    z = 10 + (5.25 / 3.5 + 10);
+                    
+                
+                }
+                
+                main {
+                    ten = 10 + 5.0;
+                    z = 10 + (5.25 / 3.5 + 10);
 
-         module pelods : void (number x, decimal las) {
-            var number y;
-            x = 594;
-        
-         }
-        
-         main {
-         
-         }
-        
+                }
+                
          PROGRAM_END;
 
         """;

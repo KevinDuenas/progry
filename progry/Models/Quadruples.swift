@@ -40,7 +40,7 @@ class Quadruples {
     var list = [Quadruple]()
     
     init(){
-        let initQuadruple = Quadruple.init(op: "start", opLeft: nil, opRight: nil, result: nil)
+        let initQuadruple = Quadruple.init(op: "START", opLeft: nil, opRight: nil, result: nil)
         list.append(initQuadruple)
     }
     

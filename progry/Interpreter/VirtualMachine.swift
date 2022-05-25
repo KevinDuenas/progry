@@ -45,6 +45,9 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "GOTOF":
                 print("GOTOF QUADRUPLE")
+                
+            case "ENDFUNC":
+                print("ENDFUNC QUADRUPLE")
             
             default:
                 
