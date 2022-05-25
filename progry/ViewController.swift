@@ -15,25 +15,23 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     let input = """
          PROGRAM_START;
-            
+        
+         module pelos : number (number x, decimal las) {
+            var number y;
+            x = 594;
+        
+            return
+         }
+        
+
+         module pelods : void (number x, decimal las) {
+            var number y;
+            x = 594;
+        
+         }
         
          main {
-            var number pelos;
-            var text name4;
-            var number x;
-        
-        
-            pelos * ( 3 / 2) + 15
-        
-            if(5>4+5){
-                5 * 4 / 23
-            }
-        
-            while (3>2) do {
-                20 * 4
-
-            }
-        
+         
          }
         
          PROGRAM_END;
