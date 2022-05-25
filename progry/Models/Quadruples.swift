@@ -49,7 +49,7 @@ class Quadruples {
         
         for (index, quadruple) in list.enumerated() {
             
-            Swift.print("\(index) - \(quadruple.op) - \(quadruple.opLeft?.data) - \(quadruple.opRight?.data) - \(quadruple.result?.quadruple) ")
+            Swift.print("\(index) - \(quadruple.op) - \(quadruple.opLeft?.address) - \(quadruple.opRight?.address) - \(quadruple.result?.address) ")
         }
         
     }

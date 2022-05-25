@@ -11,6 +11,7 @@ enum MemoryType {
     case GLOBAL
     case TEMPORAL
     case FUNCTION
+    case CONSTANTS
 }
 
 
@@ -48,7 +49,6 @@ class Memory {
         switch type {
         case .GLOBAL:
             let size = end - start
-            print("size", size)
             arraySize = size / 4
             startNumber = start;
             startDecimal = start + arraySize
@@ -62,49 +62,86 @@ class Memory {
             startDecimal  = start + arraySize;
             
         case .FUNCTION:
-            let size = end - start + 1
-            let arraySize = size / 4
+            let size = end - start
+            arraySize = size / 4
             startNumber = start;
-            numberMemory = []
-            startDecimal  = arraySize + startNumber + 1;
-            decimalMemory = []
-            startText = arraySize + startDecimal + 1;
-            textMemory = []
-            startFlag = arraySize + startText + 1;
-            flagMemory = []
+            startDecimal = start + arraySize
+            startText = start + arraySize + arraySize
+            startFlag = start + arraySize + arraySize + arraySize
+            
+        case .CONSTANTS:
+            let size = end - start
+            arraySize = size / 4
+            startNumber = start;
+            startDecimal = start + arraySize
+            startText = start + arraySize + arraySize
+            startFlag = start + arraySize + arraySize + arraySize
             
         }
         
     }
 
+    public func assignNumber(dir: Int, value: Int) -> Bool{
+        
+        let arrayDir = dir - startNumber
+        numberMemory[arrayDir] = value
+        return true
+    }
+
+    public func assignDecimal(dir: Int, value: Double) -> Bool {
+        
+        let arrayDir = dir - startDecimal
+        decimalMemory[arrayDir] = value
+        return true
+    }
+
+    public func assignText(dir: Int, value: String) -> Bool {
+
+        let arrayDir = dir - startText
+        textMemory[arrayDir] = value
+        return true
+
+    }
+
+    public func assignFlag(dir: Int, value: Bool) -> Bool {
+
+        let arrayDir = dir - startFlag
+        flagMemory[arrayDir] = value
+        return true
+
+    }
+    
     
 
-    public func pushNumber() -> Int{
-        
-        let direction = startNumber + countFlag;
+    public func newNumberDirection() -> Int{
+        let direction = startNumber + countNumber;
+        numberMemory.append(0)
         countNumber += 1
         return direction
     }
 
-    public func pushDecimal() -> Int {
+    public func newDecimalDirection() -> Int {
 
         let direction = startDecimal + countDecimal;
+        decimalMemory.append(0)
         countDecimal += 1
         return direction
 
     }
 
-    public func pushText() -> Int {
+    public func newTextDirection() -> Int {
 
         let direction = startText + countText;
+        textMemory.append("")
         countText += 1
         return direction
 
     }
 
-    public func pushFlag(flag : Bool) -> Int {
+    public func newFlagDirection() -> Int {
 
         let direction = startFlag + countFlag;
+        flagMemory.append(false)
         countFlag += 1
         return direction
 
