@@ -63,8 +63,6 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
-        enter
-        
         override func enterModule(_ ctx: ProgryParser.ModuleContext) {
             
             moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION)
@@ -85,7 +83,6 @@ struct ProgryParserWrapper : ParserType {
             let result = modules.addElement(mod, forKey: id)
             
             if (result == .collision){
-                print("El id del modulo ya esta declarado.")
                 return
             }
             
@@ -94,7 +91,6 @@ struct ProgryParserWrapper : ParserType {
                 let totalIds = ctx.ID().count
                 
                 if totalIds > 1 { // Tengo uno o más parametros
-                    print("tienes param y es void")
                     
                     let paramNumbers = ctx.ID().count - 1
                     
@@ -173,7 +169,6 @@ struct ProgryParserWrapper : ParserType {
                 let totalIds = ctx.ID().count
                 
                 if totalIds > 1 {
-                    print("TIENE PARAM y es TIPADO")
                     
                     let paramNumbers = ctx.ID().count - 1
                     
@@ -216,7 +211,6 @@ struct ProgryParserWrapper : ParserType {
                         modules.addElement(mod, forKey: currentModule)
                     }
                 } else {
-                    print("NO TIENE PARAMS Y ES UN TIPO")
                     guard let moduleType = ctx.type(0)?.getText() else {
                         return
                     }
@@ -245,10 +239,6 @@ struct ProgryParserWrapper : ParserType {
                     modules.addElement(mod, forKey: currentModule)
                 }
             }
-        }
-        
-        override func enterWrite(_ ctx: ProgryParser.WriteContext) {
-            let newQuadruple = Quadruple(op: "WRITE", opLeft: nil, opRight: nil, result: <#T##MemoryDirection?#>)
         }
         
         override func exitRead(_ ctx: ProgryParser.ReadContext) {
@@ -281,7 +271,6 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
-            print("ENTRA A CALL")
             
             guard let id = ctx.ID()?.getText() else{
                 return //regresar errror
