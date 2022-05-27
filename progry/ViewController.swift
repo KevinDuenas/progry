@@ -14,26 +14,27 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     
     let input = """
-        
         PROGRAM_START;
+                var decimal first;
+                var decimal second;
+                        
+                module printNumbers : void (decimal x, decimal y) {
+                    var decimal factor;
+                    var number total;
                 
-                var number ten;
-        
-               module testUno : void (number x, decimal y) {
-                    var decimal z;
-                    z = 10 + (5.25 / 3.5 + 10);
+                
+                    write(total);
                     
-                
                 }
+        
                 
                 main {
-                    ten = 10 + 5.0;
-                    z = 10 + (5.25 / 3.5 + 10);
-
+                    first = 10.5 + 20;
+                    second = 100 - (5 * 4 + first);
                 }
                 
-         PROGRAM_END;
-
+                        
+                PROGRAM_END;
         """;
     
     let pullUpController = SOPullUpControl()

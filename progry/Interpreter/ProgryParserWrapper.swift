@@ -13,6 +13,8 @@ import UIKit
 struct ProgryParserWrapper : ParserType {
     
     
+    
+    
     /// Convers AST nodes to instructions.
     private final class Listener : ProgryBaseListener {
         
@@ -625,10 +627,9 @@ struct ProgryParserWrapper : ParserType {
             let currModuleResult = currModule?.varsTable.getElement(forKey: id)
             let globalModule = modules.getElement(forKey: "global")
             let globalModuleResult = globalModule?.varsTable.getElement(forKey: id)
-            let lastResult = quadruples.list[quadruples.list.count-1].result
             var assignQuadruple = Quadruple()
             assignQuadruple.op = "="
-            assignQuadruple.opLeft = lastResult
+            assignQuadruple.opLeft = operands.last
             
             if (currModuleResult != nil){ //localmente
                 
@@ -699,7 +700,7 @@ struct ProgryParserWrapper : ParserType {
         
     }
     
-    func parseExpression(_ input: String) throws -> [Quadruple] {
+    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory) {
         //print("parse Expression", input)
         let parser = try buildParser(input)
         let programContext = try parser.program()
@@ -707,7 +708,7 @@ struct ProgryParserWrapper : ParserType {
         let listener = Listener()
         try ParseTreeWalker().walk(listener, programContext)
         
-        return listener.quadruples.list
+        return (listener.quadruples.list, CoreMemory(temporal: listener.temporalMemory, global: listener.globalMemory, constant: listener.constanteMemory))
     }
     
     
