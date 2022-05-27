@@ -32,6 +32,7 @@
 		0A8D07C4281E0F9400CFDECA /* Quadruples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8D07C3281E0F9400CFDECA /* Quadruples.swift */; };
 		0A8DA9082827A32E00EF783A /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8DA9072827A32E00EF783A /* Memory.swift */; };
 		0AAD704E281B2350003EC1A9 /* TypeMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAD704D281B2350003EC1A9 /* TypeMatch.swift */; };
+		0ADBA8F7283F45550037E067 /* CoreMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADBA8F6283F45550037E067 /* CoreMemory.swift */; };
 		9EF1FF6DBDC529677A753B9C /* libPods-progry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0338E21BF5452E5B839E9CC7 /* libPods-progry.a */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 		0A8D07C3281E0F9400CFDECA /* Quadruples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quadruples.swift; sourceTree = "<group>"; };
 		0A8DA9072827A32E00EF783A /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
 		0AAD704D281B2350003EC1A9 /* TypeMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeMatch.swift; sourceTree = "<group>"; };
+		0ADBA8F6283F45550037E067 /* CoreMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMemory.swift; sourceTree = "<group>"; };
 		0E907580DF5AF6BAA20891E1 /* Pods-progry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progry.debug.xcconfig"; path = "Target Support Files/Pods-progry/Pods-progry.debug.xcconfig"; sourceTree = "<group>"; };
 		1F99F19D268F7652BC217F9A /* Pods-progryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progryTests.release.xcconfig"; path = "Target Support Files/Pods-progryTests/Pods-progryTests.release.xcconfig"; sourceTree = "<group>"; };
 		96B19DCC777D9B9AE903824C /* Pods-progryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progryTests.debug.xcconfig"; path = "Target Support Files/Pods-progryTests/Pods-progryTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				0A67C0DC2810E3030084A77F /* Module.swift */,
 				0AAD704D281B2350003EC1A9 /* TypeMatch.swift */,
 				0A8D07C3281E0F9400CFDECA /* Quadruples.swift */,
+				0ADBA8F6283F45550037E067 /* CoreMemory.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				0A67C0DD2810E3030084A77F /* Module.swift in Sources */,
 				0A3D98FB28078A4D00C0708A /* SceneDelegate.swift in Sources */,
 				0A67C0D52810D93E0084A77F /* Variable.swift in Sources */,
+				0ADBA8F7283F45550037E067 /* CoreMemory.swift in Sources */,
 				0A67C0EB281129F30084A77F /* RuntimeError.swift in Sources */,
 				0A013979281233C200392CD9 /* HashTable.swift in Sources */,
 				0AAD704E281B2350003EC1A9 /* TypeMatch.swift in Sources */,
