@@ -24,7 +24,7 @@ struct ProgryParserWrapper : ParserType {
         private(set) var quadruples = Quadruples()
         private(set) var globalMemory = Memory(start: 1000, end: 4000, type: .GLOBAL)
         private(set) var temporalMemory = Memory(start: 4000, end: 8000, type: .TEMPORAL)
-        private(set) var functionMemory : Memory?
+        private(set) var moduleMemory : Memory?
         private(set) var constanteMemory = Memory(start: 10000, end: 14000, type: .CONSTANTS)
         private(set) var operands : [MemoryDirection] = []
         private(set) var operators : [String] = []
@@ -67,85 +67,87 @@ struct ProgryParserWrapper : ParserType {
         
         override func enterModule(_ ctx: ProgryParser.ModuleContext) {
             
-            functionMemory = Memory(start: 8000, end: 10000, type: .FUNCTION)
+            moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION)
+            var memoryDir = 0
             
             // Necesitamos guardar en la tabla de funciones que
             // esta en el cuadruplo
             
             let moduleVoid = ctx.VOID()?.getText()
-            print(moduleVoid)
+            
+            guard let id = ctx.ID(0)?.getText() else {
+                return //regresar errror
+            }
+            
+            currentModule = id
+            
+            var mod = Module.init(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count)
+            let result = modules.addElement(mod, forKey: id)
+            
+            if (result == .collision){
+                return
+            }
             
             if moduleVoid == "void" {
-                guard let id = ctx.ID(0)?.getText() else {
-                    return //regresar errror
-                }
                 
                 let totalIds = ctx.ID().count
                 
                 if totalIds > 1 { // Tengo uno o más parametros
-                    print("tienes param y es void")
                     
                     let paramNumbers = ctx.ID().count - 1
                     
-                    let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
+//                    let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
+//
+//
+//                    if (result == .collision){
+//                        print("El id del modulo ya esta declarado.")
+//                        return
+//                    }
                     
-                    currentModule = id
-                    if (result == .collision){
-                        print("El id del modulo ya esta declarado.")
-                        return
-                    }
-                    
-                    let mod = modules.getElement(forKey: id)
-                    mod?.print()
                     
                     for p in 1...paramNumbers {
-                        guard let paramType = ctx.type(p)?.getText() else {
+                        guard let paramType = ctx.type(p - 1)?.getText() else {
                             return
                         }
+                        
                         guard let varId = ctx.ID(p)?.getText() else {
                             return
                         }
+                        
+                        mod = modules.getElement(forKey: currentModule)!
+                        
                         switch paramType {
                         case "number":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Number, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Number)
+                            memoryDir = moduleMemory!.newNumberDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Number, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Number)
                         case "decimal":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Decimal)
+                            memoryDir = moduleMemory!.newDecimalDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Decimal)
                         case "flag":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Flag, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Flag)
+                            memoryDir = moduleMemory!.newFlagDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Flag, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Flag)
                         case "text":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Text, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Text)
+                            memoryDir = moduleMemory!.newTextDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Text, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Text)
                         case "error": break
                         case "void": break
                         default:
                             break
                         }
-                    }
-                } else { // tengo 0 parametros
-                    print("no tiene param y es void")
-                    guard let id = ctx.ID(0)?.getText() else {
-                        return //regresar errror
-                    }
-                    
-                    let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
-                    
-                    if (result == .collision){
-                        print("El id del modulo ya esta declarado.")
-                        return
-                    }
+                        modules.deleteElementForKey(currentModule)
+                        modules.addElement(mod, forKey: currentModule)
+                    } // cierra for
                 }
+                
             } else {
-                
-                guard let moduleId = ctx.ID(0)?.getText() else {
-                    return //regresar errror
-                }
-                
                 guard let moduleType = ctx.type(0)?.getText() else {
                     return
                 }
+                
                 
                 var modType : Types?
                 
@@ -169,19 +171,11 @@ struct ProgryParserWrapper : ParserType {
                 let totalIds = ctx.ID().count
                 
                 if totalIds > 1 {
-                    print("TIENE PARAM y es TIPADO")
                     
                     let paramNumbers = ctx.ID().count - 1
                     
-                    let result = modules.addElement(Module(name: moduleId, returnType: modType!, key: moduleId, forQuadruple: quadruples.list.count), forKey: moduleId)
                     
-                    if (result == .collision){
-                        print("El id del modulo ya esta declarado.")
-                        return
-                    }
                     
-                    let mod = modules.getElement(forKey: moduleId)
-                    mod?.print()
                     
                     for p in 1...paramNumbers {
                         guard let paramType = ctx.type(p)?.getText() else {
@@ -191,31 +185,34 @@ struct ProgryParserWrapper : ParserType {
                             return
                         }
                         
+                        mod = modules.getElement(forKey: currentModule)!
+                        
                         switch paramType {
                         case "number":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Number, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Number)
+                            memoryDir = moduleMemory!.newNumberDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Number, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Number)
                         case "decimal":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Decimal)
+                            memoryDir = moduleMemory!.newDecimalDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Decimal)
                         case "flag":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Flag, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Flag)
+                            memoryDir = moduleMemory!.newFlagDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Flag, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Flag)
                         case "text":
-                            mod?.varsTable.addElement(Variable(id: varId, type: .Text, direction: 0), forKey: varId)
-                            mod?.paramaters?.append(.Text)
+                            memoryDir = moduleMemory!.newTextDirection()
+                            mod.varsTable.addElement(Variable(id: varId, type: .Text, direction: memoryDir), forKey: varId)
+                            mod.paramaters?.append(.Text)
                         case "error": break
                         case "void": break
                         default:
                             break
                         }
+                        modules.deleteElementForKey(currentModule)
+                        modules.addElement(mod, forKey: currentModule)
                     }
                 } else {
-                    print("NO TIENE PARAMS Y ES UN TIPO")
-                    guard let moduleId = ctx.ID(0)?.getText() else {
-                        return //regresar errror
-                    }
-                    
                     guard let moduleType = ctx.type(0)?.getText() else {
                         return
                     }
@@ -238,37 +235,12 @@ struct ProgryParserWrapper : ParserType {
                         break
                     }
                     
-                    let result = modules.addElement(Module(name: moduleId, returnType: modType!, key: moduleId, forQuadruple: quadruples.list.count), forKey: moduleId)
+                    mod.returnType = modType!
                     
-                    if (result == .collision){
-                        print("El id del modulo ya esta declarado.")
-                        return
-                    }
-                    
-                    
-                    
+                    modules.deleteElementForKey(currentModule)
+                    modules.addElement(mod, forKey: currentModule)
                 }
-                
-                
-                
-                
             }
-          
-            //
-            //            let newModule = Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count)
-            //
-            
-            
-        
-            
-        
-            
-            //  currentModule = id
-            
-            
-            
-            
-            
         }
         
         override func exitRead(_ ctx: ProgryParser.ReadContext) {
@@ -283,20 +255,30 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func exitModule(_ ctx: ProgryParser.ModuleContext) {
-            currentModule = ""
-            let newQuadruple = Quadruple(op: "ENDFUNC", opLeft: MemoryDirection(), opRight: MemoryDirection(), result: MemoryDirection())
+            
+            guard let modType = ctx.type(0)?.getText() else {
+                return
+            }
+            
+            if modType != "void" {
+                let lastResult = quadruples.list[quadruples.list.count - 1].result
+                let newQuadruple = Quadruple(op: "RETURN", opLeft: nil, opRight: nil, result: operands.last)
+                quadruples.list.append(newQuadruple)
+            }
+            
+            let newQuadruple = Quadruple(op: "ENDFUNC", opLeft: nil, opRight: nil, result: nil)
             quadruples.list.append(newQuadruple)
             
+            currentModule = ""
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
-            print("ENTRA A CALL")
             
             guard let id = ctx.ID()?.getText() else{
                 return //regresar errror
             }
             
-            let newQuadruple = Quadruple(op: "ERA", opLeft: MemoryDirection(data: id), opRight: MemoryDirection(), result: MemoryDirection())
+            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: id))
             quadruples.list.append(newQuadruple)
             
         }
@@ -306,7 +288,7 @@ struct ProgryParserWrapper : ParserType {
                 return //regresar errror
             }
             
-            let newQuadruple = Quadruple(op: "GOSUB", opLeft: MemoryDirection(data: id), opRight: MemoryDirection(), result: MemoryDirection())
+            let newQuadruple = Quadruple(op: "GOSUB", opLeft: nil, opRight: nil, result: MemoryDirection(data: id))
             quadruples.list.append(newQuadruple)
         }
         
@@ -387,7 +369,7 @@ struct ProgryParserWrapper : ParserType {
                 if(currentModule == "global"){
                     memoryDir = globalMemory.newNumberDirection()
                 }else{
-                    memoryDir = functionMemory!.newNumberDirection()
+                    memoryDir = moduleMemory!.newNumberDirection()
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -397,7 +379,7 @@ struct ProgryParserWrapper : ParserType {
                 if(currentModule == "global"){
                     memoryDir = globalMemory.newDecimalDirection()
                 }else{
-                    memoryDir = functionMemory!.newDecimalDirection()
+                    memoryDir = moduleMemory!.newDecimalDirection()
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -407,7 +389,7 @@ struct ProgryParserWrapper : ParserType {
                 if(currentModule == "global"){
                     memoryDir = globalMemory.newTextDirection()
                 }else{
-                    memoryDir = functionMemory!.newTextDirection()
+                    memoryDir = moduleMemory!.newTextDirection()
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -416,7 +398,7 @@ struct ProgryParserWrapper : ParserType {
                 if(currentModule == "global"){
                     memoryDir = globalMemory.newFlagDirection()
                 }else{
-                    memoryDir = functionMemory!.newFlagDirection()
+                    memoryDir = moduleMemory!.newFlagDirection()
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -430,6 +412,7 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        
         override func enterF(_ ctx: ProgryParser.FContext) {
             
             let curr =  modules.getElement(forKey: currentModule)
@@ -439,7 +422,6 @@ struct ProgryParserWrapper : ParserType {
                 
                 
                 let element = curr?.varsTable.getElement(forKey: operand)
-                
                 
                 if(element != nil){
                     
@@ -573,8 +555,6 @@ struct ProgryParserWrapper : ParserType {
             }
             
             if operators.last == "<" || operators.last == ">" || operators.last == "!=" || operators.last == "==" || operators.last == ">=" || operators.last == "<="{
-                print(operands)
-                print(operators)
                 let lastOperator = operators.popLast()
                 let rightOperand = operands.popLast()
                 let leftOperand = operands.popLast()
@@ -598,8 +578,6 @@ struct ProgryParserWrapper : ParserType {
             }
             
             if operators.last == "&&" || operators.last == "||" {
-                print(operands)
-                print(operators)
                 let lastOperator = operators.popLast()
                 let rightOperand = operands.popLast()
                 let leftOperand = operands.popLast()
