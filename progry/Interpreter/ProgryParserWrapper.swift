@@ -30,6 +30,10 @@ struct ProgryParserWrapper : ParserType {
         
         var i: Int = 0
         
+        // para contar las variables de cada modulo, se suma en vars - se agrega en exit module y se reinicia a 0
+        var localCount: Int = 0;
+        var tempCount: Int = 0;
+        
         private(set) var currentModule = ""
         private(set) var currentCicle = ""
         
@@ -93,6 +97,8 @@ struct ProgryParserWrapper : ParserType {
                 if totalIds > 1 { // Tengo uno o más parametros
                     
                     let paramNumbers = ctx.ID().count - 1
+                    
+                    mod.parametersNumber = paramNumbers
                     
 //                    let result = modules.addElement(Module(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
 //
@@ -172,7 +178,7 @@ struct ProgryParserWrapper : ParserType {
                     
                     let paramNumbers = ctx.ID().count - 1
                     
-                    
+                    mod.parametersNumber = paramNumbers
                     
                     
                     for p in 1...paramNumbers {
@@ -254,27 +260,39 @@ struct ProgryParserWrapper : ParserType {
         
         override func exitModule(_ ctx: ProgryParser.ModuleContext) {
             
-            guard let modType = ctx.type(0)?.getText() else {
-                return
-            }
+            let modType = ctx.VOID()?.getText()
+            
+            print("MTYY", modType)
             
             if modType != "void" {
                 let lastResult = quadruples.list[quadruples.list.count - 1].result
-                let newQuadruple = Quadruple(op: "RETURN", opLeft: nil, opRight: nil, result: operands.last)
+                let newQuadruple = Quadruple(op: "RETURN", opLeft: nil, opRight: nil, result: operands.popLast())
                 quadruples.list.append(newQuadruple)
             }
+            
+            let mod = modules.getElement(forKey: currentModule)!
+            mod.localVarNumber = localCount
+            mod.temporalVars = tempCount
             
             let newQuadruple = Quadruple(op: "ENDFUNC", opLeft: nil, opRight: nil, result: nil)
             quadruples.list.append(newQuadruple)
             
             currentModule = ""
+            localCount = 0;
+            tempCount = 0;
+            
+            mod.print()
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
             
+            
+            
             guard let id = ctx.ID()?.getText() else{
                 return //regresar errror
             }
+            print("ENTRAPPP")
+            // agregar pams
             
             let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: id))
             quadruples.list.append(newQuadruple)
@@ -368,6 +386,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = globalMemory.newNumberDirection()
                 }else{
                     memoryDir = moduleMemory!.newNumberDirection()
+                    localCount = localCount + 1;
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -378,6 +397,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = globalMemory.newDecimalDirection()
                 }else{
                     memoryDir = moduleMemory!.newDecimalDirection()
+                    localCount = localCount + 1;
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -388,6 +408,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = globalMemory.newTextDirection()
                 }else{
                     memoryDir = moduleMemory!.newTextDirection()
+                    localCount = localCount + 1;
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -397,6 +418,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = globalMemory.newFlagDirection()
                 }else{
                     memoryDir = moduleMemory!.newFlagDirection()
+                    localCount = localCount + 1;
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
@@ -511,6 +533,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 quadruples.list.append(newQuadruple)
                 operands.append(resultOperand)
+                tempCount = tempCount + 1
             }
         }
         
@@ -534,6 +557,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 quadruples.list.append(newQuadruple)
                 operands.append(resultOperand)
+                tempCount = tempCount + 1
             }
         }
         
@@ -606,7 +630,7 @@ struct ProgryParserWrapper : ParserType {
             let lastResult = quadruples.list[quadruples.list.count-1].result
             var assignQuadruple = Quadruple()
             assignQuadruple.op = "="
-            assignQuadruple.opLeft = operands.last
+            assignQuadruple.opLeft = operands.popLast()
             
             if (currModuleResult != nil){ //localmente
                 
