@@ -314,8 +314,8 @@ struct ProgryParserWrapper : ParserType {
             
             let goToFIndex = jumpsStack.popLast()
             
-            let goTo = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
-            quadruples.list.append(goTo)
+            let goTo = Quadruple(op: "GOTOF", opLeft: nil, opRight: nil, result: MemoryDirection())
+            //quadruples.list.append(goTo)
             jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
             
             let newQuadrupleCount = quadruples.list.count
@@ -560,7 +560,7 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
+                let newTemporalDirection = globalMemory.newFlagDirection() //hay que cambiar esto revisando el contexto
                 let resultOperand = MemoryDirection(address: newTemporalDirection)
                 let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
