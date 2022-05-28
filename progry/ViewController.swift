@@ -8,75 +8,65 @@
 import UIKit
 import SOPullUpView
 
-class ViewController: UIViewController, UITextViewDelegate{
+protocol SaveExcerciseProtocol {
+    func save(programName: String)
+}
+
+protocol RunProgramProtocol {
+    func run()
+}
+
+class ViewController: UIViewController, UITextViewDelegate, SaveExcerciseProtocol{
+    
+    func save(programName : String) {
+        let myCode = textView.text
+        self.programName = programName
+        userDefaults.set(textView.text, forKey: "PROGRY-\(programName)")
+        userDefaults.set(myCode, forKey: "PROGRY-\(programName)")
+        navigationController?.popViewController(animated: true)
+    }
+    
   
     @IBOutlet weak var textView: UITextView!
     
-    
-    let input = """
-        
-        PROGRAM_START;
-                
-                var number ten;
-        
-               module testUno : void (number x, decimal y) {
-                    var decimal z;
-                    z = 10 + (5.25 / 3.5 + 10);
-                    
-                
-                }
-                
-                main {
-                    ten = 10 + 5.0;
-                    z = 10 + (5.25 / 3.5 + 10);
-
-                }
-                
-         PROGRAM_END;
-
-        """;
-    
     let pullUpController = SOPullUpControl()
-    
+    let userDefaults = UserDefaults.standard
+    var programName = ""
+    var new = true    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        transform(input)
         setupViews()
+        loadProgram()
+    }
+    
+    func loadProgram(){
+        let code = UserDefaults.standard.string(forKey: "PROGRY-\(programName)")
+        if programName == "" {
+            new = true
+        }else{
+            textView.text = code
+            new = false
+        }
+    }
+    
+    @IBAction func saveCode(_ sender: Any) {
+        let myCode = textView.text
+        if new {
+            PopUpsViewController.presentPopUp(parentVC: self)
+        }else{
+            userDefaults.set(myCode, forKey: "PROGRY-\(programName)")
+            navigationController?.popViewController(animated: true)
+        }
         
     }
     
+
     func setupViews(){
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
         
-        textView.text = """
-         PROGRAM_START;
-
-         main {
-            var number pelos
-            var text name4
-            var number x
-        
-            pelos * ( 3 / 2) + 15
-        
-            if(5>4){
-                5 * 4 / 23
-                var text myAge;
-            }
-        
-            while (3>2) do {
-                20 * 4;
-                var text myName;
-        
-            }
-        
-         }
-        
-         PROGRAM_END;
-
-        """
     }
     
     func setUpTextView(){
@@ -100,9 +90,9 @@ class ViewController: UIViewController, UITextViewDelegate{
         textView.endEditing(true)
     }
     
+    
     func textViewDidChange(_ textView: UITextView) {
-        print("entra")
-        textView.attributedText = textView.text.setColorToChar(["module", "var", "hola"], color: [.red, .blue, .orange])
+        //textView.attributedText = textView.text.setColorToChar(["module", "var", "hola"], color: [.red, .blue, .orange])
     }
   
     private func transform(_ input: String) -> String {
@@ -137,6 +127,7 @@ extension ViewController : SOPullUpViewDataSource {
     @objc func pullUpViewController() -> UIViewController {
         guard let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "console") as? ConsoleViewController else {return UIViewController()}
          vc.pullUpControl = self.pullUpController
+        vc.delegate = self
          return vc
       }
 }
@@ -177,4 +168,12 @@ extension String {
 
         return attributedString
     }
+}
+
+extension ViewController : RunProgramProtocol{
+    func run() {
+        transform(textView.text)
+    }
+    
+    
 }

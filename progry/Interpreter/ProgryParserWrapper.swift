@@ -13,6 +13,8 @@ import UIKit
 struct ProgryParserWrapper : ParserType {
     
     
+    
+    
     /// Convers AST nodes to instructions.
     private final class Listener : ProgryBaseListener {
         
@@ -330,8 +332,8 @@ struct ProgryParserWrapper : ParserType {
             
             let goToFIndex = jumpsStack.popLast()
             
-            let goTo = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
-            quadruples.list.append(goTo)
+            let goTo = Quadruple(op: "GOTOF", opLeft: nil, opRight: nil, result: MemoryDirection())
+            //quadruples.list.append(goTo)
             jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
             
             let newQuadrupleCount = quadruples.list.count
@@ -582,7 +584,7 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
+                let newTemporalDirection = globalMemory.newFlagDirection() //hay que cambiar esto revisando el contexto
                 let resultOperand = MemoryDirection(address: newTemporalDirection)
                 let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
@@ -627,7 +629,6 @@ struct ProgryParserWrapper : ParserType {
             let currModuleResult = currModule?.varsTable.getElement(forKey: id)
             let globalModule = modules.getElement(forKey: "global")
             let globalModuleResult = globalModule?.varsTable.getElement(forKey: id)
-            let lastResult = quadruples.list[quadruples.list.count-1].result
             var assignQuadruple = Quadruple()
             assignQuadruple.op = "="
             assignQuadruple.opLeft = operands.popLast()
@@ -701,7 +702,7 @@ struct ProgryParserWrapper : ParserType {
         
     }
     
-    func parseExpression(_ input: String) throws -> [Quadruple] {
+    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory) {
         //print("parse Expression", input)
         let parser = try buildParser(input)
         let programContext = try parser.program()
@@ -709,7 +710,7 @@ struct ProgryParserWrapper : ParserType {
         let listener = Listener()
         try ParseTreeWalker().walk(listener, programContext)
         
-        return listener.quadruples.list
+        return (listener.quadruples.list, CoreMemory(temporal: listener.temporalMemory, global: listener.globalMemory, constant: listener.constanteMemory))
     }
     
     
