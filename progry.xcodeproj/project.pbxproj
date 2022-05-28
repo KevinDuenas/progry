@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0A013979281233C200392CD9 /* HashTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A013978281233C200392CD9 /* HashTable.swift */; };
+		0A066B222842872100991F39 /* ProgramsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A066B212842872100991F39 /* ProgramsViewController.swift */; };
+		0A066B242842886E00991F39 /* ProgramTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A066B232842886E00991F39 /* ProgramTableViewCell.swift */; };
+		0A066B262842902500991F39 /* PopUpsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A066B252842902500991F39 /* PopUpsViewController.swift */; };
 		0A0B0FBB281274FF009AF53C /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0FBA281274FF009AF53C /* ConsoleViewController.swift */; };
 		0A3D98F928078A4D00C0708A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3D98F828078A4D00C0708A /* AppDelegate.swift */; };
 		0A3D98FB28078A4D00C0708A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3D98FA28078A4D00C0708A /* SceneDelegate.swift */; };
@@ -39,6 +42,9 @@
 /* Begin PBXFileReference section */
 		0338E21BF5452E5B839E9CC7 /* libPods-progry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-progry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A013978281233C200392CD9 /* HashTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashTable.swift; sourceTree = "<group>"; };
+		0A066B212842872100991F39 /* ProgramsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramsViewController.swift; sourceTree = "<group>"; };
+		0A066B232842886E00991F39 /* ProgramTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTableViewCell.swift; sourceTree = "<group>"; };
+		0A066B252842902500991F39 /* PopUpsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpsViewController.swift; sourceTree = "<group>"; };
 		0A0B0FBA281274FF009AF53C /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		0A3D98F528078A4D00C0708A /* progry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = progry.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3D98F828078A4D00C0708A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,10 +116,13 @@
 				0A67C0E3281110A40084A77F /* Interpreter */,
 				0A67C0D32810D8180084A77F /* Models */,
 				0A3D98F828078A4D00C0708A /* AppDelegate.swift */,
+				0A066B252842902500991F39 /* PopUpsViewController.swift */,
 				0A3D98FA28078A4D00C0708A /* SceneDelegate.swift */,
 				0A3D98FC28078A4D00C0708A /* ViewController.swift */,
 				0A0B0FBA281274FF009AF53C /* ConsoleViewController.swift */,
 				0A3D98FE28078A4D00C0708A /* Main.storyboard */,
+				0A066B232842886E00991F39 /* ProgramTableViewCell.swift */,
+				0A066B212842872100991F39 /* ProgramsViewController.swift */,
 				0A3D990128078A4E00C0708A /* Assets.xcassets */,
 				0A3D990328078A4E00C0708A /* LaunchScreen.storyboard */,
 				0A3D990628078A4E00C0708A /* Info.plist */,
@@ -287,6 +296,8 @@
 				0A67C0F7281130EA0084A77F /* Autogen in Sources */,
 				0A0B0FBB281274FF009AF53C /* ConsoleViewController.swift in Sources */,
 				0A67C0E7281111220084A77F /* Instruction.swift in Sources */,
+				0A066B262842902500991F39 /* PopUpsViewController.swift in Sources */,
+				0A066B242842886E00991F39 /* ProgramTableViewCell.swift in Sources */,
 				0A67C0E5281110D10084A77F /* Interpreter.swift in Sources */,
 				0A67C0ED28112A1B0084A77F /* VirtualMachine.swift in Sources */,
 				0A56A0E1283C32BF0088482D /* ProgryBaseListener.swift in Sources */,
@@ -297,6 +308,7 @@
 				0A67C0EF28112A930084A77F /* ProgryParserWrapper.swift in Sources */,
 				0A8D07C4281E0F9400CFDECA /* Quadruples.swift in Sources */,
 				0A56A0E3283C32BF0088482D /* ProgryListener.swift in Sources */,
+				0A066B222842872100991F39 /* ProgramsViewController.swift in Sources */,
 				0A67C0DD2810E3030084A77F /* Module.swift in Sources */,
 				0A3D98FB28078A4D00C0708A /* SceneDelegate.swift in Sources */,
 				0A67C0D52810D93E0084A77F /* Variable.swift in Sources */,

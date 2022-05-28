@@ -12,6 +12,8 @@ class ConsoleViewController: UIViewController {
     
     @IBOutlet weak var handleView: UIView!
     
+    var delegate : RunProgramProtocol?
+    
     var pullUpControl: SOPullUpControl? {
         didSet {
             pullUpControl?.delegate = self
@@ -23,6 +25,13 @@ class ConsoleViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+    @IBAction func runProgram(_ sender: Any) {
+        delegate?.run()
+    }
+    
+}
+
+extension ConsoleViewController {
     
 }
 
