@@ -35,9 +35,24 @@
 		0A8D07C4281E0F9400CFDECA /* Quadruples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8D07C3281E0F9400CFDECA /* Quadruples.swift */; };
 		0A8DA9082827A32E00EF783A /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8DA9072827A32E00EF783A /* Memory.swift */; };
 		0AAD704E281B2350003EC1A9 /* TypeMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAD704D281B2350003EC1A9 /* TypeMatch.swift */; };
+		0AD2C7A42842CD4200786194 /* Antlr4 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 0A5244B02827504A00FDDB4D /* Antlr4 */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0ADBA8F7283F45550037E067 /* CoreMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADBA8F6283F45550037E067 /* CoreMemory.swift */; };
 		9EF1FF6DBDC529677A753B9C /* libPods-progry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0338E21BF5452E5B839E9CC7 /* libPods-progry.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0AD2C7A52842CD4200786194 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0AD2C7A42842CD4200786194 /* Antlr4 in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0338E21BF5452E5B839E9CC7 /* libPods-progry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-progry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,6 +215,7 @@
 				0A3D98F128078A4D00C0708A /* Sources */,
 				0A3D98F228078A4D00C0708A /* Frameworks */,
 				0A3D98F328078A4D00C0708A /* Resources */,
+				0AD2C7A52842CD4200786194 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
