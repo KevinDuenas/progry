@@ -38,10 +38,12 @@ struct ProgryParserWrapper : ParserType {
         private(set) var currentModule = ""
         private(set) var currentCicle = ""
         
+        let typeOracle = TypeMatch.init()
         
         
         //Context variables
         var jumpsStack = [Int]()
+        
         
         
         override func enterProgram(_ ctx: ProgryParser.ProgramContext){
@@ -137,6 +139,7 @@ struct ProgryParserWrapper : ParserType {
                 }
                 
             } else {
+                // tipado
                 guard let moduleType = ctx.type(0)?.getText() else {
                     return
                 }
@@ -145,16 +148,17 @@ struct ProgryParserWrapper : ParserType {
                 
                 switch moduleType {
                 case "number":
-                        memoryDir = moduleMemory!.newNumberDirection()
+                    memoryDir = globalMemory.newNumberDirection()
                     modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
+                    print("IDDD", id, memoryDir)
                 case "decimal":
-                    memoryDir = moduleMemory!.newDecimalDirection()
+                    memoryDir = globalMemory.newDecimalDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "text":
-                    memoryDir = moduleMemory!.newTextDirection()
+                    memoryDir = globalMemory.newTextDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "flag":
-                    memoryDir = moduleMemory!.newFlagDirection()
+                    memoryDir = globalMemory.newFlagDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 default:
                     print("no type found it")
@@ -397,6 +401,8 @@ struct ProgryParserWrapper : ParserType {
                 return
             }
             
+            
+            
             //Le añadimos uno al tipo de variable en la funcion
             let curr =  modules.getElement(forKey: currentModule)
             let globalModule = modules.getElement(forKey: "global")
@@ -405,6 +411,7 @@ struct ProgryParserWrapper : ParserType {
             var globalSearch : Variable?
             let _ = modules.deleteElementForKey(currentModule)
             
+         
             
             if((localInsertion == .collision || globalSearch != nil) && currentModule != "global"){
                 //Ya existe el id o localmente o globalmente
@@ -425,6 +432,7 @@ struct ProgryParserWrapper : ParserType {
                 }
                 localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                print("LSKSKS0", id, memoryDir)
                 
             case "decimal":
                 curr?.decimals += 1
@@ -464,6 +472,9 @@ struct ProgryParserWrapper : ParserType {
             
             let _ = modules.addElement(curr!, forKey: currentModule)
             
+            
+        }
+        override func exitVars(_ ctx: ProgryParser.VarsContext) {
             
         }
         
@@ -506,12 +517,11 @@ struct ProgryParserWrapper : ParserType {
                 
                 
                 
-            } else if let cte = ctx.cte()?.getText() {
+            } else if let _ = ctx.cte()?.getText() {
                 
-                if let number = ctx.cte()?.DIGIT(0) {
-                  
+                if let number = ctx.cte()?.DIGIT()?.getText() {
                     let newMemoryDirection = constanteMemory.newNumberDirection()
-                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(cte)!)
+                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(number)!)
                     opDirection = MemoryDirection(data: nil, type: .Number, address: newMemoryDirection, quadruple: nil)
                 
                 }else if let decimal = ctx.cte()?.DECIMAL()?.getText(){
@@ -558,14 +568,33 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
+                let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
-                tempCount = tempCount + 1
+                let resTypeOracle = typeOracle.validate(left: leftTypeNum, right: rightTypeNum, op: 0)
+                
+                if resTypeOracle == .Number {
+                   let newTemporalDirection = temporalMemory.newNumberDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else if resTypeOracle == .Decimal {
+                   let newTemporalDirection = temporalMemory.newDecimalDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
@@ -577,19 +606,38 @@ struct ProgryParserWrapper : ParserType {
                 operators.append(newOperator)
             }
             
+            
             if operators.last == "+" || operators.last == "-" {
                 let lastOperator = operators.popLast()
                 let rightOperand = operands.popLast()
                 let leftOperand = operands.popLast()
                 
-                //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
-                tempCount = tempCount + 1
+                let resTypeOracle = typeOracle.validate(left: leftTypeNum, right: rightTypeNum, op: 0)
+                
+                if resTypeOracle == .Number {
+                   let newTemporalDirection = temporalMemory.newNumberDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else if resTypeOracle == .Decimal {
+                   let newTemporalDirection = temporalMemory.newDecimalDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
@@ -614,12 +662,26 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = globalMemory.newFlagDirection() //hay que cambiar esto revisando el contexto
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
+                let rightTypeOp = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeOp = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
+                
+                
+                let resTypeOracle = typeOracle.validate(left: leftTypeOp, right: rightTypeOp, op: 1)
+                
+                if resTypeOracle == .Flag {
+                   let newTemporalDirection = temporalMemory.newFlagDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
+                
             }
             
         }
@@ -637,12 +699,24 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                let rightTypeOp = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeOp = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
+                
+                let resTypeOracle = typeOracle.validate(left: leftTypeOp, right: rightTypeOp, op: 3)
+                
+                if resTypeOracle == .Flag {
+                   let newTemporalDirection = temporalMemory.newFlagDirection()
+                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
@@ -753,5 +827,7 @@ struct ProgryParserWrapper : ParserType {
         
         return try ProgryParser(tokenStream)
     }
+    
+    
 }
 
