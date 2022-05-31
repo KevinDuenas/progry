@@ -150,7 +150,6 @@ struct ProgryParserWrapper : ParserType {
                 case "number":
                     memoryDir = globalMemory.newNumberDirection()
                     modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
-                    print("IDDD", id, memoryDir)
                 case "decimal":
                     memoryDir = globalMemory.newDecimalDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
@@ -204,6 +203,7 @@ struct ProgryParserWrapper : ParserType {
                             memoryDir = moduleMemory!.newNumberDirection()
                             mod.varsTable.addElement(Variable(id: varId, type: .Number, direction: memoryDir), forKey: varId)
                             mod.paramaters?.append(.Number)
+                            print("PRAM", varId, memoryDir)
                         case "decimal":
                             memoryDir = moduleMemory!.newDecimalDirection()
                             mod.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: memoryDir), forKey: varId)
@@ -331,9 +331,9 @@ struct ProgryParserWrapper : ParserType {
                     newStack.append(operands.popLast()!)
                 }
                 
-                for _ in 0...operandsStackSize - 1 {
+                for i in 0...operandsStackSize - 1 {
                     let opLeft = newStack.popLast()
-                    let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: MemoryDirection())
+                    let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: MemoryDirection(data: "p\(i+1)"))
                     quadruples.list.append(newQuadruple)
                 }
                 
@@ -401,8 +401,6 @@ struct ProgryParserWrapper : ParserType {
                 return
             }
             
-            
-            
             //Le añadimos uno al tipo de variable en la funcion
             let curr =  modules.getElement(forKey: currentModule)
             let globalModule = modules.getElement(forKey: "global")
@@ -410,8 +408,6 @@ struct ProgryParserWrapper : ParserType {
             var localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .VOID, direction: 0), forKey: id)
             var globalSearch : Variable?
             let _ = modules.deleteElementForKey(currentModule)
-            
-         
             
             if((localInsertion == .collision || globalSearch != nil) && currentModule != "global"){
                 //Ya existe el id o localmente o globalmente
@@ -421,56 +417,70 @@ struct ProgryParserWrapper : ParserType {
                 let _ = curr?.varsTable.deleteElementForKey(id)
             }
             
-            switch type {
-            case "number":
-                curr?.numbers += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newNumberDirection()
-                }else{
-                    memoryDir = moduleMemory!.newNumberDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
-                print("LSKSKS0", id, memoryDir)
+            
+            
+            let isArray = ctx.OPEN_SBRACKET()?.getText()
+            
+            if isArray == "[" {
+                print("IS Array", id)
+            } else {
+               
                 
-            case "decimal":
-                curr?.decimals += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newDecimalDirection()
-                }else{
-                    memoryDir = moduleMemory!.newDecimalDirection()
-                    localCount = localCount + 1;
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    print("IDD", id, memoryDir)
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                default:
+                    print("no type found it")
                 }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
                 
-            case "text":
-                curr?.texts += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newTextDirection()
-                }else{
-                    memoryDir = moduleMemory!.newTextDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
-            case "flag":
-                curr?.flags += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newFlagDirection()
-                }else{
-                    memoryDir = moduleMemory!.newFlagDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
-                
-            default:
-                print("no type found it")
+                let _ = modules.addElement(curr!, forKey: currentModule)
             }
             
-            let _ = modules.addElement(curr!, forKey: currentModule)
+            
+            
+            
             
             
         }
@@ -488,8 +498,10 @@ struct ProgryParserWrapper : ParserType {
                 
                 
                 let element = curr?.varsTable.getElement(forKey: operand)
+                print("elem", element?.id, operand)
                 
                 if(element != nil){
+                    
                     
                     switch element?.type {
                     case .Number:
@@ -576,7 +588,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 if resTypeOracle == .Number {
                    let newTemporalDirection = temporalMemory.newNumberDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Number ,address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
@@ -585,7 +597,7 @@ struct ProgryParserWrapper : ParserType {
                     
                 } else if resTypeOracle == .Decimal {
                    let newTemporalDirection = temporalMemory.newDecimalDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Decimal ,address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
@@ -612,6 +624,8 @@ struct ProgryParserWrapper : ParserType {
                 let rightOperand = operands.popLast()
                 let leftOperand = operands.popLast()
                 
+                print("RIHOP", rightOperand)
+                
                 let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
                 let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
@@ -619,7 +633,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 if resTypeOracle == .Number {
                    let newTemporalDirection = temporalMemory.newNumberDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Number, address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
@@ -628,7 +642,7 @@ struct ProgryParserWrapper : ParserType {
                     
                 } else if resTypeOracle == .Decimal {
                    let newTemporalDirection = temporalMemory.newDecimalDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Decimal ,address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
@@ -671,7 +685,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 if resTypeOracle == .Flag {
                    let newTemporalDirection = temporalMemory.newFlagDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Flag ,address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
@@ -707,7 +721,7 @@ struct ProgryParserWrapper : ParserType {
                 
                 if resTypeOracle == .Flag {
                    let newTemporalDirection = temporalMemory.newFlagDirection()
-                    let resultOperand = MemoryDirection(address: newTemporalDirection)
+                    let resultOperand = MemoryDirection(type: .Flag, address: newTemporalDirection)
                     let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                     
                     quadruples.list.append(newQuadruple)
