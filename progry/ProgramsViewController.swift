@@ -28,9 +28,9 @@ class ProgramsViewController: UIViewController {
         programsTableView.dataSource = self
         if showExamples {
             loadExamples()
+            btnNew.isEnabled = false
         }else{
             getPrograms()
-            btnNew.isEnabled = false
         }
         
 
