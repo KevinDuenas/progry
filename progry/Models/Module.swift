@@ -16,6 +16,9 @@ class Module{
     var quadrupleIndex : Int;
     
     var paramaters : [Types]?
+    var parametersNumber : Int;
+    var localVarNumber : Int;
+    var temporalVars : Int;
     var numbers : Int;
     var decimals : Int;
     var texts : Int;
@@ -34,10 +37,13 @@ class Module{
         self.texts = 0
         self.flags = 0;
         paramaters = []
+        self.parametersNumber = 0;
+        self.localVarNumber = 0;
+        self.temporalVars = 0;
     }
     
     func print() {
-        Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex)")
+        Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex) paramnum \(parametersNumber) locavar \(localVarNumber) temporals \(temporalVars) number \(numbers)")
     }
     
 }
