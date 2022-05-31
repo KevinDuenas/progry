@@ -157,7 +157,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = moduleMemory!.newFlagDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 default:
-                    print("no type found it")
+                    //print("no type found it")
                 }
 
                 
@@ -278,7 +278,7 @@ struct ProgryParserWrapper : ParserType {
             localCount = 0;
             tempCount = 0;
             
-            mod.print()
+            //mod.print()
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
@@ -288,14 +288,14 @@ struct ProgryParserWrapper : ParserType {
                 return //regresar errror
             }
             guard let mod = modules.getElement(forKey: id) else {
-                print("No existe el modulo en el directorio")
+                //print("No existe el modulo en el directorio")
                 return
             }
             
             // pasarle numero de cada cosa
             var modSizes : String;
             modSizes = "\(mod.numbers)\(mod.decimals)\(mod.flags)\(mod.texts)"
-            print("MODDDDD", modSizes)
+            //print("MODDDDD", modSizes)
             let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
             quadruples.list.append(newQuadruple)
             
@@ -311,12 +311,12 @@ struct ProgryParserWrapper : ParserType {
             let operandsStackSize = operands.count
             
             if operandsStackSize == mod?.parametersNumber {
-                print("Parametros numero coinciden")
+                //print("Parametros numero coinciden")
             
                 
                 for i in 0...mod!.parametersNumber - 1 {
                     if operands[i].type != mod?.paramaters![i] {
-                        print("ERROR, parametro #\(i) de \(operands[i].type) no coincide con \(mod?.paramaters![i])")
+                        //print("ERROR, parametro #\(i) de \(operands[i].type) no coincide con \(mod?.paramaters![i])")
                         return
                     }
                 }
@@ -339,7 +339,7 @@ struct ProgryParserWrapper : ParserType {
                 quadruples.list.append(newQuadruple)
                 
             } else {
-                print("ERROR, Número de parámtetros no coincide...")
+                //print("ERROR, Número de parámtetros no coincide...")
             }
         }
         
@@ -408,7 +408,7 @@ struct ProgryParserWrapper : ParserType {
             
             if((localInsertion == .collision || globalSearch != nil) && currentModule != "global"){
                 //Ya existe el id o localmente o globalmente
-                print("id repetido", id , "en", currentModule)
+                //print("id repetido", id , "en", currentModule)
                 return
             }else{
                 let _ = curr?.varsTable.deleteElementForKey(id)
@@ -459,7 +459,7 @@ struct ProgryParserWrapper : ParserType {
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
                 
             default:
-                print("no type found it")
+                //print("no type found it")
             }
             
             let _ = modules.addElement(curr!, forKey: currentModule)
@@ -500,7 +500,7 @@ struct ProgryParserWrapper : ParserType {
                     
                 }else{
                     
-                    print("No existe la variable: \(operand)")
+                    //print("No existe la variable: \(operand)")
                     //variable not fout locally
                 }
                 
