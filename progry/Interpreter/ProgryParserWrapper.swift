@@ -157,7 +157,7 @@ struct ProgryParserWrapper : ParserType {
                     memoryDir = moduleMemory!.newFlagDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 default:
-                    //print("no type found it")
+                    print("no type found it")
                 }
 
                 
@@ -459,7 +459,7 @@ struct ProgryParserWrapper : ParserType {
                 globalSearch = globalModule?.varsTable.getElement(forKey: id)
                 
             default:
-                //print("no type found it")
+                print("no type found it")
             }
             
             let _ = modules.addElement(curr!, forKey: currentModule)
