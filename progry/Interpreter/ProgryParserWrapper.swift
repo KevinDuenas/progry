@@ -203,7 +203,6 @@ struct ProgryParserWrapper : ParserType {
                             memoryDir = moduleMemory!.newNumberDirection()
                             mod.varsTable.addElement(Variable(id: varId, type: .Number, direction: memoryDir), forKey: varId)
                             mod.paramaters?.append(.Number)
-                            print("PRAM", varId, memoryDir)
                         case "decimal":
                             memoryDir = moduleMemory!.newDecimalDirection()
                             mod.varsTable.addElement(Variable(id: varId, type: .Decimal, direction: memoryDir), forKey: varId)
@@ -391,7 +390,7 @@ struct ProgryParserWrapper : ParserType {
             
             
         }
-        override func enterVars(_ ctx: ProgryParser.VarsContext) {
+        override func exitVars(_ ctx: ProgryParser.VarsContext) {
             
             guard let type = ctx.type()?.getText() else{
                 return //regresar errror
@@ -420,12 +419,216 @@ struct ProgryParserWrapper : ParserType {
             
             
             let isArray = ctx.OPEN_SBRACKET()?.getText()
+            let isMatrix = ctx.COMMA()?.getText()
             
-            if isArray == "[" {
+            if isArray == "[" && isMatrix != "," {
                 print("IS Array", id)
+                
+                let sizeArray = operands.popLast()
+                if (sizeArray?.type != .Number) {
+                    print("Tiene que ser entero (number)")
+                    return
+                }
+                let sizeArrayInt = constanteMemory.getNumber(dir: (sizeArray?.address)!)
+                
+                
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newNumberDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newNumberDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newDecimalDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newDecimalDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newTextDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newTextDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newFlagDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newFlagDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                default:
+                    print("no type found it")
+                }
+                
+                let _ = modules.addElement(curr!, forKey: currentModule)
+                
+            } else if isMatrix == "," && isArray == "[" {
+                print("isMatrix", id)
+                
+                let sizeM1 = operands.popLast()
+                let sizeM2 = operands.popLast()
+                if (sizeM1?.type != .Number && sizeM2?.type != .Number) {
+                    print("Tienen que ser enteros (number)")
+                    return
+                }
+                let sizeM1Int = constanteMemory.getNumber(dir: (sizeM1?.address)!)
+                let sizeM2Int = constanteMemory.getNumber(dir: (sizeM2?.address)!)
+                
+                let totalSize = sizeM1Int * sizeM2Int
+                
+                
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newNumberDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newNumberDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newDecimalDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newDecimalDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newTextDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newTextDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newFlagDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newFlagDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                default:
+                    print("no type found it")
+                }
+                
+                let _ = modules.addElement(curr!, forKey: currentModule)
+                
             } else {
                
-                
                 switch type {
                 case "number":
                     curr?.numbers += 1
@@ -437,7 +640,6 @@ struct ProgryParserWrapper : ParserType {
                     }
                     localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                     globalSearch = globalModule?.varsTable.getElement(forKey: id)
-                    print("IDD", id, memoryDir)
                     
                 case "decimal":
                     curr?.decimals += 1
@@ -477,14 +679,9 @@ struct ProgryParserWrapper : ParserType {
                 
                 let _ = modules.addElement(curr!, forKey: currentModule)
             }
+            print("mem dir", memoryDir, "ID", id)
             
             
-            
-            
-            
-            
-        }
-        override func exitVars(_ ctx: ProgryParser.VarsContext) {
             
         }
         
@@ -501,6 +698,19 @@ struct ProgryParserWrapper : ParserType {
                 print("elem", element?.id, operand)
                 
                 if(element != nil){
+                    
+                    // aqui empezar los quad de arreglos
+                    let isArray = ctx.OPEN_SBRACKET()?.getText()
+                    let isMatrix = ctx.COMMA()?.getText()
+                    
+                    if isArray == "[" && isMatrix != "," {
+                        print("IS Array", element?.id)
+                        let leftOperand = operands.popLast()
+                        let righOperand = MemoryDirection(data: "0")
+                        let resultOperand = element?.vector?.sup
+                        
+                        let newQuadruple = Quadruple(op: "VER", opLeft: leftOperand, opRight: righOperand, result: MemoryDirection(data: String(resultOperand!)))
+                    }
                     
                     
                     switch element?.type {
