@@ -170,7 +170,7 @@ open class ProgryParser: Parser {
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
-		 	      let testSet: Bool = _la == ProgryParser.Tokens.VAR.rawValue
+		 	      let testSet: Bool = _la == ProgryParser.Tokens.ARRAY.rawValue || _la == ProgryParser.Tokens.VAR.rawValue
 		 	      return testSet
 		 	 }()) {
 		 		setState(44)
@@ -275,7 +275,7 @@ open class ProgryParser: Parser {
 		 	while (//closure
 		 	 { () -> Bool in
 		 	      let testSet: Bool = {  () -> Bool in
-		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 	}()
 		 	      return testSet
@@ -343,6 +343,10 @@ open class ProgryParser: Parser {
 				return getToken(ProgryParser.Tokens.RETURN.rawValue, 0)
 			}
 			open
+			func expr() -> ExprContext? {
+				return getRuleContext(ExprContext.self, 0)
+			}
+			open
 			func CLOSE_BRACKET() -> TerminalNode? {
 				return getToken(ProgryParser.Tokens.CLOSE_BRACKET.rawValue, 0)
 			}
@@ -401,7 +405,7 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(137)
+		 	setState(138)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,11, _ctx)) {
 		 	case 1:
@@ -462,7 +466,7 @@ open class ProgryParser: Parser {
 		 		_la = try _input.LA(1)
 		 		while (//closure
 		 		 { () -> Bool in
-		 		      let testSet: Bool = _la == ProgryParser.Tokens.VAR.rawValue
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.ARRAY.rawValue || _la == ProgryParser.Tokens.VAR.rawValue
 		 		      return testSet
 		 		 }()) {
 		 			setState(90)
@@ -479,7 +483,7 @@ open class ProgryParser: Parser {
 		 		while (//closure
 		 		 { () -> Bool in
 		 		      let testSet: Bool = {  () -> Bool in
-		 		   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 		   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 		    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 		}()
 		 		      return testSet
@@ -495,22 +499,24 @@ open class ProgryParser: Parser {
 		 		setState(102)
 		 		try match(ProgryParser.Tokens.RETURN.rawValue)
 		 		setState(103)
+		 		try expr()
+		 		setState(104)
 		 		try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(105)
-		 		try match(ProgryParser.Tokens.MODULE.rawValue)
 		 		setState(106)
-		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		try match(ProgryParser.Tokens.MODULE.rawValue)
 		 		setState(107)
-		 		try match(ProgryParser.Tokens.COLON.rawValue)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
 		 		setState(108)
-		 		try match(ProgryParser.Tokens.VOID.rawValue)
+		 		try match(ProgryParser.Tokens.COLON.rawValue)
 		 		setState(109)
+		 		try match(ProgryParser.Tokens.VOID.rawValue)
+		 		setState(110)
 		 		try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 		setState(119)
+		 		setState(120)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		while (//closure
@@ -521,72 +527,72 @@ open class ProgryParser: Parser {
 		 		}()
 		 		      return testSet
 		 		 }()) {
-		 			setState(117)
+		 			setState(118)
 		 			try _errHandler.sync(self)
 		 			switch(try getInterpreter().adaptivePredict(_input,7, _ctx)) {
 		 			case 1:
-		 				setState(110)
-		 				try type()
 		 				setState(111)
+		 				try type()
+		 				setState(112)
 		 				try match(ProgryParser.Tokens.ID.rawValue)
 
 		 				break
 		 			case 2:
-		 				setState(113)
-		 				try type()
 		 				setState(114)
-		 				try match(ProgryParser.Tokens.ID.rawValue)
+		 				try type()
 		 				setState(115)
+		 				try match(ProgryParser.Tokens.ID.rawValue)
+		 				setState(116)
 		 				try match(ProgryParser.Tokens.COMMA.rawValue)
 
 		 				break
 		 			default: break
 		 			}
 
-		 			setState(121)
+		 			setState(122)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
 		 		}
-		 		setState(122)
-		 		try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
 		 		setState(123)
+		 		try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
+		 		setState(124)
 		 		try match(ProgryParser.Tokens.OPEN_BRACKET.rawValue)
-		 		setState(127)
+		 		setState(128)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		while (//closure
 		 		 { () -> Bool in
-		 		      let testSet: Bool = _la == ProgryParser.Tokens.VAR.rawValue
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.ARRAY.rawValue || _la == ProgryParser.Tokens.VAR.rawValue
 		 		      return testSet
 		 		 }()) {
-		 			setState(124)
+		 			setState(125)
 		 			try vars()
 
 
-		 			setState(129)
+		 			setState(130)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
 		 		}
-		 		setState(133)
+		 		setState(134)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		while (//closure
 		 		 { () -> Bool in
 		 		      let testSet: Bool = {  () -> Bool in
-		 		   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 		   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 		    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 		}()
 		 		      return testSet
 		 		 }()) {
-		 			setState(130)
+		 			setState(131)
 		 			try statute()
 
 
-		 			setState(135)
+		 			setState(136)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
 		 		}
-		 		setState(136)
+		 		setState(137)
 		 		try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
 
 		 		break
@@ -647,7 +653,7 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(139)
+		 	setState(140)
 		 	_la = try _input.LA(1)
 		 	if (!(//closure
 		 	 { () -> Bool in
@@ -723,17 +729,17 @@ open class ProgryParser: Parser {
 		do {
 			var _alt:Int
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(149)
+		 	setState(150)
 		 	try _errHandler.sync(self)
 		 	switch (ProgryParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .DIGIT:
-		 		setState(142); 
+		 		setState(143); 
 		 		try _errHandler.sync(self)
 		 		_alt = 1;
 		 		repeat {
 		 			switch (_alt) {
 		 			case 1:
-		 				setState(141)
+		 				setState(142)
 		 				try match(ProgryParser.Tokens.DIGIT.rawValue)
 
 
@@ -741,7 +747,7 @@ open class ProgryParser: Parser {
 		 			default:
 		 				throw ANTLRException.recognition(e: NoViableAltException(self))
 		 			}
-		 			setState(144); 
+		 			setState(145); 
 		 			try _errHandler.sync(self)
 		 			_alt = try getInterpreter().adaptivePredict(_input,12,_ctx)
 		 		} while (_alt != 2 && _alt !=  ATN.INVALID_ALT_NUMBER)
@@ -749,19 +755,19 @@ open class ProgryParser: Parser {
 		 		break
 
 		 	case .DECIMAL:
-		 		setState(146)
+		 		setState(147)
 		 		try match(ProgryParser.Tokens.DECIMAL.rawValue)
 
 		 		break
 
 		 	case .TEXT:
-		 		setState(147)
+		 		setState(148)
 		 		try match(ProgryParser.Tokens.TEXT.rawValue)
 
 		 		break
 
 		 	case .FLAG:
-		 		setState(148)
+		 		setState(149)
 		 		try match(ProgryParser.Tokens.FLAG.rawValue)
 
 		 		break
@@ -839,46 +845,46 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(159)
+		 	setState(160)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,14, _ctx)) {
 		 	case 1:
-		 		setState(151)
+		 		setState(152)
 		 		try asignation()
 
 		 		break
 		 	case 2:
-		 		setState(152)
+		 		setState(153)
 		 		try read()
 
 		 		break
 		 	case 3:
-		 		setState(153)
+		 		setState(154)
 		 		try write()
 
 		 		break
 		 	case 4:
-		 		setState(154)
+		 		setState(155)
 		 		try arrays()
 
 		 		break
 		 	case 5:
-		 		setState(155)
+		 		setState(156)
 		 		try ifs()
 
 		 		break
 		 	case 6:
-		 		setState(156)
+		 		setState(157)
 		 		try whiles()
 
 		 		break
 		 	case 7:
-		 		setState(157)
+		 		setState(158)
 		 		try fors()
 
 		 		break
 		 	case 8:
-		 		setState(158)
+		 		setState(159)
 		 		try module_call()
 
 		 		break
@@ -939,13 +945,13 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(161)
-		 	try match(ProgryParser.Tokens.ID.rawValue)
 		 	setState(162)
-		 	try match(ProgryParser.Tokens.EQUAL.rawValue)
+		 	try match(ProgryParser.Tokens.ID.rawValue)
 		 	setState(163)
-		 	try m_expr()
+		 	try match(ProgryParser.Tokens.EQUAL.rawValue)
 		 	setState(164)
+		 	try m_expr()
+		 	setState(165)
 		 	try match(ProgryParser.Tokens.DOT_COMMA.rawValue)
 
 		}
@@ -998,11 +1004,11 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(166)
-		 	try match(ProgryParser.Tokens.READ.rawValue)
 		 	setState(167)
-		 	try match(ProgryParser.Tokens.ID.rawValue)
+		 	try match(ProgryParser.Tokens.READ.rawValue)
 		 	setState(168)
+		 	try match(ProgryParser.Tokens.ID.rawValue)
+		 	setState(169)
 		 	try match(ProgryParser.Tokens.DOT_COMMA.rawValue)
 
 		}
@@ -1059,20 +1065,20 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(175)
+		 	setState(176)
 		 	try _errHandler.sync(self)
 		 	switch(try getInterpreter().adaptivePredict(_input,15, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(170)
+		 		setState(171)
 		 		try g_expr()
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(171)
-		 		try g_expr()
 		 		setState(172)
+		 		try g_expr()
+		 		setState(173)
 		 		_la = try _input.LA(1)
 		 		if (!(//closure
 		 		 { () -> Bool in
@@ -1085,7 +1091,7 @@ open class ProgryParser: Parser {
 		 			_errHandler.reportMatch(self)
 		 			try consume()
 		 		}
-		 		setState(173)
+		 		setState(174)
 		 		try expr()
 
 		 		break
@@ -1118,6 +1124,30 @@ open class ProgryParser: Parser {
 			func DOT_COMMA() -> TerminalNode? {
 				return getToken(ProgryParser.Tokens.DOT_COMMA.rawValue, 0)
 			}
+			open
+			func ARRAY() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.ARRAY.rawValue, 0)
+			}
+			open
+			func OPEN_SBRACKET() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.OPEN_SBRACKET.rawValue, 0)
+			}
+			open
+			func CLOSE_SBRACKET() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue, 0)
+			}
+			open
+			func DIGIT() -> [TerminalNode] {
+				return getTokens(ProgryParser.Tokens.DIGIT.rawValue)
+			}
+			open
+			func DIGIT(_ i:Int) -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.DIGIT.rawValue, i)
+			}
+			open
+			func COMMA() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.COMMA.rawValue, 0)
+			}
 		override open
 		func getRuleIndex() -> Int {
 			return ProgryParser.RULE_vars
@@ -1140,20 +1170,106 @@ open class ProgryParser: Parser {
 		var _localctx: VarsContext
 		_localctx = VarsContext(_ctx, getState())
 		try enterRule(_localctx, 18, ProgryParser.RULE_vars)
+		var _la: Int = 0
 		defer {
 	    		try! exitRule()
 	    }
 		do {
-		 	try enterOuterAlt(_localctx, 1)
-		 	setState(177)
-		 	try match(ProgryParser.Tokens.VAR.rawValue)
-		 	setState(178)
-		 	try type()
-		 	setState(179)
-		 	try match(ProgryParser.Tokens.ID.rawValue)
-		 	setState(180)
-		 	try match(ProgryParser.Tokens.DOT_COMMA.rawValue)
+		 	setState(211)
+		 	try _errHandler.sync(self)
+		 	switch(try getInterpreter().adaptivePredict(_input,19, _ctx)) {
+		 	case 1:
+		 		try enterOuterAlt(_localctx, 1)
+		 		setState(178)
+		 		try match(ProgryParser.Tokens.VAR.rawValue)
+		 		setState(179)
+		 		try type()
+		 		setState(180)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(181)
+		 		try match(ProgryParser.Tokens.DOT_COMMA.rawValue)
 
+		 		break
+		 	case 2:
+		 		try enterOuterAlt(_localctx, 2)
+		 		setState(183)
+		 		try match(ProgryParser.Tokens.ARRAY.rawValue)
+		 		setState(184)
+		 		try type()
+		 		setState(185)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(186)
+		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
+		 		setState(188) 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(187)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(190); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(192)
+		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
+
+		 		break
+		 	case 3:
+		 		try enterOuterAlt(_localctx, 3)
+		 		setState(194)
+		 		try match(ProgryParser.Tokens.ARRAY.rawValue)
+		 		setState(195)
+		 		try type()
+		 		setState(196)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(197)
+		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
+		 		setState(199) 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(198)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(201); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(203)
+		 		try match(ProgryParser.Tokens.COMMA.rawValue)
+		 		setState(205) 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(204)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(207); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(209)
+		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
+
+		 		break
+		 	default: break
+		 	}
 		}
 		catch ANTLRException.recognition(let re) {
 			_localctx.exception = re
@@ -1188,22 +1304,6 @@ open class ProgryParser: Parser {
 			open
 			func m_expr(_ i: Int) -> M_exprContext? {
 				return getRuleContext(M_exprContext.self, i)
-			}
-			open
-			func cte() -> [CteContext] {
-				return getRuleContexts(CteContext.self)
-			}
-			open
-			func cte(_ i: Int) -> CteContext? {
-				return getRuleContext(CteContext.self, i)
-			}
-			open
-			func ID() -> [TerminalNode] {
-				return getTokens(ProgryParser.Tokens.ID.rawValue)
-			}
-			open
-			func ID(_ i:Int) -> TerminalNode? {
-				return getToken(ProgryParser.Tokens.ID.rawValue, i)
 			}
 			open
 			func COMMA() -> [TerminalNode] {
@@ -1241,85 +1341,46 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(182)
+		 	setState(213)
 		 	try match(ProgryParser.Tokens.WRITE.rawValue)
-		 	setState(183)
+		 	setState(214)
 		 	try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 	setState(187)
-		 	try _errHandler.sync(self)
-		 	switch(try getInterpreter().adaptivePredict(_input,16, _ctx)) {
-		 	case 1:
-		 		setState(184)
-		 		try m_expr()
-
-		 		break
-		 	case 2:
-		 		setState(185)
-		 		try cte()
-
-		 		break
-		 	case 3:
-		 		setState(186)
-		 		try match(ProgryParser.Tokens.ID.rawValue)
-
-		 		break
-		 	default: break
-		 	}
-		 	setState(199)
+		 	setState(219) 
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	while (//closure
+		 	repeat {
+		 		setState(219)
+		 		try _errHandler.sync(self)
+		 		switch(try getInterpreter().adaptivePredict(_input,20, _ctx)) {
+		 		case 1:
+		 			setState(215)
+		 			try m_expr()
+
+		 			break
+		 		case 2:
+		 			setState(216)
+		 			try m_expr()
+		 			setState(217)
+		 			try match(ProgryParser.Tokens.COMMA.rawValue)
+
+		 			break
+		 		default: break
+		 		}
+
+		 		setState(221); 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 	} while (//closure
 		 	 { () -> Bool in
-		 	      let testSet: Bool = _la == ProgryParser.Tokens.COMMA.rawValue
+		 	      let testSet: Bool = {  () -> Bool in
+		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue,ProgryParser.Tokens.ID.rawValue,ProgryParser.Tokens.TEXT.rawValue,ProgryParser.Tokens.DIGIT.rawValue,ProgryParser.Tokens.DECIMAL.rawValue,ProgryParser.Tokens.FLAG.rawValue]
+		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
+		 	}()
 		 	      return testSet
-		 	 }()) {
-		 		setState(189)
-		 		try match(ProgryParser.Tokens.COMMA.rawValue)
-		 		setState(193) 
-		 		try _errHandler.sync(self)
-		 		_la = try _input.LA(1)
-		 		repeat {
-		 			setState(193)
-		 			try _errHandler.sync(self)
-		 			switch(try getInterpreter().adaptivePredict(_input,17, _ctx)) {
-		 			case 1:
-		 				setState(190)
-		 				try m_expr()
-
-		 				break
-		 			case 2:
-		 				setState(191)
-		 				try cte()
-
-		 				break
-		 			case 3:
-		 				setState(192)
-		 				try match(ProgryParser.Tokens.ID.rawValue)
-
-		 				break
-		 			default: break
-		 			}
-
-		 			setState(195); 
-		 			try _errHandler.sync(self)
-		 			_la = try _input.LA(1)
-		 		} while (//closure
-		 		 { () -> Bool in
-		 		      let testSet: Bool = {  () -> Bool in
-		 		   let testArray: [Int] = [_la, ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue,ProgryParser.Tokens.ID.rawValue,ProgryParser.Tokens.TEXT.rawValue,ProgryParser.Tokens.DIGIT.rawValue,ProgryParser.Tokens.DECIMAL.rawValue,ProgryParser.Tokens.FLAG.rawValue]
-		 		    return  Utils.testBitLeftShiftArray(testArray, 0)
-		 		}()
-		 		      return testSet
-		 		 }())
-
-
-		 		setState(201)
-		 		try _errHandler.sync(self)
-		 		_la = try _input.LA(1)
-		 	}
-		 	setState(202)
+		 	 }())
+		 	setState(223)
 		 	try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
-		 	setState(203)
+		 	setState(224)
 		 	try match(ProgryParser.Tokens.DOT_COMMA.rawValue)
 
 		}
@@ -1334,28 +1395,28 @@ open class ProgryParser: Parser {
 
 	public class ArraysContext: ParserRuleContext {
 			open
-			func ARRAY() -> TerminalNode? {
-				return getToken(ProgryParser.Tokens.ARRAY.rawValue, 0)
+			func ID() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.ID.rawValue, 0)
 			}
 			open
 			func type() -> TypeContext? {
 				return getRuleContext(TypeContext.self, 0)
 			}
 			open
-			func OPEN_PARENTHESIS() -> TerminalNode? {
-				return getToken(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue, 0)
+			func OPEN_SBRACKET() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.OPEN_SBRACKET.rawValue, 0)
 			}
 			open
-			func cte() -> [CteContext] {
-				return getRuleContexts(CteContext.self)
+			func CLOSE_SBRACKET() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue, 0)
 			}
 			open
-			func cte(_ i: Int) -> CteContext? {
-				return getRuleContext(CteContext.self, i)
+			func DIGIT() -> [TerminalNode] {
+				return getTokens(ProgryParser.Tokens.DIGIT.rawValue)
 			}
 			open
-			func CLOSE_PARENTHESIS() -> TerminalNode? {
-				return getToken(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue, 0)
+			func DIGIT(_ i:Int) -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.DIGIT.rawValue, i)
 			}
 			open
 			func COMMA() -> TerminalNode? {
@@ -1388,41 +1449,85 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	try enterOuterAlt(_localctx, 1)
-		 	setState(205)
-		 	try match(ProgryParser.Tokens.ARRAY.rawValue)
-		 	setState(206)
-		 	try type()
-		 	setState(207)
-		 	try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 	setState(208)
-		 	try cte()
-
-		 	setState(209)
-		 	try match(ProgryParser.Tokens.COMMA.rawValue)
-		 	setState(213)
+		 	setState(252)
 		 	try _errHandler.sync(self)
-		 	_la = try _input.LA(1)
-		 	while (//closure
-		 	 { () -> Bool in
-		 	      let testSet: Bool = {  () -> Bool in
-		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.TEXT.rawValue,ProgryParser.Tokens.DIGIT.rawValue,ProgryParser.Tokens.DECIMAL.rawValue,ProgryParser.Tokens.FLAG.rawValue]
-		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
-		 	}()
-		 	      return testSet
-		 	 }()) {
-		 		setState(210)
-		 		try cte()
-
-
-		 		setState(215)
+		 	switch(try getInterpreter().adaptivePredict(_input,25, _ctx)) {
+		 	case 1:
+		 		try enterOuterAlt(_localctx, 1)
+		 		setState(226)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(227)
+		 		try type()
+		 		setState(228)
+		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
+		 		setState(230) 
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(229)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(232); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(234)
+		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
+
+		 		break
+		 	case 2:
+		 		try enterOuterAlt(_localctx, 2)
+		 		setState(236)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(237)
+		 		try type()
+		 		setState(238)
+		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
+		 		setState(240) 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(239)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(242); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(244)
+		 		try match(ProgryParser.Tokens.COMMA.rawValue)
+		 		setState(246) 
+		 		try _errHandler.sync(self)
+		 		_la = try _input.LA(1)
+		 		repeat {
+		 			setState(245)
+		 			try match(ProgryParser.Tokens.DIGIT.rawValue)
+
+
+		 			setState(248); 
+		 			try _errHandler.sync(self)
+		 			_la = try _input.LA(1)
+		 		} while (//closure
+		 		 { () -> Bool in
+		 		      let testSet: Bool = _la == ProgryParser.Tokens.DIGIT.rawValue
+		 		      return testSet
+		 		 }())
+		 		setState(250)
+		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
+
+		 		break
+		 	default: break
 		 	}
-
-		 	setState(216)
-		 	try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
-
 		}
 		catch ANTLRException.recognition(let re) {
 			_localctx.exception = re
@@ -1518,56 +1623,56 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(218)
+		 	setState(254)
 		 	try match(ProgryParser.Tokens.IF.rawValue)
-		 	setState(219)
+		 	setState(255)
 		 	try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 	setState(220)
+		 	setState(256)
 		 	try expr()
-		 	setState(221)
+		 	setState(257)
 		 	try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
-		 	setState(222)
+		 	setState(258)
 		 	try dos()
-		 	setState(223)
+		 	setState(259)
 		 	try match(ProgryParser.Tokens.OPEN_BRACKET.rawValue)
-		 	setState(227)
+		 	setState(263)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
-		 	      let testSet: Bool = _la == ProgryParser.Tokens.VAR.rawValue
+		 	      let testSet: Bool = _la == ProgryParser.Tokens.ARRAY.rawValue || _la == ProgryParser.Tokens.VAR.rawValue
 		 	      return testSet
 		 	 }()) {
-		 		setState(224)
+		 		setState(260)
 		 		try vars()
 
 
-		 		setState(229)
+		 		setState(265)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(233)
+		 	setState(269)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
 		 	      let testSet: Bool = {  () -> Bool in
-		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 	}()
 		 	      return testSet
 		 	 }()) {
-		 		setState(230)
+		 		setState(266)
 		 		try statute()
 
 
-		 		setState(235)
+		 		setState(271)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(236)
+		 	setState(272)
 		 	try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
-		 	setState(242)
+		 	setState(278)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	if (//closure
@@ -1575,13 +1680,13 @@ open class ProgryParser: Parser {
 		 	      let testSet: Bool = _la == ProgryParser.Tokens.ELSE.rawValue
 		 	      return testSet
 		 	 }()) {
-		 		setState(237)
+		 		setState(273)
 		 		try match(ProgryParser.Tokens.ELSE.rawValue)
-		 		setState(238)
+		 		setState(274)
 		 		try match(ProgryParser.Tokens.OPEN_BRACKET.rawValue)
-		 		setState(239)
+		 		setState(275)
 		 		try statute()
-		 		setState(240)
+		 		setState(276)
 		 		try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
 
 		 	}
@@ -1670,54 +1775,54 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(244)
+		 	setState(280)
 		 	try match(ProgryParser.Tokens.WHILE.rawValue)
-		 	setState(245)
+		 	setState(281)
 		 	try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 	setState(246)
+		 	setState(282)
 		 	try expr()
-		 	setState(247)
+		 	setState(283)
 		 	try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
-		 	setState(248)
+		 	setState(284)
 		 	try dos()
-		 	setState(249)
+		 	setState(285)
 		 	try match(ProgryParser.Tokens.OPEN_BRACKET.rawValue)
-		 	setState(253)
+		 	setState(289)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
-		 	      let testSet: Bool = _la == ProgryParser.Tokens.VAR.rawValue
+		 	      let testSet: Bool = _la == ProgryParser.Tokens.ARRAY.rawValue || _la == ProgryParser.Tokens.VAR.rawValue
 		 	      return testSet
 		 	 }()) {
-		 		setState(250)
+		 		setState(286)
 		 		try vars()
 
 
-		 		setState(255)
+		 		setState(291)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(259)
+		 	setState(295)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
 		 	      let testSet: Bool = {  () -> Bool in
-		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 	}()
 		 	      return testSet
 		 	 }()) {
-		 		setState(256)
+		 		setState(292)
 		 		try statute()
 
 
-		 		setState(261)
+		 		setState(297)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(262)
+		 	setState(298)
 		 	try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
 
 		}
@@ -1762,7 +1867,7 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(264)
+		 	setState(300)
 		 	try match(ProgryParser.Tokens.DO.rawValue)
 
 		}
@@ -1852,78 +1957,78 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(266)
+		 	setState(302)
 		 	try match(ProgryParser.Tokens.FOR.rawValue)
-		 	setState(267)
+		 	setState(303)
 		 	try match(ProgryParser.Tokens.VAR.rawValue)
-		 	setState(268)
+		 	setState(304)
 		 	try match(ProgryParser.Tokens.ID.rawValue)
-		 	setState(269)
+		 	setState(305)
 		 	try match(ProgryParser.Tokens.EQUAL.rawValue)
-		 	setState(272)
+		 	setState(308)
 		 	try _errHandler.sync(self)
 		 	switch (ProgryParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .TEXT:fallthrough
 		 	case .DIGIT:fallthrough
 		 	case .DECIMAL:fallthrough
 		 	case .FLAG:
-		 		setState(270)
+		 		setState(306)
 		 		try cte()
 
 		 		break
 
 		 	case .ID:
-		 		setState(271)
+		 		setState(307)
 		 		try match(ProgryParser.Tokens.ID.rawValue)
 
 		 		break
 		 	default:
 		 		throw ANTLRException.recognition(e: NoViableAltException(self))
 		 	}
-		 	setState(274)
+		 	setState(310)
 		 	try match(ProgryParser.Tokens.TO.rawValue)
-		 	setState(277)
+		 	setState(313)
 		 	try _errHandler.sync(self)
 		 	switch (ProgryParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .TEXT:fallthrough
 		 	case .DIGIT:fallthrough
 		 	case .DECIMAL:fallthrough
 		 	case .FLAG:
-		 		setState(275)
+		 		setState(311)
 		 		try cte()
 
 		 		break
 
 		 	case .ID:
-		 		setState(276)
+		 		setState(312)
 		 		try match(ProgryParser.Tokens.ID.rawValue)
 
 		 		break
 		 	default:
 		 		throw ANTLRException.recognition(e: NoViableAltException(self))
 		 	}
-		 	setState(279)
+		 	setState(315)
 		 	try match(ProgryParser.Tokens.OPEN_BRACKET.rawValue)
-		 	setState(283)
+		 	setState(319)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
 		 	 { () -> Bool in
 		 	      let testSet: Bool = {  () -> Bool in
-		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.ARRAY.rawValue,ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
+		 	   let testArray: [Int] = [_la, ProgryParser.Tokens.READ.rawValue,ProgryParser.Tokens.WRITE.rawValue,ProgryParser.Tokens.IF.rawValue,ProgryParser.Tokens.FOR.rawValue,ProgryParser.Tokens.WHILE.rawValue,ProgryParser.Tokens.ID.rawValue]
 		 	    return  Utils.testBitLeftShiftArray(testArray, 0)
 		 	}()
 		 	      return testSet
 		 	 }()) {
-		 		setState(280)
+		 		setState(316)
 		 		try statute()
 
 
-		 		setState(285)
+		 		setState(321)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(286)
+		 	setState(322)
 		 	try match(ProgryParser.Tokens.CLOSE_BRACKET.rawValue)
 
 		}
@@ -1993,11 +2098,11 @@ open class ProgryParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(288)
+		 	setState(324)
 		 	try match(ProgryParser.Tokens.ID.rawValue)
-		 	setState(289)
+		 	setState(325)
 		 	try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 	setState(296)
+		 	setState(332)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
 		 	while (//closure
@@ -2008,29 +2113,29 @@ open class ProgryParser: Parser {
 		 	}()
 		 	      return testSet
 		 	 }()) {
-		 		setState(294)
+		 		setState(330)
 		 		try _errHandler.sync(self)
-		 		switch(try getInterpreter().adaptivePredict(_input,29, _ctx)) {
+		 		switch(try getInterpreter().adaptivePredict(_input,34, _ctx)) {
 		 		case 1:
-		 			setState(290)
+		 			setState(326)
 		 			try expr()
 
 		 			break
 		 		case 2:
-		 			setState(291)
+		 			setState(327)
 		 			try expr()
-		 			setState(292)
+		 			setState(328)
 		 			try match(ProgryParser.Tokens.COMMA.rawValue)
 
 		 			break
 		 		default: break
 		 		}
 
-		 		setState(298)
+		 		setState(334)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 	}
-		 	setState(299)
+		 	setState(335)
 		 	try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
 
 		}
@@ -2103,20 +2208,20 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(306)
+		 	setState(342)
 		 	try _errHandler.sync(self)
-		 	switch(try getInterpreter().adaptivePredict(_input,31, _ctx)) {
+		 	switch(try getInterpreter().adaptivePredict(_input,36, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(301)
+		 		setState(337)
 		 		try m_expr()
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(302)
+		 		setState(338)
 		 		try m_expr()
-		 		setState(303)
+		 		setState(339)
 		 		_la = try _input.LA(1)
 		 		if (!(//closure
 		 		 { () -> Bool in
@@ -2132,7 +2237,7 @@ open class ProgryParser: Parser {
 		 			_errHandler.reportMatch(self)
 		 			try consume()
 		 		}
-		 		setState(304)
+		 		setState(340)
 		 		try g_expr()
 
 		 		break
@@ -2192,20 +2297,20 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(313)
+		 	setState(349)
 		 	try _errHandler.sync(self)
-		 	switch(try getInterpreter().adaptivePredict(_input,32, _ctx)) {
+		 	switch(try getInterpreter().adaptivePredict(_input,37, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(308)
+		 		setState(344)
 		 		try t()
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(309)
+		 		setState(345)
 		 		try t()
-		 		setState(310)
+		 		setState(346)
 		 		_la = try _input.LA(1)
 		 		if (!(//closure
 		 		 { () -> Bool in
@@ -2218,7 +2323,7 @@ open class ProgryParser: Parser {
 		 			_errHandler.reportMatch(self)
 		 			try consume()
 		 		}
-		 		setState(311)
+		 		setState(347)
 		 		try m_expr()
 
 		 		break
@@ -2278,20 +2383,20 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(320)
+		 	setState(356)
 		 	try _errHandler.sync(self)
-		 	switch(try getInterpreter().adaptivePredict(_input,33, _ctx)) {
+		 	switch(try getInterpreter().adaptivePredict(_input,38, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(315)
+		 		setState(351)
 		 		try f()
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(316)
+		 		setState(352)
 		 		try f()
-		 		setState(317)
+		 		setState(353)
 		 		_la = try _input.LA(1)
 		 		if (!(//closure
 		 		 { () -> Bool in
@@ -2304,7 +2409,7 @@ open class ProgryParser: Parser {
 		 			_errHandler.reportMatch(self)
 		 			try consume()
 		 		}
-		 		setState(318)
+		 		setState(354)
 		 		try t()
 
 		 		break
@@ -2330,12 +2435,20 @@ open class ProgryParser: Parser {
 				return getToken(ProgryParser.Tokens.OPEN_SBRACKET.rawValue, 0)
 			}
 			open
-			func m_expr() -> M_exprContext? {
-				return getRuleContext(M_exprContext.self, 0)
+			func m_expr() -> [M_exprContext] {
+				return getRuleContexts(M_exprContext.self)
+			}
+			open
+			func m_expr(_ i: Int) -> M_exprContext? {
+				return getRuleContext(M_exprContext.self, i)
 			}
 			open
 			func CLOSE_SBRACKET() -> TerminalNode? {
 				return getToken(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue, 0)
+			}
+			open
+			func COMMA() -> TerminalNode? {
+				return getToken(ProgryParser.Tokens.COMMA.rawValue, 0)
 			}
 			open
 			func cte() -> CteContext? {
@@ -2383,46 +2496,62 @@ open class ProgryParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(334)
+		 	setState(377)
 		 	try _errHandler.sync(self)
-		 	switch(try getInterpreter().adaptivePredict(_input,34, _ctx)) {
+		 	switch(try getInterpreter().adaptivePredict(_input,39, _ctx)) {
 		 	case 1:
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(322)
+		 		setState(358)
 		 		try match(ProgryParser.Tokens.ID.rawValue)
 
 		 		break
 		 	case 2:
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(323)
+		 		setState(359)
 		 		try match(ProgryParser.Tokens.ID.rawValue)
-		 		setState(324)
+		 		setState(360)
 		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
-		 		setState(325)
+		 		setState(361)
 		 		try m_expr()
-		 		setState(326)
+		 		setState(362)
 		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
 
 		 		break
 		 	case 3:
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(328)
-		 		try cte()
+		 		setState(364)
+		 		try match(ProgryParser.Tokens.ID.rawValue)
+		 		setState(365)
+		 		try match(ProgryParser.Tokens.OPEN_SBRACKET.rawValue)
+		 		setState(366)
+		 		try m_expr()
+		 		setState(367)
+		 		try match(ProgryParser.Tokens.COMMA.rawValue)
+		 		setState(368)
+		 		try m_expr()
+		 		setState(369)
+		 		try match(ProgryParser.Tokens.CLOSE_SBRACKET.rawValue)
 
 		 		break
 		 	case 4:
 		 		try enterOuterAlt(_localctx, 4)
-		 		setState(329)
-		 		try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
-		 		setState(330)
-		 		try expr()
-		 		setState(331)
-		 		try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
+		 		setState(371)
+		 		try cte()
 
 		 		break
 		 	case 5:
 		 		try enterOuterAlt(_localctx, 5)
-		 		setState(333)
+		 		setState(372)
+		 		try match(ProgryParser.Tokens.OPEN_PARENTHESIS.rawValue)
+		 		setState(373)
+		 		try expr()
+		 		setState(374)
+		 		try match(ProgryParser.Tokens.CLOSE_PARENTHESIS.rawValue)
+
+		 		break
+		 	case 6:
+		 		try enterOuterAlt(_localctx, 6)
+		 		setState(376)
 		 		try module_call()
 
 		 		break
@@ -2439,116 +2568,131 @@ open class ProgryParser: Parser {
 	}
 
 	static let _serializedATN:[Int] = [
-		4,1,50,337,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,50,380,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,7,20,1,0,1,0,1,
 		0,5,0,46,8,0,10,0,12,0,49,9,0,1,0,5,0,52,8,0,10,0,12,0,55,9,0,1,0,1,0,
 		1,0,1,0,1,0,1,1,1,1,1,1,5,1,65,8,1,10,1,12,1,68,9,1,1,1,1,1,1,2,1,2,1,
 		2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,5,2,84,8,2,10,2,12,2,87,9,2,1,2,
 		1,2,1,2,5,2,92,8,2,10,2,12,2,95,9,2,1,2,5,2,98,8,2,10,2,12,2,101,9,2,1,
-		2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,5,2,118,8,2,
-		10,2,12,2,121,9,2,1,2,1,2,1,2,5,2,126,8,2,10,2,12,2,129,9,2,1,2,5,2,132,
-		8,2,10,2,12,2,135,9,2,1,2,3,2,138,8,2,1,3,1,3,1,4,4,4,143,8,4,11,4,12,
-		4,144,1,4,1,4,1,4,3,4,150,8,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,160,
-		8,5,1,6,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,3,8,176,8,
-		8,1,9,1,9,1,9,1,9,1,9,1,10,1,10,1,10,1,10,1,10,3,10,188,8,10,1,10,1,10,
-		1,10,1,10,4,10,194,8,10,11,10,12,10,195,5,10,198,8,10,10,10,12,10,201,
-		9,10,1,10,1,10,1,10,1,11,1,11,1,11,1,11,1,11,1,11,5,11,212,8,11,10,11,
-		12,11,215,9,11,1,11,1,11,1,12,1,12,1,12,1,12,1,12,1,12,1,12,5,12,226,8,
-		12,10,12,12,12,229,9,12,1,12,5,12,232,8,12,10,12,12,12,235,9,12,1,12,1,
-		12,1,12,1,12,1,12,1,12,3,12,243,8,12,1,13,1,13,1,13,1,13,1,13,1,13,1,13,
-		5,13,252,8,13,10,13,12,13,255,9,13,1,13,5,13,258,8,13,10,13,12,13,261,
-		9,13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,1,15,1,15,1,15,3,15,273,8,15,1,
-		15,1,15,1,15,3,15,278,8,15,1,15,1,15,5,15,282,8,15,10,15,12,15,285,9,15,
-		1,15,1,15,1,16,1,16,1,16,1,16,1,16,1,16,5,16,295,8,16,10,16,12,16,298,
-		9,16,1,16,1,16,1,17,1,17,1,17,1,17,1,17,3,17,307,8,17,1,18,1,18,1,18,1,
-		18,1,18,3,18,314,8,18,1,19,1,19,1,19,1,19,1,19,3,19,321,8,19,1,20,1,20,
-		1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,3,20,335,8,20,1,20,0,
-		0,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,0,5,1,0,
-		29,32,1,0,6,7,1,0,8,13,1,0,1,2,1,0,3,4,363,0,42,1,0,0,0,2,61,1,0,0,0,4,
-		137,1,0,0,0,6,139,1,0,0,0,8,149,1,0,0,0,10,159,1,0,0,0,12,161,1,0,0,0,
-		14,166,1,0,0,0,16,175,1,0,0,0,18,177,1,0,0,0,20,182,1,0,0,0,22,205,1,0,
-		0,0,24,218,1,0,0,0,26,244,1,0,0,0,28,264,1,0,0,0,30,266,1,0,0,0,32,288,
-		1,0,0,0,34,306,1,0,0,0,36,313,1,0,0,0,38,320,1,0,0,0,40,334,1,0,0,0,42,
-		43,5,23,0,0,43,47,5,26,0,0,44,46,3,18,9,0,45,44,1,0,0,0,46,49,1,0,0,0,
-		47,45,1,0,0,0,47,48,1,0,0,0,48,53,1,0,0,0,49,47,1,0,0,0,50,52,3,4,2,0,
-		51,50,1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,53,54,1,0,0,0,54,56,1,0,0,0,
-		55,53,1,0,0,0,56,57,3,2,1,0,57,58,5,24,0,0,58,59,5,26,0,0,59,60,5,0,0,
-		1,60,1,1,0,0,0,61,62,5,21,0,0,62,66,5,16,0,0,63,65,3,10,5,0,64,63,1,0,
-		0,0,65,68,1,0,0,0,66,64,1,0,0,0,66,67,1,0,0,0,67,69,1,0,0,0,68,66,1,0,
-		0,0,69,70,5,17,0,0,70,3,1,0,0,0,71,72,5,20,0,0,72,73,5,43,0,0,73,74,5,
-		25,0,0,74,75,3,6,3,0,75,85,5,14,0,0,76,77,3,6,3,0,77,78,5,43,0,0,78,84,
-		1,0,0,0,79,80,3,6,3,0,80,81,5,43,0,0,81,82,5,27,0,0,82,84,1,0,0,0,83,76,
-		1,0,0,0,83,79,1,0,0,0,84,87,1,0,0,0,85,83,1,0,0,0,85,86,1,0,0,0,86,88,
-		1,0,0,0,87,85,1,0,0,0,88,89,5,15,0,0,89,93,5,16,0,0,90,92,3,18,9,0,91,
-		90,1,0,0,0,92,95,1,0,0,0,93,91,1,0,0,0,93,94,1,0,0,0,94,99,1,0,0,0,95,
-		93,1,0,0,0,96,98,3,10,5,0,97,96,1,0,0,0,98,101,1,0,0,0,99,97,1,0,0,0,99,
-		100,1,0,0,0,100,102,1,0,0,0,101,99,1,0,0,0,102,103,5,41,0,0,103,104,5,
-		17,0,0,104,138,1,0,0,0,105,106,5,20,0,0,106,107,5,43,0,0,107,108,5,25,
-		0,0,108,109,5,42,0,0,109,119,5,14,0,0,110,111,3,6,3,0,111,112,5,43,0,0,
-		112,118,1,0,0,0,113,114,3,6,3,0,114,115,5,43,0,0,115,116,5,27,0,0,116,
-		118,1,0,0,0,117,110,1,0,0,0,117,113,1,0,0,0,118,121,1,0,0,0,119,117,1,
-		0,0,0,119,120,1,0,0,0,120,122,1,0,0,0,121,119,1,0,0,0,122,123,5,15,0,0,
-		123,127,5,16,0,0,124,126,3,18,9,0,125,124,1,0,0,0,126,129,1,0,0,0,127,
-		125,1,0,0,0,127,128,1,0,0,0,128,133,1,0,0,0,129,127,1,0,0,0,130,132,3,
-		10,5,0,131,130,1,0,0,0,132,135,1,0,0,0,133,131,1,0,0,0,133,134,1,0,0,0,
-		134,136,1,0,0,0,135,133,1,0,0,0,136,138,5,17,0,0,137,71,1,0,0,0,137,105,
-		1,0,0,0,138,5,1,0,0,0,139,140,7,0,0,0,140,7,1,0,0,0,141,143,5,46,0,0,142,
-		141,1,0,0,0,143,144,1,0,0,0,144,142,1,0,0,0,144,145,1,0,0,0,145,150,1,
-		0,0,0,146,150,5,47,0,0,147,150,5,44,0,0,148,150,5,49,0,0,149,142,1,0,0,
-		0,149,146,1,0,0,0,149,147,1,0,0,0,149,148,1,0,0,0,150,9,1,0,0,0,151,160,
-		3,12,6,0,152,160,3,14,7,0,153,160,3,20,10,0,154,160,3,22,11,0,155,160,
-		3,24,12,0,156,160,3,26,13,0,157,160,3,30,15,0,158,160,3,32,16,0,159,151,
-		1,0,0,0,159,152,1,0,0,0,159,153,1,0,0,0,159,154,1,0,0,0,159,155,1,0,0,
-		0,159,156,1,0,0,0,159,157,1,0,0,0,159,158,1,0,0,0,160,11,1,0,0,0,161,162,
-		5,43,0,0,162,163,5,5,0,0,163,164,3,36,18,0,164,165,5,26,0,0,165,13,1,0,
-		0,0,166,167,5,33,0,0,167,168,5,43,0,0,168,169,5,26,0,0,169,15,1,0,0,0,
-		170,176,3,34,17,0,171,172,3,34,17,0,172,173,7,1,0,0,173,174,3,16,8,0,174,
-		176,1,0,0,0,175,170,1,0,0,0,175,171,1,0,0,0,176,17,1,0,0,0,177,178,5,28,
-		0,0,178,179,3,6,3,0,179,180,5,43,0,0,180,181,5,26,0,0,181,19,1,0,0,0,182,
-		183,5,34,0,0,183,187,5,14,0,0,184,188,3,36,18,0,185,188,3,8,4,0,186,188,
-		5,43,0,0,187,184,1,0,0,0,187,185,1,0,0,0,187,186,1,0,0,0,188,199,1,0,0,
-		0,189,193,5,27,0,0,190,194,3,36,18,0,191,194,3,8,4,0,192,194,5,43,0,0,
-		193,190,1,0,0,0,193,191,1,0,0,0,193,192,1,0,0,0,194,195,1,0,0,0,195,193,
-		1,0,0,0,195,196,1,0,0,0,196,198,1,0,0,0,197,189,1,0,0,0,198,201,1,0,0,
-		0,199,197,1,0,0,0,199,200,1,0,0,0,200,202,1,0,0,0,201,199,1,0,0,0,202,
-		203,5,15,0,0,203,204,5,26,0,0,204,21,1,0,0,0,205,206,5,22,0,0,206,207,
-		3,6,3,0,207,208,5,14,0,0,208,209,3,8,4,0,209,213,5,27,0,0,210,212,3,8,
-		4,0,211,210,1,0,0,0,212,215,1,0,0,0,213,211,1,0,0,0,213,214,1,0,0,0,214,
-		216,1,0,0,0,215,213,1,0,0,0,216,217,5,15,0,0,217,23,1,0,0,0,218,219,5,
-		35,0,0,219,220,5,14,0,0,220,221,3,16,8,0,221,222,5,15,0,0,222,223,3,28,
-		14,0,223,227,5,16,0,0,224,226,3,18,9,0,225,224,1,0,0,0,226,229,1,0,0,0,
-		227,225,1,0,0,0,227,228,1,0,0,0,228,233,1,0,0,0,229,227,1,0,0,0,230,232,
-		3,10,5,0,231,230,1,0,0,0,232,235,1,0,0,0,233,231,1,0,0,0,233,234,1,0,0,
-		0,234,236,1,0,0,0,235,233,1,0,0,0,236,242,5,17,0,0,237,238,5,36,0,0,238,
-		239,5,16,0,0,239,240,3,10,5,0,240,241,5,17,0,0,241,243,1,0,0,0,242,237,
-		1,0,0,0,242,243,1,0,0,0,243,25,1,0,0,0,244,245,5,38,0,0,245,246,5,14,0,
-		0,246,247,3,16,8,0,247,248,5,15,0,0,248,249,3,28,14,0,249,253,5,16,0,0,
-		250,252,3,18,9,0,251,250,1,0,0,0,252,255,1,0,0,0,253,251,1,0,0,0,253,254,
-		1,0,0,0,254,259,1,0,0,0,255,253,1,0,0,0,256,258,3,10,5,0,257,256,1,0,0,
-		0,258,261,1,0,0,0,259,257,1,0,0,0,259,260,1,0,0,0,260,262,1,0,0,0,261,
-		259,1,0,0,0,262,263,5,17,0,0,263,27,1,0,0,0,264,265,5,39,0,0,265,29,1,
-		0,0,0,266,267,5,37,0,0,267,268,5,28,0,0,268,269,5,43,0,0,269,272,5,5,0,
-		0,270,273,3,8,4,0,271,273,5,43,0,0,272,270,1,0,0,0,272,271,1,0,0,0,273,
-		274,1,0,0,0,274,277,5,40,0,0,275,278,3,8,4,0,276,278,5,43,0,0,277,275,
-		1,0,0,0,277,276,1,0,0,0,278,279,1,0,0,0,279,283,5,16,0,0,280,282,3,10,
-		5,0,281,280,1,0,0,0,282,285,1,0,0,0,283,281,1,0,0,0,283,284,1,0,0,0,284,
-		286,1,0,0,0,285,283,1,0,0,0,286,287,5,17,0,0,287,31,1,0,0,0,288,289,5,
-		43,0,0,289,296,5,14,0,0,290,295,3,16,8,0,291,292,3,16,8,0,292,293,5,27,
-		0,0,293,295,1,0,0,0,294,290,1,0,0,0,294,291,1,0,0,0,295,298,1,0,0,0,296,
-		294,1,0,0,0,296,297,1,0,0,0,297,299,1,0,0,0,298,296,1,0,0,0,299,300,5,
-		15,0,0,300,33,1,0,0,0,301,307,3,36,18,0,302,303,3,36,18,0,303,304,7,2,
-		0,0,304,305,3,34,17,0,305,307,1,0,0,0,306,301,1,0,0,0,306,302,1,0,0,0,
-		307,35,1,0,0,0,308,314,3,38,19,0,309,310,3,38,19,0,310,311,7,3,0,0,311,
-		312,3,36,18,0,312,314,1,0,0,0,313,308,1,0,0,0,313,309,1,0,0,0,314,37,1,
-		0,0,0,315,321,3,40,20,0,316,317,3,40,20,0,317,318,7,4,0,0,318,319,3,38,
-		19,0,319,321,1,0,0,0,320,315,1,0,0,0,320,316,1,0,0,0,321,39,1,0,0,0,322,
-		335,5,43,0,0,323,324,5,43,0,0,324,325,5,18,0,0,325,326,3,36,18,0,326,327,
-		5,19,0,0,327,335,1,0,0,0,328,335,3,8,4,0,329,330,5,14,0,0,330,331,3,16,
-		8,0,331,332,5,15,0,0,332,335,1,0,0,0,333,335,3,32,16,0,334,322,1,0,0,0,
-		334,323,1,0,0,0,334,328,1,0,0,0,334,329,1,0,0,0,334,333,1,0,0,0,335,41,
-		1,0,0,0,35,47,53,66,83,85,93,99,117,119,127,133,137,144,149,159,175,187,
-		193,195,199,213,227,233,242,253,259,272,277,283,294,296,306,313,320,334
+		2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,5,2,119,
+		8,2,10,2,12,2,122,9,2,1,2,1,2,1,2,5,2,127,8,2,10,2,12,2,130,9,2,1,2,5,
+		2,133,8,2,10,2,12,2,136,9,2,1,2,3,2,139,8,2,1,3,1,3,1,4,4,4,144,8,4,11,
+		4,12,4,145,1,4,1,4,1,4,3,4,151,8,4,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,3,5,
+		161,8,5,1,6,1,6,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,3,8,177,
+		8,8,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,1,9,4,9,189,8,9,11,9,12,9,190,
+		1,9,1,9,1,9,1,9,1,9,1,9,1,9,4,9,200,8,9,11,9,12,9,201,1,9,1,9,4,9,206,
+		8,9,11,9,12,9,207,1,9,1,9,3,9,212,8,9,1,10,1,10,1,10,1,10,1,10,1,10,4,
+		10,220,8,10,11,10,12,10,221,1,10,1,10,1,10,1,11,1,11,1,11,1,11,4,11,231,
+		8,11,11,11,12,11,232,1,11,1,11,1,11,1,11,1,11,1,11,4,11,241,8,11,11,11,
+		12,11,242,1,11,1,11,4,11,247,8,11,11,11,12,11,248,1,11,1,11,3,11,253,8,
+		11,1,12,1,12,1,12,1,12,1,12,1,12,1,12,5,12,262,8,12,10,12,12,12,265,9,
+		12,1,12,5,12,268,8,12,10,12,12,12,271,9,12,1,12,1,12,1,12,1,12,1,12,1,
+		12,3,12,279,8,12,1,13,1,13,1,13,1,13,1,13,1,13,1,13,5,13,288,8,13,10,13,
+		12,13,291,9,13,1,13,5,13,294,8,13,10,13,12,13,297,9,13,1,13,1,13,1,14,
+		1,14,1,15,1,15,1,15,1,15,1,15,1,15,3,15,309,8,15,1,15,1,15,1,15,3,15,314,
+		8,15,1,15,1,15,5,15,318,8,15,10,15,12,15,321,9,15,1,15,1,15,1,16,1,16,
+		1,16,1,16,1,16,1,16,5,16,331,8,16,10,16,12,16,334,9,16,1,16,1,16,1,17,
+		1,17,1,17,1,17,1,17,3,17,343,8,17,1,18,1,18,1,18,1,18,1,18,3,18,350,8,
+		18,1,19,1,19,1,19,1,19,1,19,3,19,357,8,19,1,20,1,20,1,20,1,20,1,20,1,20,
+		1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,1,20,3,20,
+		378,8,20,1,20,0,0,21,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,
+		36,38,40,0,5,1,0,29,32,1,0,6,7,1,0,8,13,1,0,1,2,1,0,3,4,411,0,42,1,0,0,
+		0,2,61,1,0,0,0,4,138,1,0,0,0,6,140,1,0,0,0,8,150,1,0,0,0,10,160,1,0,0,
+		0,12,162,1,0,0,0,14,167,1,0,0,0,16,176,1,0,0,0,18,211,1,0,0,0,20,213,1,
+		0,0,0,22,252,1,0,0,0,24,254,1,0,0,0,26,280,1,0,0,0,28,300,1,0,0,0,30,302,
+		1,0,0,0,32,324,1,0,0,0,34,342,1,0,0,0,36,349,1,0,0,0,38,356,1,0,0,0,40,
+		377,1,0,0,0,42,43,5,23,0,0,43,47,5,26,0,0,44,46,3,18,9,0,45,44,1,0,0,0,
+		46,49,1,0,0,0,47,45,1,0,0,0,47,48,1,0,0,0,48,53,1,0,0,0,49,47,1,0,0,0,
+		50,52,3,4,2,0,51,50,1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,53,54,1,0,0,0,
+		54,56,1,0,0,0,55,53,1,0,0,0,56,57,3,2,1,0,57,58,5,24,0,0,58,59,5,26,0,
+		0,59,60,5,0,0,1,60,1,1,0,0,0,61,62,5,21,0,0,62,66,5,16,0,0,63,65,3,10,
+		5,0,64,63,1,0,0,0,65,68,1,0,0,0,66,64,1,0,0,0,66,67,1,0,0,0,67,69,1,0,
+		0,0,68,66,1,0,0,0,69,70,5,17,0,0,70,3,1,0,0,0,71,72,5,20,0,0,72,73,5,43,
+		0,0,73,74,5,25,0,0,74,75,3,6,3,0,75,85,5,14,0,0,76,77,3,6,3,0,77,78,5,
+		43,0,0,78,84,1,0,0,0,79,80,3,6,3,0,80,81,5,43,0,0,81,82,5,27,0,0,82,84,
+		1,0,0,0,83,76,1,0,0,0,83,79,1,0,0,0,84,87,1,0,0,0,85,83,1,0,0,0,85,86,
+		1,0,0,0,86,88,1,0,0,0,87,85,1,0,0,0,88,89,5,15,0,0,89,93,5,16,0,0,90,92,
+		3,18,9,0,91,90,1,0,0,0,92,95,1,0,0,0,93,91,1,0,0,0,93,94,1,0,0,0,94,99,
+		1,0,0,0,95,93,1,0,0,0,96,98,3,10,5,0,97,96,1,0,0,0,98,101,1,0,0,0,99,97,
+		1,0,0,0,99,100,1,0,0,0,100,102,1,0,0,0,101,99,1,0,0,0,102,103,5,41,0,0,
+		103,104,3,16,8,0,104,105,5,17,0,0,105,139,1,0,0,0,106,107,5,20,0,0,107,
+		108,5,43,0,0,108,109,5,25,0,0,109,110,5,42,0,0,110,120,5,14,0,0,111,112,
+		3,6,3,0,112,113,5,43,0,0,113,119,1,0,0,0,114,115,3,6,3,0,115,116,5,43,
+		0,0,116,117,5,27,0,0,117,119,1,0,0,0,118,111,1,0,0,0,118,114,1,0,0,0,119,
+		122,1,0,0,0,120,118,1,0,0,0,120,121,1,0,0,0,121,123,1,0,0,0,122,120,1,
+		0,0,0,123,124,5,15,0,0,124,128,5,16,0,0,125,127,3,18,9,0,126,125,1,0,0,
+		0,127,130,1,0,0,0,128,126,1,0,0,0,128,129,1,0,0,0,129,134,1,0,0,0,130,
+		128,1,0,0,0,131,133,3,10,5,0,132,131,1,0,0,0,133,136,1,0,0,0,134,132,1,
+		0,0,0,134,135,1,0,0,0,135,137,1,0,0,0,136,134,1,0,0,0,137,139,5,17,0,0,
+		138,71,1,0,0,0,138,106,1,0,0,0,139,5,1,0,0,0,140,141,7,0,0,0,141,7,1,0,
+		0,0,142,144,5,46,0,0,143,142,1,0,0,0,144,145,1,0,0,0,145,143,1,0,0,0,145,
+		146,1,0,0,0,146,151,1,0,0,0,147,151,5,47,0,0,148,151,5,44,0,0,149,151,
+		5,49,0,0,150,143,1,0,0,0,150,147,1,0,0,0,150,148,1,0,0,0,150,149,1,0,0,
+		0,151,9,1,0,0,0,152,161,3,12,6,0,153,161,3,14,7,0,154,161,3,20,10,0,155,
+		161,3,22,11,0,156,161,3,24,12,0,157,161,3,26,13,0,158,161,3,30,15,0,159,
+		161,3,32,16,0,160,152,1,0,0,0,160,153,1,0,0,0,160,154,1,0,0,0,160,155,
+		1,0,0,0,160,156,1,0,0,0,160,157,1,0,0,0,160,158,1,0,0,0,160,159,1,0,0,
+		0,161,11,1,0,0,0,162,163,5,43,0,0,163,164,5,5,0,0,164,165,3,36,18,0,165,
+		166,5,26,0,0,166,13,1,0,0,0,167,168,5,33,0,0,168,169,5,43,0,0,169,170,
+		5,26,0,0,170,15,1,0,0,0,171,177,3,34,17,0,172,173,3,34,17,0,173,174,7,
+		1,0,0,174,175,3,16,8,0,175,177,1,0,0,0,176,171,1,0,0,0,176,172,1,0,0,0,
+		177,17,1,0,0,0,178,179,5,28,0,0,179,180,3,6,3,0,180,181,5,43,0,0,181,182,
+		5,26,0,0,182,212,1,0,0,0,183,184,5,22,0,0,184,185,3,6,3,0,185,186,5,43,
+		0,0,186,188,5,18,0,0,187,189,5,46,0,0,188,187,1,0,0,0,189,190,1,0,0,0,
+		190,188,1,0,0,0,190,191,1,0,0,0,191,192,1,0,0,0,192,193,5,19,0,0,193,212,
+		1,0,0,0,194,195,5,22,0,0,195,196,3,6,3,0,196,197,5,43,0,0,197,199,5,18,
+		0,0,198,200,5,46,0,0,199,198,1,0,0,0,200,201,1,0,0,0,201,199,1,0,0,0,201,
+		202,1,0,0,0,202,203,1,0,0,0,203,205,5,27,0,0,204,206,5,46,0,0,205,204,
+		1,0,0,0,206,207,1,0,0,0,207,205,1,0,0,0,207,208,1,0,0,0,208,209,1,0,0,
+		0,209,210,5,19,0,0,210,212,1,0,0,0,211,178,1,0,0,0,211,183,1,0,0,0,211,
+		194,1,0,0,0,212,19,1,0,0,0,213,214,5,34,0,0,214,219,5,14,0,0,215,220,3,
+		36,18,0,216,217,3,36,18,0,217,218,5,27,0,0,218,220,1,0,0,0,219,215,1,0,
+		0,0,219,216,1,0,0,0,220,221,1,0,0,0,221,219,1,0,0,0,221,222,1,0,0,0,222,
+		223,1,0,0,0,223,224,5,15,0,0,224,225,5,26,0,0,225,21,1,0,0,0,226,227,5,
+		43,0,0,227,228,3,6,3,0,228,230,5,18,0,0,229,231,5,46,0,0,230,229,1,0,0,
+		0,231,232,1,0,0,0,232,230,1,0,0,0,232,233,1,0,0,0,233,234,1,0,0,0,234,
+		235,5,19,0,0,235,253,1,0,0,0,236,237,5,43,0,0,237,238,3,6,3,0,238,240,
+		5,18,0,0,239,241,5,46,0,0,240,239,1,0,0,0,241,242,1,0,0,0,242,240,1,0,
+		0,0,242,243,1,0,0,0,243,244,1,0,0,0,244,246,5,27,0,0,245,247,5,46,0,0,
+		246,245,1,0,0,0,247,248,1,0,0,0,248,246,1,0,0,0,248,249,1,0,0,0,249,250,
+		1,0,0,0,250,251,5,19,0,0,251,253,1,0,0,0,252,226,1,0,0,0,252,236,1,0,0,
+		0,253,23,1,0,0,0,254,255,5,35,0,0,255,256,5,14,0,0,256,257,3,16,8,0,257,
+		258,5,15,0,0,258,259,3,28,14,0,259,263,5,16,0,0,260,262,3,18,9,0,261,260,
+		1,0,0,0,262,265,1,0,0,0,263,261,1,0,0,0,263,264,1,0,0,0,264,269,1,0,0,
+		0,265,263,1,0,0,0,266,268,3,10,5,0,267,266,1,0,0,0,268,271,1,0,0,0,269,
+		267,1,0,0,0,269,270,1,0,0,0,270,272,1,0,0,0,271,269,1,0,0,0,272,278,5,
+		17,0,0,273,274,5,36,0,0,274,275,5,16,0,0,275,276,3,10,5,0,276,277,5,17,
+		0,0,277,279,1,0,0,0,278,273,1,0,0,0,278,279,1,0,0,0,279,25,1,0,0,0,280,
+		281,5,38,0,0,281,282,5,14,0,0,282,283,3,16,8,0,283,284,5,15,0,0,284,285,
+		3,28,14,0,285,289,5,16,0,0,286,288,3,18,9,0,287,286,1,0,0,0,288,291,1,
+		0,0,0,289,287,1,0,0,0,289,290,1,0,0,0,290,295,1,0,0,0,291,289,1,0,0,0,
+		292,294,3,10,5,0,293,292,1,0,0,0,294,297,1,0,0,0,295,293,1,0,0,0,295,296,
+		1,0,0,0,296,298,1,0,0,0,297,295,1,0,0,0,298,299,5,17,0,0,299,27,1,0,0,
+		0,300,301,5,39,0,0,301,29,1,0,0,0,302,303,5,37,0,0,303,304,5,28,0,0,304,
+		305,5,43,0,0,305,308,5,5,0,0,306,309,3,8,4,0,307,309,5,43,0,0,308,306,
+		1,0,0,0,308,307,1,0,0,0,309,310,1,0,0,0,310,313,5,40,0,0,311,314,3,8,4,
+		0,312,314,5,43,0,0,313,311,1,0,0,0,313,312,1,0,0,0,314,315,1,0,0,0,315,
+		319,5,16,0,0,316,318,3,10,5,0,317,316,1,0,0,0,318,321,1,0,0,0,319,317,
+		1,0,0,0,319,320,1,0,0,0,320,322,1,0,0,0,321,319,1,0,0,0,322,323,5,17,0,
+		0,323,31,1,0,0,0,324,325,5,43,0,0,325,332,5,14,0,0,326,331,3,16,8,0,327,
+		328,3,16,8,0,328,329,5,27,0,0,329,331,1,0,0,0,330,326,1,0,0,0,330,327,
+		1,0,0,0,331,334,1,0,0,0,332,330,1,0,0,0,332,333,1,0,0,0,333,335,1,0,0,
+		0,334,332,1,0,0,0,335,336,5,15,0,0,336,33,1,0,0,0,337,343,3,36,18,0,338,
+		339,3,36,18,0,339,340,7,2,0,0,340,341,3,34,17,0,341,343,1,0,0,0,342,337,
+		1,0,0,0,342,338,1,0,0,0,343,35,1,0,0,0,344,350,3,38,19,0,345,346,3,38,
+		19,0,346,347,7,3,0,0,347,348,3,36,18,0,348,350,1,0,0,0,349,344,1,0,0,0,
+		349,345,1,0,0,0,350,37,1,0,0,0,351,357,3,40,20,0,352,353,3,40,20,0,353,
+		354,7,4,0,0,354,355,3,38,19,0,355,357,1,0,0,0,356,351,1,0,0,0,356,352,
+		1,0,0,0,357,39,1,0,0,0,358,378,5,43,0,0,359,360,5,43,0,0,360,361,5,18,
+		0,0,361,362,3,36,18,0,362,363,5,19,0,0,363,378,1,0,0,0,364,365,5,43,0,
+		0,365,366,5,18,0,0,366,367,3,36,18,0,367,368,5,27,0,0,368,369,3,36,18,
+		0,369,370,5,19,0,0,370,378,1,0,0,0,371,378,3,8,4,0,372,373,5,14,0,0,373,
+		374,3,16,8,0,374,375,5,15,0,0,375,378,1,0,0,0,376,378,3,32,16,0,377,358,
+		1,0,0,0,377,359,1,0,0,0,377,364,1,0,0,0,377,371,1,0,0,0,377,372,1,0,0,
+		0,377,376,1,0,0,0,378,41,1,0,0,0,40,47,53,66,83,85,93,99,118,120,128,134,
+		138,145,150,160,176,190,201,207,211,219,221,232,242,248,252,263,269,278,
+		289,295,308,313,319,330,332,342,349,356,377
 	]
 
 	public

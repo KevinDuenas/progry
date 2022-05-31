@@ -5,12 +5,17 @@
 //  Created by Kevin Duenas on 21/04/22.
 //
 
+import UIKit
+
 struct VirtualMachine : VirtualMachineType {
 
    
     func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory) throws -> Double  {
         
         var pointer = 0;
+        let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
+        let topVc = topController as! ViewController;
+        var moduleMemory : Memory?
         
         while pointer < quadruples.count {
             
@@ -25,6 +30,7 @@ struct VirtualMachine : VirtualMachineType {
                     
                     print("START QUADRUPLE")
                     pointer += 1
+                    topVc.clearCommandView()
                 case "=":
                     let l = memory.getValueFromDir(dir: (left?.address)!)
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
@@ -233,15 +239,34 @@ struct VirtualMachine : VirtualMachineType {
                     if condition == false{
                         pointer = (result?.quadruple)!
                     }
+                
                     pointer += 1
                 case "ENDFUNC":
                     print("ENDFUNC QUADRUPLE")
+                    moduleMemory = nil;
                     pointer += 1
                 case "ERA":
+                    
+                    moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
+                    
+                    // 3 number
+                    
+                    
                     print("ERA QUADRUPLE")
                     pointer += 1
                 case "GOSUB":
                     print("GOSUB QUADRUPLE")
+                    pointer += 1
+                    
+                case "read":
+                    print("READ QUADRUPLE")
+                    //PopUpsViewController.presentPopUp(parentVC: topController)
+                    //topVc.addComand(cmd: "writing")
+                    pointer += 1
+                    
+                case "write":
+                    let data = memory.getValueFromDir(dir: (result?.address)!)
+                    topVc.addComand(cmd: data!.1)
                     pointer += 1
                 default:
                     pointer += 1

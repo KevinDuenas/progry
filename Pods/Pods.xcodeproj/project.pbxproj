@@ -38,10 +38,10 @@
 		7540C06227A2F21E3276A4E5B739B657 /* Pods-progry */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "Pods-progry"; path = "libPods-progry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		835916FBD53888B2C13EB0F572C85474 /* SOPullUpViewDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SOPullUpViewDataSource.swift; path = SOPullUpView/Classes/Protocols/SOPullUpViewDataSource.swift; sourceTree = "<group>"; };
 		8464969CE81A45B68325113F6DB11763 /* Pods-progry-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-progry-dummy.m"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A66F190BD67D2ED74323E56E7FC0DFBA /* PullUpController+Animation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PullUpController+Animation.swift"; path = "SOPullUpView/Classes/PullUpController+Animation.swift"; sourceTree = "<group>"; };
 		C3883011C797398D87F99A8BE9AFE804 /* Pods-progry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-progry.release.xcconfig"; sourceTree = "<group>"; };
-		C7A90F89E2732CA4176620ACFA4C47CD /* SOPullUpView */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = SOPullUpView; path = libSOPullUpView.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOPullUpView.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD4D280B681EBEB1DF104066B1B9C0D5 /* SOPullUpView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SOPullUpView-prefix.pch"; sourceTree = "<group>"; };
 		DED11487EB2790CB3879214E14F8500A /* SOPullUpView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SOPullUpView.modulemap; sourceTree = "<group>"; };
 		E3E7CD55F53EF3D81EFCFB699A7BC94C /* Pods-progry-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-progry-umbrella.h"; sourceTree = "<group>"; };
@@ -85,7 +85,6 @@
 				E4DEA508F25DC2CB46D886CE46708A92 /* SOPullUpViewDelegate.swift */,
 				CCBD995181C92A1AF2C1AC41873485B9 /* Support Files */,
 			);
-			name = SOPullUpView;
 			path = SOPullUpView;
 			sourceTree = "<group>";
 		};
@@ -93,7 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				7540C06227A2F21E3276A4E5B739B657 /* Pods-progry */,
-				C7A90F89E2732CA4176620ACFA4C47CD /* SOPullUpView */,
+				C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,7 +207,7 @@
 			);
 			name = SOPullUpView;
 			productName = SOPullUpView;
-			productReference = C7A90F89E2732CA4176620ACFA4C47CD /* SOPullUpView */;
+			productReference = C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -218,7 +217,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1310;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 13.0";
@@ -307,7 +306,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				GCC_PREFIX_HEADER = "Target Support Files/SOPullUpView/SOPullUpView-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MODULEMAP_FILE = Headers/Public/SOPullUpView/SOPullUpView.modulemap;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -505,7 +504,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				GCC_PREFIX_HEADER = "Target Support Files/SOPullUpView/SOPullUpView-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MODULEMAP_FILE = Headers/Public/SOPullUpView/SOPullUpView.modulemap;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";

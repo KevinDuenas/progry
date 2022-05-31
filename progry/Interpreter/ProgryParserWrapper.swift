@@ -347,31 +347,14 @@ struct ProgryParserWrapper : ParserType {
         override func enterIfs(_ ctx: ProgryParser.IfsContext) {
             
             
-            //Expresiones
-            //            jumpsStack.append(quadruples.list.count ) //Migajita de pan
-            //            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
-            //            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
-            //            quadruples.list.append(goToF)
-            
-            
+
         }
         
         
         
         
         override func exitIfs(_ ctx: ProgryParser.IfsContext) {
-            
-            
-            
-            let goToFIndex = jumpsStack.popLast()
-            
-            let goTo = Quadruple(op: "GOTOF", opLeft: nil, opRight: nil, result: MemoryDirection())
-            //quadruples.list.append(goTo)
-            jumpsStack.append(quadruples.list.count-1) //migajita de pan del goTo
-            
-            let newQuadrupleCount = quadruples.list.count
-            quadruples.list[goToFIndex!].result?.quadruple = newQuadrupleCount
-            
+                
         }
         
         override func enterDos(_ ctx: ProgryParser.DosContext) {
@@ -637,7 +620,7 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
+                let newTemporalDirection = temporalMemory.newFlagDirection()
                 let resultOperand = MemoryDirection(address: newTemporalDirection)
                 let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
@@ -677,34 +660,9 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func enterWhiles(_ ctx: ProgryParser.WhilesContext) {
-            
-            //            jumpsStack.append(quadruples.list.count ) //Migajita de pan
-            //            let lastTemporal = quadruples.list[quadruples.list.count - 1].result
-            //            let goToF = Quadruple(op:"GOTOF", opLeft: lastTemporal, opRight: nil, result: MemoryDirection())
-            //            quadruples.list.append(goToF)
-            
-            
+
             //Migajita de pan
             jumpsStack.append(quadruples.list.count)
-            
-            
-            //Evalua la expresion del while
-            
-            //Si es falsa la expresion Brinca los estatutos
-            //jumpsStack.append(quadruples.list.count)
-            
-            //tomamos la direccion del temporal de la expresio
-            //let exprResultOp = quadruples.list[quadruples.list.count-1].result
-            
-            //Agregamos el cuadruplo goToF
-            //let goToF = Quadruple(op: "GOTOF", opLeft: exprResultOp, opRight: nil, result: MemoryDirection())
-            //quadruples.list.append(goToF)
-            
-            
-            //Realiza todos los estatuos
-            
-            
-            
             
         }
         
@@ -724,6 +682,20 @@ struct ProgryParserWrapper : ParserType {
         
         
         override func enterStatute(_ ctx: ProgryParser.StatuteContext) {
+            
+            
+        }
+        
+        override func enterWrite(_ ctx: ProgryParser.WriteContext) {
+          
+
+        }
+        override func exitWrite(_ ctx: ProgryParser.WriteContext) {
+            for operand in operands {
+                let newWriteQuadruple = Quadruple(op: "write", opLeft: nil, opRight: nil, result: operand)
+                operands.removeFirst()
+                quadruples.list.append(newWriteQuadruple)
+            }
         }
         
         override func exitProgram(_ ctx: ProgryParser.ProgramContext) {
