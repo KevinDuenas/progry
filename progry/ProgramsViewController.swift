@@ -10,9 +10,13 @@ import UIKit
 class ProgramsViewController: UIViewController {
 
     @IBOutlet weak var programsTableView: UITableView!
+    @IBOutlet weak var btnNew: UIBarButtonItem!
     
     var programs = [String]()
     var selectedProgram = ""
+    var showExamples = false
+    var selectedExample : Int?
+    var examplePrograms = ["Variables", "Ciclo While"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,21 +26,36 @@ class ProgramsViewController: UIViewController {
     func setupViews(){
         programsTableView.delegate = self
         programsTableView.dataSource = self
-        getPrograms()
+        if showExamples {
+            loadExamples()
+        }else{
+            getPrograms()
+            btnNew.isEnabled = false
+        }
+        
 
-    }
-    @IBAction func newProgram(_ sender: Any) {
-        selectedProgram = ""
-        performSegue(withIdentifier: "showProgram", sender: nil)
     }
     
 }
 
 extension ProgramsViewController {
     
+    @IBAction func newProgram(_ sender: Any) {
+        selectedProgram = ""
+        performSegue(withIdentifier: "showProgram", sender: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as! ViewController
-        vc.programName = selectedProgram
+        if segue.identifier == "showProgram" {
+            let vc = segue.destination as! ViewController
+            vc.programName = selectedProgram
+            if showExamples {
+                vc.exampleIndex = selectedExample
+            }else{
+                vc.programName = selectedProgram
+            }
+        }
+
     }
     
     func getPrograms(){
@@ -51,12 +70,14 @@ extension ProgramsViewController {
         }
     }
     
+    func loadExamples() {
+        programs = examplePrograms
+    }
+    
     func deleteProgram(index : Int){
         print("deleting")
         var name = programs[index]
         name = "PROGRY-\(name)"
-        print("deleting")
-        print(name)
         UserDefaults.standard.removeObject(forKey: name)
         
         
@@ -80,6 +101,7 @@ extension ProgramsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedProgram = programs[indexPath.row]
+        selectedExample = indexPath.row
         performSegue(withIdentifier: "showProgram", sender: nil)
     }
     
