@@ -35,12 +35,26 @@ struct VirtualMachine : VirtualMachineType {
                 topVc.clearCommandView()
             case "=":
                 let l = memory.getValueFromDir(dir: (left?.address)!)
-                memory.addValueToDir(dir: result!.address!, data: l!.1)
+                if result?.data == "POINTER" || left?.data == "POINTER"{
+                    let dir = memory.getValueFromDir(dir: (result?.address)!)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
+                } else {
+                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                }
                 pointer += 1
             case "+":
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
                 
-                let l = memory.getValueFromDir(dir: (left?.address)!)
-                let r = memory.getValueFromDir(dir: (right?.address)!)
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
                 
                 switch l!.0{
                 case .Number:
@@ -64,8 +78,18 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
             case "-":
                 
-                let l = memory.getValueFromDir(dir: (left?.address)!)
-                let r = memory.getValueFromDir(dir: (right?.address)!)
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
                 
                 switch l!.0{
                 case .Number:
@@ -88,8 +112,18 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 
             case "/":
-                let l = memory.getValueFromDir(dir: (left?.address)!)
-                let r = memory.getValueFromDir(dir: (right?.address)!)
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
                 
                 switch l!.0{
                 case .Number:
@@ -111,8 +145,18 @@ struct VirtualMachine : VirtualMachineType {
                 }
                 pointer += 1
             case "*":
-                let l = memory.getValueFromDir(dir: (left?.address)!)
-                let r = memory.getValueFromDir(dir: (right?.address)!)
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
                 
                 switch l!.0{
                 case .Number:
