@@ -563,6 +563,88 @@
             </objects>
             <point key="canvasLocation" x="-983" y="71"/>
         </scene>
+        <!--Read Pop Up View Controller-->
+        <scene sceneID="tX6-Da-Lgo">
+            <objects>
+                <viewController storyboardIdentifier="ReadPopUps" id="v7r-dB-Cdm" customClass="ReadPopUpViewController" customModule="progry" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HVy-1D-ryc">
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yrp-KN-iMJ">
+                                <rect key="frame" x="50" y="348" width="328" height="230"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ingresa el valor" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twa-SZ-3cn">
+                                        <rect key="frame" x="24" y="24" width="280" height="28.666666666666671"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7u8-Xg-uLe">
+                                        <rect key="frame" x="0.0" y="180" width="328" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TtV-Ze-bLF">
+                                                <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="gray" title="Ingresar"/>
+                                                <connections>
+                                                    <action selector="returnValue:" destination="v7r-dB-Cdm" eventType="touchUpInside" id="XMx-EC-Dct"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="e7n-9y-rkg"/>
+                                        </constraints>
+                                    </stackView>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fAX-0K-DZk">
+                                        <rect key="frame" x="36" y="98" width="256" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="7u8-Xg-uLe" firstAttribute="leading" secondItem="Yrp-KN-iMJ" secondAttribute="leading" id="L6f-vZ-poP"/>
+                                    <constraint firstAttribute="height" constant="230" id="Qxi-GQ-6QU"/>
+                                    <constraint firstAttribute="trailing" secondItem="twa-SZ-3cn" secondAttribute="trailing" constant="24" id="S9s-xR-lKO"/>
+                                    <constraint firstItem="fAX-0K-DZk" firstAttribute="leading" secondItem="Yrp-KN-iMJ" secondAttribute="leading" constant="36" id="TTy-mk-K5w"/>
+                                    <constraint firstAttribute="trailing" secondItem="fAX-0K-DZk" secondAttribute="trailing" constant="36" id="YWA-Wq-Vz9"/>
+                                    <constraint firstAttribute="trailing" secondItem="7u8-Xg-uLe" secondAttribute="trailing" id="gNy-pc-hj1"/>
+                                    <constraint firstItem="fAX-0K-DZk" firstAttribute="centerX" secondItem="Yrp-KN-iMJ" secondAttribute="centerX" id="gze-du-JOb"/>
+                                    <constraint firstItem="fAX-0K-DZk" firstAttribute="centerY" secondItem="Yrp-KN-iMJ" secondAttribute="centerY" id="o2P-d4-9GT"/>
+                                    <constraint firstItem="twa-SZ-3cn" firstAttribute="leading" secondItem="Yrp-KN-iMJ" secondAttribute="leading" constant="24" id="qbb-Zh-FpM"/>
+                                    <constraint firstItem="twa-SZ-3cn" firstAttribute="top" secondItem="Yrp-KN-iMJ" secondAttribute="top" constant="24" id="rb2-sI-mpF"/>
+                                    <constraint firstAttribute="bottom" secondItem="7u8-Xg-uLe" secondAttribute="bottom" id="ttr-Y2-dmm"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="sKb-g0-P8y"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="sKb-g0-P8y" firstAttribute="trailing" secondItem="Yrp-KN-iMJ" secondAttribute="trailing" constant="50" id="WZC-Yo-Mnc"/>
+                            <constraint firstItem="Yrp-KN-iMJ" firstAttribute="leading" secondItem="sKb-g0-P8y" secondAttribute="leading" constant="50" id="XSU-t0-ssC"/>
+                            <constraint firstItem="Yrp-KN-iMJ" firstAttribute="centerY" secondItem="HVy-1D-ryc" secondAttribute="centerY" id="be1-k9-d4W"/>
+                            <constraint firstItem="Yrp-KN-iMJ" firstAttribute="centerX" secondItem="HVy-1D-ryc" secondAttribute="centerX" id="zNT-rx-1Bb"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="8tY-7F-3TW" appends="YES" id="KiQ-ZB-Fu3"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="tfValue" destination="fAX-0K-DZk" id="KR4-Gw-MBq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hQX-5t-R47" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="8tY-7F-3TW"/>
+            </objects>
+            <point key="canvasLocation" x="2251" y="71"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="JP7-Ce-Tji"/>

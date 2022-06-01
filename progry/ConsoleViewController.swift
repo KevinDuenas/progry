@@ -42,8 +42,8 @@ class ConsoleViewController: UIViewController {
         
     }
     
-    @IBAction func runProgram(_ sender: Any) {
-        delegate?.run()
+    @IBAction func runProgram(_ sender: Any)  {
+         delegate?.run()
     }
     
 }

@@ -56,16 +56,43 @@ class ViewController: UIViewController, UITextViewDelegate{
             limit = limit + 1.0;
         }
     
-        if (limit > 4) {
-            write("entro al if");
-        }
-        
-    
     }
     
     PROGRAM_END;
     """
+    
+    let ifCode = """
+    PROGRAM_START;
+    
+        var decimal age;
+    
+    main {
+        age = 25.0;
+        
+        if (age < 30) do {
+    
+            write("Es menor que 30");
+        };
+    
+    }
+    
+    PROGRAM_END;
+    """;
 
+    let forCode = """
+    PROGRAM_START;
+    
+        var number initial;
+        var number end;
+    
+    main {
+        number = 10;
+    
+    }
+    
+    PROGRAM_END;
+    """;
+    
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
     var programName = ""
@@ -105,6 +132,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     func setupViews(){
         codePrograms.append(variablesCode)
         codePrograms.append(whileCode)
+        codePrograms.append(ifCode)
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
@@ -146,7 +174,7 @@ class ViewController: UIViewController, UITextViewDelegate{
         //textView.attributedText = textView.text.setColorToChar(["module", "var", "hola"], color: [.red, .blue, .orange])
     }
     
-    private func transform(_ input: String) -> String {
+    private func transform(_ input: String)  -> String {
         let interpreter = Interpreter()
         let result = interpreter.evaluate(input)
         
@@ -226,8 +254,9 @@ extension String {
 }
 
 extension ViewController : RunProgramProtocol{
-    func run() {
-        transform(textView.text)
+
+    func run()  {
+         transform(textView.text)
     }
     
     
