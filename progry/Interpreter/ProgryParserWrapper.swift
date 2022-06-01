@@ -1065,15 +1065,6 @@ struct ProgryParserWrapper : ParserType {
             }
         }
         
-        
-        override func exitWrite(_ ctx: ProgryParser.WriteContext) {
-                    for operand in operands {
-                        let newWriteQuadruple = Quadruple(op: "WRITE", opLeft: nil, opRight: nil, result: operand)
-                        operands.removeFirst()
-                        quadruples.list.append(newWriteQuadruple)
-                    }
-                }
-        
         override func exitAsignation(_ ctx: ProgryParser.AsignationContext) {
             let curr = modules.getElement(forKey: "currentModule")
             guard let id = ctx.ID()?.getText() else {
