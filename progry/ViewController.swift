@@ -16,38 +16,106 @@ protocol RunProgramProtocol {
     func run()
 }
 
-class ViewController: UIViewController, UITextViewDelegate, SaveExcerciseProtocol{
+protocol UpdateCommandsProtocol{
+    func update(cmds : [String])
+}
+
+class ViewController: UIViewController, UITextViewDelegate{
+
     
-    func save(programName : String) {
-        let myCode = textView.text
-        self.programName = programName
-        userDefaults.set(textView.text, forKey: "PROGRY-\(programName)")
-        userDefaults.set(myCode, forKey: "PROGRY-\(programName)")
-        navigationController?.popViewController(animated: true)
+    @IBOutlet weak var btnSave: UIBarButtonItem!
+    @IBOutlet weak var textView: UITextView!
+    
+    let variablesCode = """
+    PROGRAM_START;
+    
+    var number myAge;
+    var decimal myHeight;
+    var text myName;
+    var flag imSick;
+    
+    main {
+        myHeight = 1.82;
+        write("Mi estatura es de ", myHeight);
+    
     }
     
-  
-    @IBOutlet weak var textView: UITextView!
+    PROGRAM_END;
+    """
+    
+    let whileCode = """
+    PROGRAM_START;
+    
+        var decimal limit;
+    
+    main {
+        limit = 1.0;
+    
+        while (limit < 6) do {
+            write("Entra");
+            limit = limit + 1.0;
+        }
+    
+    }
+    
+    PROGRAM_END;
+    """
+    
+    let ifCode = """
+    PROGRAM_START;
+    
+        var decimal age;
+    
+    main {
+        age = 25.0;
+        
+        if (age < 30) do {
+    
+            write("Es menor que 30");
+        };
+    
+    }
+    
+    PROGRAM_END;
+    """;
+
+    let forCode = """
+    PROGRAM_START;
+    
+        var number initial;
+        var number end;
+    
+    main {
+        number = 10;
+    
+    }
+    
+    PROGRAM_END;
+    """;
     
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
     var programName = ""
-    var new = true    
+    var new = true
+    var exampleIndex : Int?
+    var delegate : UpdateCommandsProtocol?
+    var commands = [String]()
+    var codePrograms = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        loadProgram()
+        
     }
     
-    func loadProgram(){
-        let code = UserDefaults.standard.string(forKey: "PROGRY-\(programName)")
-        if programName == "" {
-            new = true
-        }else{
-            textView.text = code
-            new = false
-        }
+    func clearCommandView(){
+        commands = []
+        delegate?.update(cmds: commands)
+    }
+    
+    func addComand(cmd: String){
+        commands.append(cmd)
+        delegate?.update(cmds: commands)
     }
     
     @IBAction func saveCode(_ sender: Any) {
@@ -58,33 +126,44 @@ class ViewController: UIViewController, UITextViewDelegate, SaveExcerciseProtoco
             userDefaults.set(myCode, forKey: "PROGRY-\(programName)")
             navigationController?.popViewController(animated: true)
         }
-        
     }
     
-
+    
     func setupViews(){
+        codePrograms.append(variablesCode)
+        codePrograms.append(whileCode)
+        codePrograms.append(ifCode)
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
+        loadProgram()
+    }
+    
+    func loadProgram(){
+        
+        if exampleIndex == nil {
+            let code = UserDefaults.standard.string(forKey: "PROGRY-\(programName)")
+            if programName == "" {
+                new = true
+            }else{
+                textView.text = code
+                new = false
+            }
+        }else{
+            textView.text = codePrograms[exampleIndex!]
+            btnSave.isEnabled = false
+        }
         
     }
     
     func setUpTextView(){
         textView.layer.masksToBounds = true
         textView.delegate = self
-
-            // Set the font.
-            textView.font = UIFont.systemFont(ofSize: 18)
-
-            // Set font color.
-            textView.textColor = UIColor.black
-
-            // Set left justified.
-            textView.textAlignment = NSTextAlignment.left
-
-            // Make text uneditable.
-            textView.isEditable = true    }
-    
+        textView.font = UIFont.systemFont(ofSize: 18)
+        textView.textColor = UIColor.black
+        textView.textAlignment = NSTextAlignment.left
+        textView.isEditable = true
+    }
     
     @IBAction func hideKeyboard(_ sender: Any) {
         textView.endEditing(true)
@@ -94,23 +173,26 @@ class ViewController: UIViewController, UITextViewDelegate, SaveExcerciseProtoco
     func textViewDidChange(_ textView: UITextView) {
         //textView.attributedText = textView.text.setColorToChar(["module", "var", "hola"], color: [.red, .blue, .orange])
     }
-  
-    private func transform(_ input: String) -> String {
-         let interpreter = Interpreter()
-         let result = interpreter.evaluate(input)
-
-         switch result {
-             case .success(let value):
-             print("success")
-                 return "\(value)"
-             case .failure:
-             print("failure")
-                 return ""
-         }
-     }
     
-
-
+    private func transform(_ input: String)  -> String {
+        let interpreter = Interpreter()
+        let result = interpreter.evaluate(input)
+        
+        
+    
+        
+        switch result {
+        case .success(let value):
+            print("success")
+            return "\(value)"
+        case .failure:
+            print("failure")
+            return ""
+        }
+    }
+    
+    
+    
 }
 
 extension ViewController : SOPullUpViewDataSource {
@@ -123,13 +205,14 @@ extension ViewController : SOPullUpViewDataSource {
     func pullUpViewExpandedViewHeight() -> CGFloat {
         return 800.0
     }
-
+    
     @objc func pullUpViewController() -> UIViewController {
         guard let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "console") as? ConsoleViewController else {return UIViewController()}
-         vc.pullUpControl = self.pullUpController
+        vc.pullUpControl = self.pullUpController
         vc.delegate = self
-         return vc
-      }
+        vc.parentVC = self
+        return vc
+    }
 }
 
 
@@ -153,27 +236,40 @@ extension String {
     }
     func setColorToChar(_ chars: [String] , color: [UIColor]) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
-
+        
         if chars.count != color.count {
             fatalError("Colors are not added correctly")
         }
-
-         //   let ranges = getRanges(of: char)
-           for i in 0..<chars.count {
+        
+        //   let ranges = getRanges(of: char)
+        for i in 0..<chars.count {
             let ranges = getRanges(of: chars[i])
             for range in ranges {
                 attributedString.addAttributes([NSAttributedString.Key.foregroundColor: color[i]], range: range)
             }
         }
-
+        
         return attributedString
     }
 }
 
 extension ViewController : RunProgramProtocol{
-    func run() {
-        transform(textView.text)
+
+    func run()  {
+         transform(textView.text)
     }
     
     
 }
+
+extension ViewController :  SaveExcerciseProtocol {
+    func save(programName : String) {
+        let myCode = textView.text
+        self.programName = programName
+        userDefaults.set(textView.text, forKey: "PROGRY-\(programName)")
+        userDefaults.set(myCode, forKey: "PROGRY-\(programName)")
+        navigationController?.popViewController(animated: true)
+    }
+    
+}
+

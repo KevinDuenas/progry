@@ -56,7 +56,7 @@ struct Interpreter {
         }
 
         do {
-            let resultValue = try virtualMachine.execute(result.0, withMemory: result.1) //mandar la memoria
+            let resultValue = try  virtualMachine.execute(result.0, withMemory: result.1) //mandar la memoria
             return .success(resultValue)
         }
         catch {

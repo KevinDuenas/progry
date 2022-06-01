@@ -57,9 +57,11 @@ class Memory {
             
         case .TEMPORAL:
             let size = end - start
-            arraySize = size / 2
+            arraySize = size / 4
             startNumber = start;
-            startDecimal  = start + arraySize;
+            startDecimal = start + arraySize
+            startText = start + arraySize + arraySize
+            startFlag = start + arraySize + arraySize + arraySize
             
         case .FUNCTION:
             let size = end - start

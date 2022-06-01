@@ -13,6 +13,10 @@ class ConsoleViewController: UIViewController {
     @IBOutlet weak var handleView: UIView!
     
     var delegate : RunProgramProtocol?
+    @IBOutlet weak var tableView: UITableView!
+    
+    var commands = [String]()
+    var parentVC : UIViewController?
     
     var pullUpControl: SOPullUpControl? {
         didSet {
@@ -23,10 +27,23 @@ class ConsoleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setupViews()
+        
     }
-    @IBAction func runProgram(_ sender: Any) {
-        delegate?.run()
+    
+    func setupViews(){
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundView = nil
+        tableView.backgroundColor = UIColor.clear
+        let vc = parentVC as! ViewController
+        
+        vc.delegate = self
+        
+    }
+    
+    @IBAction func runProgram(_ sender: Any)  {
+         delegate?.run()
     }
     
 }
@@ -35,6 +52,31 @@ extension ConsoleViewController {
     
 }
 
+extension ConsoleViewController : UITableViewDelegate , UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        commands.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "printCell", for: indexPath) as! ConsoleTableViewCell
+        cell.lblTitle.text = commands[indexPath.row]
+        cell.backgroundColor = UIColor.clear
+        return cell
+    }
+    
+    
+    
+    
+}
+
+extension ConsoleViewController : UpdateCommandsProtocol{
+    func update(cmds: [String]) {
+        commands = cmds
+        tableView.reloadData()
+    }
+    
+    
+}
 
 extension ConsoleViewController: SOPullUpViewDelegate {
     
