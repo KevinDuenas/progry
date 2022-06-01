@@ -218,7 +218,7 @@ class Memory {
         countNumber += 1
         return direction
     }
-
+    
     public func newDecimalDirection() -> Int {
 
         let direction = startDecimal + countDecimal;

@@ -124,6 +124,24 @@ class TypeMatch {
         return oracle[left][right][op]
     }
     
+    public func checkOracle(typeOperand : Types) -> Int {
+        switch typeOperand {
+        case .Number:
+            return 0
+        case .Decimal:
+            return 1
+        case .Text:
+            return 2
+        case .Flag:
+            return 3
+        case .ERROR: break
+            
+        case .VOID: break
+            
+        }
+        return -1
+    }
+    
                                 
     
 }

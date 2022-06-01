@@ -7,11 +7,20 @@
 
 import Foundation
 
+struct size {
+    var inf : Int = 0;
+    var sup : Int?;
+    var off : Int?;
+}
+
 class Variable {
     
     var id: String;
     var type: Types;
     var memoryDirection : Int;
+    var vector : size?
+    var matrix : size?
+    var cteDir : Int?;
 //    var key: String;
 //    var nextNode: Variable?
     

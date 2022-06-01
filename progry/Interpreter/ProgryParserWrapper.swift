@@ -38,10 +38,12 @@ struct ProgryParserWrapper : ParserType {
         private(set) var currentModule = ""
         private(set) var currentCicle = ""
         
+        let typeOracle = TypeMatch.init()
         
         
         //Context variables
         var jumpsStack = [Int]()
+        
         
         
         override func enterProgram(_ ctx: ProgryParser.ProgramContext){
@@ -137,6 +139,7 @@ struct ProgryParserWrapper : ParserType {
                 }
                 
             } else {
+                // tipado
                 guard let moduleType = ctx.type(0)?.getText() else {
                     return
                 }
@@ -145,16 +148,16 @@ struct ProgryParserWrapper : ParserType {
                 
                 switch moduleType {
                 case "number":
-                        memoryDir = moduleMemory!.newNumberDirection()
+                    memoryDir = globalMemory.newNumberDirection()
                     modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "decimal":
-                    memoryDir = moduleMemory!.newDecimalDirection()
+                    memoryDir = globalMemory.newDecimalDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "text":
-                    memoryDir = moduleMemory!.newTextDirection()
+                    memoryDir = globalMemory.newTextDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "flag":
-                    memoryDir = moduleMemory!.newFlagDirection()
+                    memoryDir = globalMemory.newFlagDirection()
                 modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 default:
                     print("no type found it")
@@ -334,9 +337,9 @@ struct ProgryParserWrapper : ParserType {
                     newStack.append(operands.popLast()!)
                 }
                 
-                for _ in 0...operandsStackSize - 1 {
+                for i in 0...operandsStackSize - 1 {
                     let opLeft = newStack.popLast()
-                    let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: MemoryDirection())
+                    let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: MemoryDirection(data: "p\(i+1)"))
                     quadruples.list.append(newQuadruple)
                 }
                 
@@ -413,7 +416,7 @@ struct ProgryParserWrapper : ParserType {
             
             
         }
-        override func enterVars(_ ctx: ProgryParser.VarsContext) {
+        override func exitVars(_ ctx: ProgryParser.VarsContext) {
             
             guard let type = ctx.type()?.getText() else{
                 return //regresar errror
@@ -431,7 +434,6 @@ struct ProgryParserWrapper : ParserType {
             var globalSearch : Variable?
             let _ = modules.deleteElementForKey(currentModule)
             
-            
             if((localInsertion == .collision || globalSearch != nil) && currentModule != "global"){
                 //Ya existe el id o localmente o globalmente
                 //print("id repetido", id , "en", currentModule)
@@ -440,61 +442,334 @@ struct ProgryParserWrapper : ParserType {
                 let _ = curr?.varsTable.deleteElementForKey(id)
             }
             
-            switch type {
-            case "number":
-                curr?.numbers += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newNumberDirection()
-                }else{
-                    memoryDir = moduleMemory!.newNumberDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+            
+            
+            let isArray = ctx.OPEN_SBRACKET()?.getText()
+            let isMatrix = ctx.COMMA()?.getText()
+            
+            if isArray == "[" && isMatrix != "," {
                 
-            case "decimal":
-                curr?.decimals += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newDecimalDirection()
-                }else{
-                    memoryDir = moduleMemory!.newDecimalDirection()
-                    localCount = localCount + 1;
+                let sizeArray = operands.popLast()
+                if (sizeArray?.type != .Number) {
+                    print("Tiene que ser entero (number)")
+                    return
                 }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                let sizeArrayInt = constanteMemory.getNumber(dir: (sizeArray?.address)!)
                 
-            case "text":
-                curr?.texts += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newTextDirection()
-                }else{
-                    memoryDir = moduleMemory!.newTextDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
-            case "flag":
-                curr?.flags += 1
-                if(currentModule == "global"){
-                    memoryDir = globalMemory.newFlagDirection()
-                }else{
-                    memoryDir = moduleMemory!.newFlagDirection()
-                    localCount = localCount + 1;
-                }
-                localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
-                globalSearch = globalModule?.varsTable.getElement(forKey: id)
                 
-            default:
-                print("no type found it")
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newNumberDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newNumberDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    
+                    let addressSizeArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeArrayInt)
+                    
+                    let addressOffArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: sizeArrayInt + 1)
+                    
+                    vectorVar?.vector = size(inf: 0, sup: addressSizeArrDir, off: addressOffArrDir)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newDecimalDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newDecimalDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newTextDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newTextDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                        for _ in 1...sizeArrayInt {
+                            let _ = globalMemory.newFlagDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...sizeArrayInt {
+                            let _ = moduleMemory!.newFlagDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeArrayInt
+                    vectorVar?.vector?.off = sizeArrayInt + 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                default:
+                    print("no type found it")
+                }
+                
+               
+                
+                let _ = modules.addElement(curr!, forKey: currentModule)
+                
+            } else if isMatrix == "," && isArray == "[" {
+                let sizeM1 = operands.popLast()
+                let sizeM2 = operands.popLast()
+                if (sizeM1?.type != .Number && sizeM2?.type != .Number) {
+                    print("Tienen que ser enteros (number)")
+                    return
+                }
+                let sizeM1Int = constanteMemory.getNumber(dir: (sizeM1?.address)!)
+                let sizeM2Int = constanteMemory.getNumber(dir: (sizeM2?.address)!)
+                
+                let totalSize = sizeM1Int * sizeM2Int
+                
+                
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newNumberDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newNumberDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    
+                    let addressSizeArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeM1Int)
+                    
+                    let addressOffArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: sizeM2Int)
+                    
+                    vectorVar?.vector = size(inf: 0, sup: addressSizeArrDir, off: addressOffArrDir)
+                    
+                    let addressSizeMatDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeM2Int)
+                    
+                    let addressOffMatDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: 1)
+                    
+                    vectorVar?.matrix = size(inf: 0, sup: addressSizeMatDir, off: addressOffMatDir)
+                    
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newDecimalDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newDecimalDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newTextDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newTextDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                        for _ in 1...totalSize {
+                            let _ = globalMemory.newFlagDirection()
+                        }
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                        for _ in 1...totalSize {
+                            let _ = moduleMemory!.newFlagDirection()
+                        }
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    let vectorVar = curr?.varsTable.getElement(forKey: id)
+                    vectorVar?.vector?.sup = sizeM1Int
+                    vectorVar?.vector?.off = sizeM2Int
+                    vectorVar?.matrix?.sup = sizeM2Int
+                    vectorVar?.matrix?.off = 1
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                    let addressMemDirection = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
+                    
+                    vectorVar?.cteDir = addressMemDirection
+                    
+                default:
+                    print("no type found it")
+                }
+                
+                let _ = modules.addElement(curr!, forKey: currentModule)
+                
+            } else {
+               
+                switch type {
+                case "number":
+                    curr?.numbers += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newNumberDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newNumberDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "decimal":
+                    curr?.decimals += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newDecimalDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newDecimalDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Decimal, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                case "text":
+                    curr?.texts += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newTextDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newTextDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Text, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                case "flag":
+                    curr?.flags += 1
+                    if(currentModule == "global"){
+                        memoryDir = globalMemory.newFlagDirection()
+                    }else{
+                        memoryDir = moduleMemory!.newFlagDirection()
+                        localCount = localCount + 1;
+                    }
+                    localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Flag, direction: memoryDir), forKey: id)
+                    globalSearch = globalModule?.varsTable.getElement(forKey: id)
+                    
+                default:
+                    print("no type found it")
+                }
+                
+                
+                
+                let _ = modules.addElement(curr!, forKey: currentModule)
             }
-            
-            let _ = modules.addElement(curr!, forKey: currentModule)
-            
-            
         }
         
         
-        override func enterF(_ ctx: ProgryParser.FContext) {
+        override func exitF(_ ctx: ProgryParser.FContext) {
             
             let curr =  modules.getElement(forKey: currentModule)
             var opDirection : MemoryDirection?
@@ -506,23 +781,79 @@ struct ProgryParserWrapper : ParserType {
                 
                 if(element != nil){
                     
-                    switch element?.type {
-                    case .Number:
-                        opDirection = MemoryDirection(data: nil, type: .Number, address: element?.memoryDirection, quadruple: nil)
-                    case .Decimal:
-                        opDirection = MemoryDirection(data: nil, type: .Decimal, address: element?.memoryDirection, quadruple: nil)
-                    case .Text:
-                        opDirection = MemoryDirection(data: nil, type: .Text, address: element?.memoryDirection, quadruple: nil)
-                    case .Flag:
-                        opDirection = MemoryDirection(data: nil, type: .Flag, address: element?.memoryDirection, quadruple: nil)
-                    case .VOID:
-                        print("Type not found")
-                    case .ERROR:
-                        print("Type not found")
-                    case .none:
-                        print("Type not found")
-                    }
+                    // aqui empezar los quad de arreglos
+                    let isArray = ctx.OPEN_SBRACKET()?.getText()
+                    let isMatrix = ctx.COMMA()?.getText()
                     
+                    if isArray == "[" && isMatrix != "," {
+                        let leftOperand = operands.popLast()
+                        let righOperand = element?.vector?.inf
+                        let resultOperand = element?.vector?.sup
+                        
+                        let newQuadruple = Quadruple(op: "VER", opLeft: leftOperand, opRight: MemoryDirection(data: String(righOperand!)), result: MemoryDirection(data: String(resultOperand!)))
+                        
+                        quadruples.list.append(newQuadruple)
+                        
+                        let newTemporalDirection = temporalMemory.newNumberDirection()
+                        opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection)
+                        
+                        let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
+                        
+                        quadruples.list.append(dirQuadruple)
+                        
+                    } else if isArray == "[" && isMatrix == "," {
+                        let rightSize = operands.popLast()
+                        let leftSize = operands.popLast()
+                        
+                        let limSupM1 = element?.vector?.sup
+                        let offM1 = element?.vector?.off
+                        let limSupM2 = element?.matrix?.sup
+                        
+                        
+                        
+                        let newQuadruple = Quadruple(op: "Ver", opLeft: leftSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM1!)))
+                        quadruples.list.append(newQuadruple)
+                        
+                        let newTemporalDirection1 = temporalMemory.newNumberDirection()
+                        let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
+                        
+                        let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
+                        quadruples.list.append(newQuadrupleSM)
+                        
+                        let newQuadruple2 = Quadruple(op: "VER", opLeft: rightSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM2!)))
+                        
+                        quadruples.list.append(newQuadruple2)
+                        
+                        let newTemporalDirection2 = temporalMemory.newNumberDirection()
+                        let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
+                        
+                        let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
+                        quadruples.list.append(newQuadrupleSMS)
+                        
+                        let newTemporalDirection3 = temporalMemory.newNumberDirection()
+                        opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
+                        
+                        let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
+                        quadruples.list.append(lastQuadruple)
+                        
+                    } else {
+                        switch element?.type {
+                        case .Number:
+                            opDirection = MemoryDirection(data: nil, type: .Number, address: element?.memoryDirection, quadruple: nil)
+                        case .Decimal:
+                            opDirection = MemoryDirection(data: nil, type: .Decimal, address: element?.memoryDirection, quadruple: nil)
+                        case .Text:
+                            opDirection = MemoryDirection(data: nil, type: .Text, address: element?.memoryDirection, quadruple: nil)
+                        case .Flag:
+                            opDirection = MemoryDirection(data: nil, type: .Flag, address: element?.memoryDirection, quadruple: nil)
+                        case .VOID:
+                            print("Type not found")
+                        case .ERROR:
+                            print("Type not found")
+                        case .none:
+                            print("Type not found")
+                        }
+                    }
                     
                 }else{
                     
@@ -532,12 +863,11 @@ struct ProgryParserWrapper : ParserType {
                 
                 
                 
-            } else if let cte = ctx.cte()?.getText() {
+            } else if let _ = ctx.cte()?.getText() {
                 
-                if let number = ctx.cte()?.DIGIT(0) {
-                  
+                if let number = ctx.cte()?.DIGIT()?.getText() {
                     let newMemoryDirection = constanteMemory.newNumberDirection()
-                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(cte)!)
+                    let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(number)!)
                     opDirection = MemoryDirection(data: nil, type: .Number, address: newMemoryDirection, quadruple: nil)
                 
                 }else if let decimal = ctx.cte()?.DECIMAL()?.getText(){
@@ -584,14 +914,33 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
+                let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
-                tempCount = tempCount + 1
+                let resTypeOracle = typeOracle.validate(left: leftTypeNum, right: rightTypeNum, op: 0)
+                
+                if resTypeOracle == .Number {
+                   let newTemporalDirection = temporalMemory.newNumberDirection()
+                    let resultOperand = MemoryDirection(type: .Number ,address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else if resTypeOracle == .Decimal {
+                   let newTemporalDirection = temporalMemory.newDecimalDirection()
+                    let resultOperand = MemoryDirection(type: .Decimal ,address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
@@ -603,19 +952,38 @@ struct ProgryParserWrapper : ParserType {
                 operators.append(newOperator)
             }
             
+            
             if operators.last == "+" || operators.last == "-" {
                 let lastOperator = operators.popLast()
                 let rightOperand = operands.popLast()
                 let leftOperand = operands.popLast()
                 
-                //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newDecimalDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
-                tempCount = tempCount + 1
+                let resTypeOracle = typeOracle.validate(left: leftTypeNum, right: rightTypeNum, op: 0)
+                
+                if resTypeOracle == .Number {
+                   let newTemporalDirection = temporalMemory.newNumberDirection()
+                    let resultOperand = MemoryDirection(type: .Number, address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else if resTypeOracle == .Decimal {
+                   let newTemporalDirection = temporalMemory.newDecimalDirection()
+                    let resultOperand = MemoryDirection(type: .Decimal ,address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
@@ -640,12 +1008,26 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = globalMemory.newFlagDirection() //hay que cambiar esto revisando el contexto
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
+                let rightTypeOp = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeOp = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
+                
+                
+                let resTypeOracle = typeOracle.validate(left: leftTypeOp, right: rightTypeOp, op: 1)
+                
+                if resTypeOracle == .Flag {
+                   let newTemporalDirection = temporalMemory.newFlagDirection()
+                    let resultOperand = MemoryDirection(type: .Flag ,address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
+                
             }
             
         }
@@ -663,43 +1045,168 @@ struct ProgryParserWrapper : ParserType {
                 let leftOperand = operands.popLast()
                 
                 //aqui tenemos que ver el resultante de los dos tipos de se operaran
-                let newTemporalDirection = temporalMemory.newFlagDirection()
-                let resultOperand = MemoryDirection(address: newTemporalDirection)
-                let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                let rightTypeOp = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
+                let leftTypeOp = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                quadruples.list.append(newQuadruple)
-                operands.append(resultOperand)
+                let resTypeOracle = typeOracle.validate(left: leftTypeOp, right: rightTypeOp, op: 3)
+                
+                if resTypeOracle == .Flag {
+                   let newTemporalDirection = temporalMemory.newFlagDirection()
+                    let resultOperand = MemoryDirection(type: .Flag, address: newTemporalDirection)
+                    let newQuadruple = Quadruple(op: lastOperator, opLeft: leftOperand, opRight: rightOperand, result: resultOperand)
+                    
+                    quadruples.list.append(newQuadruple)
+                    operands.append(resultOperand)
+                    tempCount = tempCount + 1
+                    
+                } else {
+                    // ERRORRRRRR
+                }
             }
         }
         
-        
-        
-        
         override func exitAsignation(_ ctx: ProgryParser.AsignationContext) {
+            let curr = modules.getElement(forKey: "currentModule")
             guard let id = ctx.ID()?.getText() else {
                 return
             }
-            
-            
-            let currModule = modules.getElement(forKey: currentModule)
-            let currModuleResult = currModule?.varsTable.getElement(forKey: id)
+            let element = curr?.varsTable.getElement(forKey: id)
             let globalModule = modules.getElement(forKey: "global")
             let globalModuleResult = globalModule?.varsTable.getElement(forKey: id)
             var assignQuadruple = Quadruple()
             assignQuadruple.op = "="
             assignQuadruple.opLeft = operands.popLast()
             
-            if (currModuleResult != nil){ //localmente
+            let isArray = ctx.array()?.OPEN_SBRACKET()?.getText()
+            let isMatrix = ctx.array()?.COMMA()?.getText()
+            
+            if element != nil {
+              
                 
-                assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: currModuleResult?.memoryDirection, quadruple: nil)
+                if isArray == "[" && isMatrix != "," {
+                    print("ENTRA A ARRAY ASSIGN")
+                    let leftOperand = operands.popLast()
+                    let rightOperand = element?.vector?.inf
+                    let resultOperand = element?.vector?.sup
+                    
+                    
+                    let newQuadruple = Quadruple(op: "VER", opLeft: leftOperand, opRight: MemoryDirection(data: String(rightOperand!)), result: MemoryDirection(data: String(resultOperand!)))
+                    quadruples.list.append(newQuadruple)
+                    
+                    let temporalDirection = temporalMemory.newNumberDirection()
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number, address: temporalDirection)
+                    
+                    let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
+                    quadruples.list.append(dirQuadruple)
+                    assignQuadruple.result = opDirection // en global cambiar a globalresult
+                    
+                   
+                    
+                } else if isArray == "[" && isMatrix == "," {
+                    print("Entra a matriz assign")
+
+                    let rightSize = operands.popLast()
+                    let leftSize = operands.popLast()
+                    
+                    let limSupM1 = element?.vector?.sup
+                    let offM1 = element?.vector?.off
+                    let limSupM2 = element?.matrix?.sup
+                    
+                    let newQuadruple = Quadruple(op: "Ver", opLeft: leftSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM1!)))
+                    quadruples.list.append(newQuadruple)
+                    
+                    let newTemporalDirection1 = temporalMemory.newNumberDirection()
+                    let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
+                    
+                    let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
+                    quadruples.list.append(newQuadrupleSM)
+                    
+                    let newQuadruple2 = Quadruple(op: "VER", opLeft: rightSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM2!)))
+                    
+                    quadruples.list.append(newQuadruple2)
+                    
+                    let newTemporalDirection2 = temporalMemory.newNumberDirection()
+                    let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
+                    
+                    let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
+                    quadruples.list.append(newQuadrupleSMS)
+                    
+                    let newTemporalDirection3 = temporalMemory.newNumberDirection()
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
+                    
+                    let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
+                    quadruples.list.append(lastQuadruple)
+                    
+                    assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: element?.memoryDirection, quadruple: nil)
+                    
+                } else {
+                    assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: element?.memoryDirection, quadruple: nil)
+                }
                 
-            }else if (globalModuleResult != nil){ //globalmente
-                assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: globalModuleResult?.memoryDirection, quadruple: nil)
+            } else if globalModuleResult != nil {
+                // global
+                
+                if isArray == "[" && isMatrix != "," {
+                    let leftOperand = operands.popLast()
+                    let rightOperand = globalModuleResult?.vector?.inf
+                    let resultOperand = globalModuleResult?.vector?.sup
+                    
+                    let newQuadruple = Quadruple(op: "VER", opLeft: leftOperand, opRight: MemoryDirection(data: String(rightOperand!)), result: MemoryDirection(data: String(resultOperand!)))
+                    quadruples.list.append(newQuadruple)
+                    
+                    let temporalDirection = temporalMemory.newNumberDirection()
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number, address: temporalDirection)
+                    
+                    let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: globalModuleResult?.cteDir), result: opDirection)
+                    quadruples.list.append(dirQuadruple)
+                    
+                    assignQuadruple.result = opDirection
+                    
+                   
+                    
+                } else if isArray == "[" && isMatrix == "," {
+                    let rightSize = operands.popLast()
+                    let leftSize = operands.popLast()
+                    
+                    let limSupM1 = globalModuleResult?.vector?.sup
+                    let offM1 = globalModuleResult?.vector?.off
+                    let limSupM2 = globalModuleResult?.matrix?.sup
+                    
+                    let newQuadruple = Quadruple(op: "Ver", opLeft: leftSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM1!)))
+                    quadruples.list.append(newQuadruple)
+                    
+                    let newTemporalDirection1 = temporalMemory.newNumberDirection()
+                    let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
+                    
+                    let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
+                    quadruples.list.append(newQuadrupleSM)
+                    
+                    let newQuadruple2 = Quadruple(op: "VER", opLeft: rightSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM2!)))
+                    
+                    quadruples.list.append(newQuadruple2)
+                    
+                    let newTemporalDirection2 = temporalMemory.newNumberDirection()
+                    let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
+                    
+                    let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
+                    quadruples.list.append(newQuadrupleSMS)
+                    
+                    let newTemporalDirection3 = temporalMemory.newNumberDirection()
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
+                    
+                    let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: globalModuleResult?.cteDir), result: opDirection)
+                    quadruples.list.append(lastQuadruple)
+                    
+                    assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: globalModuleResult?.memoryDirection, quadruple: nil)
+                    
+                } else {
+                    assignQuadruple.result = MemoryDirection(data: nil, type: nil, address: globalModuleResult?.memoryDirection, quadruple: nil)
+                }
+                
+            } else {
+                //no existe
             }
-            
             quadruples.list.append(assignQuadruple)
-            
-            
         }
         
         override func enterWhiles(_ ctx: ProgryParser.WhilesContext) {
@@ -771,5 +1278,7 @@ struct ProgryParserWrapper : ParserType {
         
         return try ProgryParser(tokenStream)
     }
+    
+    
 }
 
