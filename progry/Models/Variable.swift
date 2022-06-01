@@ -20,6 +20,7 @@ class Variable {
     var memoryDirection : Int;
     var vector : size?
     var matrix : size?
+    var cteDir : Int?;
 //    var key: String;
 //    var nextNode: Variable?
     
