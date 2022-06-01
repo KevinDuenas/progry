@@ -448,17 +448,21 @@ struct ProgryParserWrapper : ParserType {
                     }
                     localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                     let vectorVar = curr?.varsTable.getElement(forKey: id)
-                    print("Vector var", vectorVar?.id)
-                    vectorVar?.vector = size(inf: 0, sup: sizeArrayInt, off: sizeArrayInt + 1)
+                    
+                    let addressSizeArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeArrayInt)
+                    
+                    let addressOffArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: sizeArrayInt + 1)
+                    
+                    vectorVar?.vector = size(inf: 0, sup: addressSizeArrDir, off: addressOffArrDir)
                     globalSearch = globalModule?.varsTable.getElement(forKey: id)
                     
-                    print("ENVARS", vectorVar?.vector?.sup)
                     
                     let addressMemDirection = constanteMemory.newNumberDirection()
                     let _ = constanteMemory.assignNumber(dir: addressMemDirection, value: memoryDir)
                     
                     vectorVar?.cteDir = addressMemDirection
-                    print("Vector ctedir", vectorVar?.cteDir)
                     
                 case "decimal":
                     curr?.decimals += 1
@@ -572,8 +576,23 @@ struct ProgryParserWrapper : ParserType {
                     }
                     localInsertion = curr?.varsTable.addElement(Variable(id: id, type: .Number, direction: memoryDir), forKey: id)
                     let vectorVar = curr?.varsTable.getElement(forKey: id)
-                    vectorVar?.vector = size(inf: 0, sup: sizeM1Int, off: sizeM2Int)
-                    vectorVar?.matrix = size(inf: 0, sup: sizeM2Int, off: 1)
+                    
+                    let addressSizeArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeM1Int)
+                    
+                    let addressOffArrDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: sizeM2Int)
+                    
+                    vectorVar?.vector = size(inf: 0, sup: addressSizeArrDir, off: addressOffArrDir)
+                    
+                    let addressSizeMatDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressSizeArrDir, value: sizeM2Int)
+                    
+                    let addressOffMatDir = constanteMemory.newNumberDirection()
+                    let _ = constanteMemory.assignNumber(dir: addressOffArrDir, value: 1)
+                    
+                    vectorVar?.matrix = size(inf: 0, sup: addressSizeMatDir, off: addressOffMatDir)
+                    
                     globalSearch = globalModule?.varsTable.getElement(forKey: id)
                     
                     let addressMemDirection = constanteMemory.newNumberDirection()
@@ -750,7 +769,7 @@ struct ProgryParserWrapper : ParserType {
                         quadruples.list.append(newQuadruple)
                         
                         let newTemporalDirection = temporalMemory.newNumberDirection()
-                        opDirection = MemoryDirection(type: .Number ,address: newTemporalDirection)
+                        opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection)
                         
                         let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
                         
@@ -770,7 +789,7 @@ struct ProgryParserWrapper : ParserType {
                         quadruples.list.append(newQuadruple)
                         
                         let newTemporalDirection1 = temporalMemory.newNumberDirection()
-                        let temp1 = MemoryDirection(type: .Number ,address: newTemporalDirection1)
+                        let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
                         
                         let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
                         quadruples.list.append(newQuadrupleSM)
@@ -780,13 +799,13 @@ struct ProgryParserWrapper : ParserType {
                         quadruples.list.append(newQuadruple2)
                         
                         let newTemporalDirection2 = temporalMemory.newNumberDirection()
-                        let temp2 = MemoryDirection(type: .Number ,address: newTemporalDirection2)
+                        let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
                         
                         let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
                         quadruples.list.append(newQuadrupleSMS)
                         
                         let newTemporalDirection3 = temporalMemory.newNumberDirection()
-                        opDirection = MemoryDirection(type: .Number ,address: newTemporalDirection3)
+                        opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
                         
                         let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
                         quadruples.list.append(lastQuadruple)
@@ -1022,7 +1041,13 @@ struct ProgryParserWrapper : ParserType {
         }
         
         
-        
+        override func exitWrite(_ ctx: ProgryParser.WriteContext) {
+                    for operand in operands {
+                        let newWriteQuadruple = Quadruple(op: "WRITE", opLeft: nil, opRight: nil, result: operand)
+                        operands.removeFirst()
+                        quadruples.list.append(newWriteQuadruple)
+                    }
+                }
         
         override func exitAsignation(_ ctx: ProgryParser.AsignationContext) {
             let curr = modules.getElement(forKey: "currentModule")
@@ -1035,17 +1060,15 @@ struct ProgryParserWrapper : ParserType {
             var assignQuadruple = Quadruple()
             assignQuadruple.op = "="
             assignQuadruple.opLeft = operands.popLast()
-            print("ASS", assignQuadruple.opLeft)
             
             let isArray = ctx.array()?.OPEN_SBRACKET()?.getText()
             let isMatrix = ctx.array()?.COMMA()?.getText()
-            
-            print("KEHAY", element?.id, globalModuleResult?.id)
             
             if element != nil {
               
                 
                 if isArray == "[" && isMatrix != "," {
+                    print("ENTRA A ARRAY ASSIGN")
                     let leftOperand = operands.popLast()
                     let rightOperand = element?.vector?.inf
                     let resultOperand = element?.vector?.sup
@@ -1055,16 +1078,17 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple)
                     
                     let temporalDirection = temporalMemory.newNumberDirection()
-                    let opDirection = MemoryDirection(type: .Number, address: temporalDirection)
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number, address: temporalDirection)
                     
                     let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
                     quadruples.list.append(dirQuadruple)
-                    
                     assignQuadruple.result = opDirection // en global cambiar a globalresult
                     
                    
                     
                 } else if isArray == "[" && isMatrix == "," {
+                    print("Entra a matriz assign")
+
                     let rightSize = operands.popLast()
                     let leftSize = operands.popLast()
                     
@@ -1076,7 +1100,7 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple)
                     
                     let newTemporalDirection1 = temporalMemory.newNumberDirection()
-                    let temp1 = MemoryDirection(type: .Number ,address: newTemporalDirection1)
+                    let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
                     
                     let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
                     quadruples.list.append(newQuadrupleSM)
@@ -1086,13 +1110,13 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple2)
                     
                     let newTemporalDirection2 = temporalMemory.newNumberDirection()
-                    let temp2 = MemoryDirection(type: .Number ,address: newTemporalDirection2)
+                    let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
                     
                     let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
                     quadruples.list.append(newQuadrupleSMS)
                     
                     let newTemporalDirection3 = temporalMemory.newNumberDirection()
-                    let opDirection = MemoryDirection(type: .Number ,address: newTemporalDirection3)
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
                     
                     let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: element?.cteDir), result: opDirection)
                     quadruples.list.append(lastQuadruple)
@@ -1115,7 +1139,7 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple)
                     
                     let temporalDirection = temporalMemory.newNumberDirection()
-                    let opDirection = MemoryDirection(type: .Number, address: temporalDirection)
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number, address: temporalDirection)
                     
                     let dirQuadruple = Quadruple(op: "+", opLeft: leftOperand, opRight: MemoryDirection(address: globalModuleResult?.cteDir), result: opDirection)
                     quadruples.list.append(dirQuadruple)
@@ -1136,7 +1160,7 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple)
                     
                     let newTemporalDirection1 = temporalMemory.newNumberDirection()
-                    let temp1 = MemoryDirection(type: .Number ,address: newTemporalDirection1)
+                    let temp1 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection1)
                     
                     let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
                     quadruples.list.append(newQuadrupleSM)
@@ -1146,13 +1170,13 @@ struct ProgryParserWrapper : ParserType {
                     quadruples.list.append(newQuadruple2)
                     
                     let newTemporalDirection2 = temporalMemory.newNumberDirection()
-                    let temp2 = MemoryDirection(type: .Number ,address: newTemporalDirection2)
+                    let temp2 = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection2)
                     
                     let newQuadrupleSMS = Quadruple(op: "+", opLeft: temp1, opRight: rightSize, result: temp2)
                     quadruples.list.append(newQuadrupleSMS)
                     
                     let newTemporalDirection3 = temporalMemory.newNumberDirection()
-                    let opDirection = MemoryDirection(type: .Number ,address: newTemporalDirection3)
+                    let opDirection = MemoryDirection(data: "POINTER", type: .Number ,address: newTemporalDirection3)
                     
                     let lastQuadruple = Quadruple(op: "+", opLeft: temp2, opRight: MemoryDirection(address: globalModuleResult?.cteDir), result: opDirection)
                     quadruples.list.append(lastQuadruple)
