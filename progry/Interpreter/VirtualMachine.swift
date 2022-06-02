@@ -233,11 +233,11 @@ struct VirtualMachine : VirtualMachineType {
                 switch l!.0{
                 case .Number:
                     let prod = Int(l!.1)! >= Int(r!.1)!
-                    print(">= QUADRUPLE ->", prod)
+                    print(">= QUADRUPLE ->")
                     memory.addValueToDir(dir: (result?.address)!, data: String(prod))
                 case .Decimal:
                     let prod =  Double(l!.1)! >= Double(r!.1)!
-                    print(">= QUADRUPLE ->", prod)
+                    print(">= QUADRUPLE ->")
                     memory.addValueToDir(dir: (result?.address)!, data: String(prod))
                 case .Text:
                     print("texts cannot compare")
@@ -273,6 +273,29 @@ struct VirtualMachine : VirtualMachineType {
                     print("void cannot compare")
                 }
                 pointer += 1
+            case "<=":
+                let l = memory.getValueFromDir(dir: (left?.address)!)
+                let r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                switch l!.0{
+                case .Number:
+                    let prod = Int(l!.1)! <= Int(r!.1)!
+                    print("<= QUADRUPLE ->", prod)
+                    memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                case .Decimal:
+                    let prod =  Double(l!.1)! <= Double(r!.1)!
+                    print("<= QUADRUPLE ->", prod)
+                    memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                case .Text:
+                    print("texts cannot compare")
+                case .Flag:
+                    print("flags cannot compare")
+                case .ERROR:
+                    print("error cannot compare")
+                case .VOID:
+                    print("void cannot compare")
+                }
+                pointer += 1
                 
             case "GOTO":
                 print("GOTO QUADRUPLE")
@@ -284,9 +307,10 @@ struct VirtualMachine : VirtualMachineType {
                 let condition = Bool(data!.1)
                 if condition == false{
                     pointer = (result?.quadruple)!
+                }else{
+                    pointer += 1
                 }
                 
-                pointer += 1
             case "ENDFUNC":
                 print("ENDFUNC QUADRUPLE")
                 moduleMemory = nil;
@@ -297,7 +321,6 @@ struct VirtualMachine : VirtualMachineType {
                 
                 // 3 number
                 
-                
                 print("ERA QUADRUPLE")
                 pointer += 1
             case "GOSUB":
@@ -306,27 +329,21 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "READ":
                 print("READ QUADRUPLE")
-                ReadPopUpViewController.presentPopUp(parentVC: topVc)
+                //ReadPopUpViewController.presentPopUp(parentVC: topVc)
                 //PopUpsViewController.presentPopUp(parentVC: topController)
                 //topVc.addComand(cmd: "writing")
                 //await ReadPopUpViewController.newTask
                 pointer += 1
                 
             case "WRITE":
-                
-                
-                print("RESULTADRESS WRITE", result?.address, "Y DATA", result?.data)
-                
+                print("WRITE QUADRUPLE")
                 if result?.data == "POINTER" {
                     let dataPointer = memory.getValueFromDir(dir: (result?.address)!)
                     let data = memory.getValueFromDir(dir: Int(dataPointer!.1)!)
                     topVc.addComand(cmd: data!.1)
-                    print("DATA DE WRITE", data)
                 } else {
                     let data = memory.getValueFromDir(dir: (result?.address)!)
                     topVc.addComand(cmd: data!.1)
-                    print("DATA WRITE", data)
-                    
                 }
                 pointer += 1
             default:

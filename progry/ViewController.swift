@@ -27,70 +27,73 @@ class ViewController: UIViewController, UITextViewDelegate{
     @IBOutlet weak var textView: UITextView!
     
     let variablesCode = """
-    PROGRAM_START;
+    PROGRAM_START
     
-    var number myAge;
-    var decimal myHeight;
-    var text myName;
-    var flag imSick;
+    var number myAge
+    var decimal myHeight
+    var text myName
+    var flag imSick
     
     main {
-        myHeight = 1.82;
-        write("Mi estatura es de ", myHeight);
-    
+        myHeight = 1.82
+        write("Mi estatura es de ", myHeight)
     }
     
-    PROGRAM_END;
+    PROGRAM_END
     """
     
     let whileCode = """
-    PROGRAM_START;
+    PROGRAM_START
     
-        var decimal limit;
+    var decimal limit
     
     main {
-        limit = 1.0;
+        limit = 1.0
     
         while (limit < 6) do {
-            write("Entra");
-            limit = limit + 1.0;
+            write("Entra")
+            limit = limit + 1.0
         }
     
     }
     
-    PROGRAM_END;
+    PROGRAM_END
     """
     
     let ifCode = """
-    PROGRAM_START;
+    PROGRAM_START
     
-        var decimal age;
+    var decimal age
     
     main {
-        age = 25.0;
+        age = 25.0
         
         if (age < 30) do {
     
-            write("Es menor que 30");
-        };
+            write("Es menor que 30")
+        }
     
     }
     
-    PROGRAM_END;
+    PROGRAM_END
     """;
 
     let forCode = """
-    PROGRAM_START;
+    PROGRAM_START
     
-        var number initial;
-        var number end;
+        var number initial
+        var number end
     
     main {
-        number = 10;
+        initial = 0
+        end = 2
+        for initial to end do {
+            write("Hello", initial)
+        }
     
     }
     
-    PROGRAM_END;
+    PROGRAM_END
     """;
     
     let pullUpController = SOPullUpControl()
@@ -133,6 +136,7 @@ class ViewController: UIViewController, UITextViewDelegate{
         codePrograms.append(variablesCode)
         codePrograms.append(whileCode)
         codePrograms.append(ifCode)
+        codePrograms.append(forCode)
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
