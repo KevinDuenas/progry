@@ -130,9 +130,15 @@ class Memory {
             if dir >= start! && dir < startDecimal {
 
                 return .Number
-            }else if dir >= startDecimal && dir < end!{
+            }else if dir >= startDecimal && dir < startText{
 
                 return .Decimal
+            }else if dir >= startText && dir < startFlag {
+
+                return .Text
+            }else if dir >= startFlag && dir <= end! {
+
+                return .Flag
             }
         }else{
             if dir >= start! && dir < startDecimal {

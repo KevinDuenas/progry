@@ -16,7 +16,7 @@ class ProgramsViewController: UIViewController {
     var selectedProgram = ""
     var showExamples = false
     var selectedExample : Int?
-    var examplePrograms = ["Variables", "Ciclo While", "Condicional If"]
+    var examplePrograms = ["Variables", "Ciclo While", "Condicional If", "Ciclo For"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
