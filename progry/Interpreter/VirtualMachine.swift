@@ -34,11 +34,14 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 topVc.clearCommandView()
             case "=":
-                let l = memory.getValueFromDir(dir: (left?.address)!)
-                if result?.data == "POINTER" || left?.data == "POINTER"{
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
                     memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
-                } else {
+                }else if left?.data == "POINTER"{
+                    l = memory.getValueFromDir(dir: Int(l!.1)!)
+                    memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
+                }else {
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
                 pointer += 1

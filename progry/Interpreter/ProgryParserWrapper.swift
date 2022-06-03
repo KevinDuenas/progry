@@ -401,12 +401,11 @@ struct ProgryParserWrapper : ParserType {
             }
             
         }
-    
-            
+        
+        
         
         override func enterFors(_ ctx: ProgryParser.ForsContext) {
             currentCicle = "FOR";
-            
             let curr = modules.getElement(forKey: currentModule)
             let globalModule = modules.getElement(forKey: "global")
             var firstVar : Variable?
@@ -422,9 +421,15 @@ struct ProgryParserWrapper : ParserType {
                 }
             }
             
+            guard let firstCte = ctx.cte(0)?.DIGIT()?.getText() else {return}
+            let cteDir =  constanteMemory.newNumberDirection()
+            let _ = constanteMemory.assignNumber(dir: cteDir, value: Int(firstCte)!)
             
+            //Creando el cuadruplo de asignación
+            let assignQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Number, address: cteDir), opRight: nil, result: MemoryDirection( type: firstVar?.type, address: firstVar?.memoryDirection))
+            quadruples.list.append(assignQuadruple)
             
-            if let lim = ctx.cte()?.DIGIT()?.getText() {
+            if let lim = ctx.cte(1)?.DIGIT()?.getText() {
                 // Constante
                 let constant = constanteMemory.newNumberDirection()
                 constanteMemory.assignData(dir: constant, data: lim)
@@ -451,7 +456,7 @@ struct ProgryParserWrapper : ParserType {
                 quadruples.list.append(Quadruple(op: "<=", opLeft: opLeft, opRight: opRight, result: opRes))
             }
             jumpsStack.append(quadruples.list.count - 1)
-    
+            
             //Go To F
             quadruples.list.append(Quadruple(op: "GOTOF", opLeft: MemoryDirection( type: .Flag, address: tempResultDir), opRight: nil, result: MemoryDirection()))
             jumpsStack.append(quadruples.list.count - 1)
@@ -486,13 +491,13 @@ struct ProgryParserWrapper : ParserType {
             let goToFIndex = jumpsStack.popLast()
             let goToQuadrupleIndex = jumpsStack.popLast()
             
-
+            
             //Go To
             quadruples.list.append(Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection(quadruple: goToQuadrupleIndex)))
             
             //Fill the quadruple of goToF
             let quadrupleCount = quadruples.list.count
-            quadruples.list[goToFIndex!].result? =  MemoryDirection(quadruple: quadrupleCount) 
+            quadruples.list[goToFIndex!].result? =  MemoryDirection(quadruple: quadrupleCount)
             
             currentCicle = "";
         }
@@ -1232,7 +1237,7 @@ struct ProgryParserWrapper : ParserType {
                     
                 } else if isArray == "[" && isMatrix == "," {
                     //print("Entra a matriz assign")
-
+                    
                     let rightSize = operands.popLast()
                     let leftSize = operands.popLast()
                     
@@ -1296,7 +1301,7 @@ struct ProgryParserWrapper : ParserType {
                     let rightSize = operands.popLast()
                     let leftSize = operands.popLast()
                     
-                     // aqui son direciones de memoria
+                    // aqui son direciones de memoria
                     let limSupM1 = globalModuleResult?.vector?.sup
                     let offM1 = globalModuleResult?.vector?.off
                     let limSupM2 = globalModuleResult?.matrix?.sup
