@@ -21,7 +21,7 @@ protocol UpdateCommandsProtocol{
 }
 
 class ViewController: UIViewController, UITextViewDelegate{
-
+    
     
     @IBOutlet weak var btnSave: UIBarButtonItem!
     @IBOutlet weak var textView: UITextView!
@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     PROGRAM_END
     """;
-
+    
     let forCode = """
     PROGRAM_START
     
@@ -95,6 +95,117 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     PROGRAM_END
     """;
+    
+    let findCode = """
+    PROGRAM_START
+    
+        var number index
+        var number end
+        var number arr[5]
+        var number find
+        var number curr
+    
+    main {
+        find = 32
+        end = 4
+        arr[0] = 10
+        arr[1] = 23
+        arr[2] = 43
+        arr[3] = 32
+        arr[4] = 34
+    
+        for index = 0 to end do {
+            curr = arr[index]
+            if (curr == find) do {
+                write("Encontrado en el indice", index)
+            }
+        }
+    
+    }
+    
+    PROGRAM_END
+    """
+    
+    let findCodeMatrix = """
+    PROGRAM_START
+    
+        var number i
+        var number iEnd
+        var number j
+        var number jEnd
+        var number mat[5,5]
+        var number find
+    
+    
+    main {
+    
+        find = 6
+
+        for i = 0 to 4 do {
+            for j = 0 to 4 do {
+                mat[i,j] = i * j
+            }
+        }
+    
+        for i = 0 to 4 do {
+            for j = 0 to 4 do {
+                if (find == mat[i,j]) {
+                    write("Encontrado", i , j)
+    
+                }
+                
+            }
+        }
+    
+    }
+    
+    PROGRAM_END
+    """
+    
+    
+    let matMulti = """
+    PROGRAM_START
+    
+        var number one[2,3]
+        var number two[3,2]
+        var number res[2,2]
+        var number i
+        var number j
+        var number x
+    
+    main {
+    
+        for i = 0 to 1 do {
+            for j = 0 to 2 do {
+                one[i,j] = i + j
+            }
+        }
+    
+        for i = 0 to 2 do {
+            for j = 0 to 1 do {
+                two[i,j] = i + j
+            }
+        }
+    
+        for i = 0 to 1 do {
+            for j = 0 to 1 do {
+                for x = 0 to 2 do {
+                    res[i,j] = res[i,j] + one[i,x] * two[x,j]
+                }
+            }
+        }
+    
+        for i = 0 to 1 do {
+            for j = 0 to 1 do {
+                write(res[i,j])
+            }
+        }
+    
+    }
+
+    PROGRAM_END
+    """
+    
     
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
@@ -137,6 +248,10 @@ class ViewController: UIViewController, UITextViewDelegate{
         codePrograms.append(whileCode)
         codePrograms.append(ifCode)
         codePrograms.append(forCode)
+        codePrograms.append(findCode)
+        codePrograms.append(matMulti)
+        codePrograms.append(findCodeMatrix)
+        
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
@@ -183,7 +298,7 @@ class ViewController: UIViewController, UITextViewDelegate{
         let result = interpreter.evaluate(input)
         
         
-    
+        
         
         switch result {
         case .success(let value):
@@ -258,9 +373,9 @@ extension String {
 }
 
 extension ViewController : RunProgramProtocol{
-
+    
     func run()  {
-         transform(textView.text)
+        transform(textView.text)
     }
     
     
