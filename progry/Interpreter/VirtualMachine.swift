@@ -15,10 +15,10 @@ struct VirtualMachine : VirtualMachineType {
         var pointer = 0;
         let topController: UIViewController =  UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
         let topVc = topController as! ViewController;
-        var moduleMemory : Memory?
+        var lastPointer  = 0
+        var onFunction = false
         
-        
-        
+
         while pointer < quadruples.count {
             
             let quadruple = quadruples[pointer]
@@ -34,6 +34,7 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 topVc.clearCommandView()
             case "=":
+                print("= QUADRUPLE", left?.address , result?.address)
                 var l = memory.getValueFromDir(dir: (left?.address)!)
                 if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
@@ -42,8 +43,10 @@ struct VirtualMachine : VirtualMachineType {
                     l = memory.getValueFromDir(dir: Int(l!.1)!)
                     memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
                 }else {
+                    print("left", l!.1, "res", result?.address)
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
+                
                 pointer += 1
             case "+":
                 var l = memory.getValueFromDir(dir: (left?.address)!)
@@ -351,7 +354,7 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 
             case "GOTO":
-                print("GOTO QUADRUPLE")
+                print("GOTO QUADRUPLE", (quadruple.result?.quadruple))
                 pointer = (quadruple.result?.quadruple)!
                 
             case "GOTOF":
@@ -366,19 +369,46 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "ENDFUNC":
                 print("ENDFUNC QUADRUPLE")
-                moduleMemory = nil;
-                pointer += 1
+                
+                memory.moduleStack.popLast()
+                pointer = lastPointer
             case "ERA":
                 
-                moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
+                let newModMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
                 
-                // 3 number
+                // 3 number -> //
+    
+                let quantities = result?.data?.components(separatedBy: "-")
                 
+                var aux = 0;
+                
+                while (aux < Int(quantities![0])! ){
+                    print("entra al numero")
+                    let _ = newModMemory.newNumberDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < Int(quantities![1])! ){
+                    let _ = newModMemory.newDecimalDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < Int(quantities![2])! ){
+                    let _ = newModMemory.newTextDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < Int(quantities![3])! ){
+                    let _ = newModMemory.newFlagDirection()
+                    aux += 1;
+                }
+                memory.moduleStack.append(newModMemory)
                 print("ERA QUADRUPLE")
                 pointer += 1
             case "GOSUB":
-                print("GOSUB QUADRUPLE")
-                pointer += 1
+                print("GOSUB QUADRUPLE", quadruple.result?.quadruple)
+                lastPointer = pointer + 1
+                pointer = (quadruple.result?.quadruple)!
                 
             case "READ":
                 print("READ QUADRUPLE")
@@ -388,16 +418,48 @@ struct VirtualMachine : VirtualMachineType {
                 //await ReadPopUpViewController.newTask
                 pointer += 1
                 
+            case "PARAM":
+                
+                print("PARAM QUADRUPLE")
+         
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                if result?.data == "POINTER"{
+                    let dir = memory.getValueFromDir(dir: (result?.address)!)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
+                } else {
+                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                }
+                
+                pointer += 1
+                
+            case "RETURN":
+                print("RETURN QUADRUPLE")
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                if result?.data == "POINTER"{
+                    let dir = memory.getValueFromDir(dir: (result?.address)!)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
+                }else if left?.data == "POINTER"{
+                    l = memory.getValueFromDir(dir: Int(l!.1)!)
+                    memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
+                }else {
+                    print("left", l!.1, "res", result?.address)
+                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                }
+                
+                pointer += 1
             case "WRITE":
                 print("WRITE QUADRUPLE")
                 if result?.data == "POINTER" {
                     let dataPointer = memory.getValueFromDir(dir: (result?.address)!)
                     let data = memory.getValueFromDir(dir: Int(dataPointer!.1)!)
+                    print("data pointer", dataPointer)
                     topVc.addComand(cmd: data!.1)
                 } else {
                     let data = memory.getValueFromDir(dir: (result?.address)!)
                     topVc.addComand(cmd: data!.1)
+                    print("data", result?.address)
                 }
+                
                 pointer += 1
             default:
                 pointer += 1
@@ -408,7 +470,7 @@ struct VirtualMachine : VirtualMachineType {
             
         }
         
-        
+        //   return uno(2) + uno(2)
         
         
         

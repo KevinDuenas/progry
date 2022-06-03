@@ -207,6 +207,26 @@ class ViewController: UIViewController, UITextViewDelegate{
     """
     
     
+    let moduleCode = """
+    PROGRAM_START
+        var number prueba
+    
+    module pelos : number (number age){
+      
+        return age
+    }
+    
+    main {
+        prueba = pelos(10)
+        write(prueba)
+        prueba = pelos(5) + pelos(10)
+        write(prueba)
+    }
+
+    PROGRAM_END
+    """
+    
+    
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
     var programName = ""
@@ -244,6 +264,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     
     func setupViews(){
+        codePrograms.append(moduleCode)
         codePrograms.append(variablesCode)
         codePrograms.append(whileCode)
         codePrograms.append(ifCode)

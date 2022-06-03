@@ -87,7 +87,6 @@ class Memory {
     public func assignData(dir: Int, data: String)  {
         switch getDirType(dir: dir){
         case .Number:
-            
             assignNumber(dir: dir, value: Int(data)!)
         case .Decimal:
             assignDecimal(dir: dir, value: Double(data)!)
@@ -136,13 +135,12 @@ class Memory {
             }else if dir >= startText && dir < startFlag {
 
                 return .Text
-            }else if dir >= startFlag && dir <= end! {
+            }else if dir >= startFlag && dir < end! {
 
                 return .Flag
             }
         }else{
             if dir >= start! && dir < startDecimal {
-
                 return .Number
             }else if dir >= startDecimal && dir < startText{
 
@@ -150,7 +148,7 @@ class Memory {
             }else if dir >= startText && dir < startFlag {
 
                 return .Text
-            }else if dir >= startFlag && dir <= end! {
+            }else if dir >= startFlag && dir < end! {
 
                 return .Flag
             }
