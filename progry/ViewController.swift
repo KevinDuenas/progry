@@ -71,6 +71,10 @@ class ViewController: UIViewController, UITextViewDelegate{
         if (age < 30) do {
     
             write("Es menor que 30")
+        }else{
+    
+            write("Es mayor que 30")
+    
         }
     
     }
@@ -149,7 +153,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
         for i = 0 to 4 do {
             for j = 0 to 4 do {
-                if (find == mat[i,j]) {
+                if (find == mat[i,j]) do {
                     write("Encontrado", i , j)
     
                 }

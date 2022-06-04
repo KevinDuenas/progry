@@ -328,128 +328,141 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func exitModule_call(_ ctx: ProgryParser.Module_callContext) {
-                    // Aquí no reviso ID => eso es en enterModule
+            // Aquí no reviso ID => eso es en enterModule
+            
+            let globalModule = modules.getElement(forKey: "global")
+            let globalModuleResult = globalModule?.varsTable.getElement(forKey: (ctx.ID()?.getText())!)
+            
+            
+            let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
+            var newStack : [MemoryDirection] = []
+            var pStack : [MemoryDirection] = []
+            let virtMemFake = Memory(start: 8000, end: 1000, type: .FUNCTION)
+            
+            let operandsStackSize = operands.count
+            
+            if mod?.parametersNumber != 0 {
+                if operandsStackSize == mod?.parametersNumber {
+                    //print("Parametros numero coinciden")
                     
-                    let globalModule = modules.getElement(forKey: "global")
-                    let globalModuleResult = globalModule?.varsTable.getElement(forKey: (ctx.ID()?.getText())!)
+                    print("mod ->", mod?.parametersNumber)
                     
                     
-                    let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
-                    var newStack : [MemoryDirection] = []
-                    var pStack : [MemoryDirection] = []
-                    let virtMemFake = Memory(start: 8000, end: 1000, type: .FUNCTION)
-                    
-                    let operandsStackSize = operands.count
-                    
-                    if mod?.parametersNumber != 0 {
-                        if operandsStackSize == mod?.parametersNumber {
-                            //print("Parametros numero coinciden")
-                            
-                            print("mod ->", mod?.parametersNumber)
-                            
-                            
-                            for i in 0...mod!.parametersNumber - 1 {
-                               
-                                if operands[i].type != mod?.paramaters![i] {
-                                    //print("ERROR, parametro #\(i) de \(operands[i].type) no coincide con \(mod?.paramaters![i])")
-                                    return
-                                }
-                                switch mod?.paramaters![i] {
-                                case .Number:
-                                    pStack.append(MemoryDirection(address: virtMemFake.newNumberDirection()))
-                                case .Decimal:
-                                    pStack.append(MemoryDirection(address: virtMemFake.newDecimalDirection()))
-                                case .Text:
-                                    pStack.append(MemoryDirection(address: virtMemFake.newTextDirection()))
-                                case .Flag:
-                                    pStack.append(MemoryDirection(address: virtMemFake.newFlagDirection()))
-                                    
-                                case .none: break
-                                    
-                                case .some(.ERROR): break
-                                    
-                                case .some(.VOID): break
-                                    
-                                }
-                            }
-                            
-                            
-                            // LLenamos el nuevo stack de temporales al reves
-                            // vaciamos el stack de expresion => operands_
-                            for _ in 0...mod!.parametersNumber - 1 {
-                                newStack.append(operands.popLast()!)
-                                
-                            }
-                            
-                            for i in 0...operandsStackSize - 1 {
-                                let opLeft = newStack.popLast()
-                                let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: pStack[i])
-                                quadruples.list.append(newQuadruple)
-                            }
-                            let indexMod = mod?.quadrupleIndex
-                            
-                            let newQuadruple = Quadruple(op: "GOSUB", opLeft: nil, opRight: nil, result: MemoryDirection(quadruple: indexMod ))
-                            quadruples.list.append(newQuadruple)
-                            
-                        } else {
-                            print("ERROR, Número de parámtetros no coincide...")
+                    for i in 0...mod!.parametersNumber - 1 {
+                        
+                        if operands[i].type != mod?.paramaters![i] {
+                            //print("ERROR, parametro #\(i) de \(operands[i].type) no coincide con \(mod?.paramaters![i])")
+                            return
                         }
-                        
-                    } else {
-                        let indexMod = mod?.quadrupleIndex
-                        
-                        let newQuadruple = Quadruple(op: "GOSUB", opLeft: nil, opRight: nil, result: MemoryDirection(quadruple: indexMod ))
-                        quadruples.list.append(newQuadruple)
-                    }
-                    
-                    switch mod?.returnType {
-                    case .Number:
-
-                        let parcheMem = temporalMemory.newNumberDirection()
-                        let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Number, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Number, address: parcheMem))
-                        quadruples.list.append(newQuadruple)
-                        operands.append(MemoryDirection(type: .Number, address: parcheMem))
-                    case .Decimal:
-                        let parcheMem = temporalMemory.newDecimalDirection()
-                        let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Decimal, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Decimal, address: parcheMem))
-                        quadruples.list.append(newQuadruple)
-                        operands.append(MemoryDirection(type: .Decimal, address: parcheMem))
-                    case .Flag:
-                        let parcheMem = temporalMemory.newFlagDirection()
-                        let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Flag, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Flag, address: parcheMem))
-                        quadruples.list.append(newQuadruple)
-                        operands.append(MemoryDirection(type: .Flag, address: parcheMem))
-                    case .Text:
-                        let parcheMem = temporalMemory.newTextDirection()
-                        let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Text, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Text, address: parcheMem))
-                        quadruples.list.append(newQuadruple)
-                        operands.append(MemoryDirection(type: .Text, address: parcheMem))
-                    case .none:
-                        break
-                    case .some(_):
-                        break
+                        switch mod?.paramaters![i] {
+                        case .Number:
+                            pStack.append(MemoryDirection(address: virtMemFake.newNumberDirection()))
+                        case .Decimal:
+                            pStack.append(MemoryDirection(address: virtMemFake.newDecimalDirection()))
+                        case .Text:
+                            pStack.append(MemoryDirection(address: virtMemFake.newTextDirection()))
+                        case .Flag:
+                            pStack.append(MemoryDirection(address: virtMemFake.newFlagDirection()))
+                            
+                        case .none: break
+                            
+                        case .some(.ERROR): break
+                            
+                        case .some(.VOID): break
+                            
+                        }
                     }
                     
                     
-                   
+                    // LLenamos el nuevo stack de temporales al reves
+                    // vaciamos el stack de expresion => operands_
+                    for _ in 0...mod!.parametersNumber - 1 {
+                        newStack.append(operands.popLast()!)
+                        
+                    }
+                    
+                    for i in 0...operandsStackSize - 1 {
+                        let opLeft = newStack.popLast()
+                        let newQuadruple = Quadruple(op: "PARAM", opLeft: opLeft, opRight: nil, result: pStack[i])
+                        quadruples.list.append(newQuadruple)
+                    }
+                    let indexMod = mod?.quadrupleIndex
+                    
+                    let newQuadruple = Quadruple(op: "GOSUB", opLeft: nil, opRight: nil, result: MemoryDirection(quadruple: indexMod ))
+                    quadruples.list.append(newQuadruple)
+                    
+                } else {
+                    print("ERROR, Número de parámtetros no coincide...")
                 }
+                
+            } else {
+                let indexMod = mod?.quadrupleIndex
+                
+                let newQuadruple = Quadruple(op: "GOSUB", opLeft: nil, opRight: nil, result: MemoryDirection(quadruple: indexMod ))
+                quadruples.list.append(newQuadruple)
+            }
+            
+            switch mod?.returnType {
+            case .Number:
+                
+                let parcheMem = temporalMemory.newNumberDirection()
+                let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Number, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Number, address: parcheMem))
+                quadruples.list.append(newQuadruple)
+                operands.append(MemoryDirection(type: .Number, address: parcheMem))
+            case .Decimal:
+                let parcheMem = temporalMemory.newDecimalDirection()
+                let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Decimal, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Decimal, address: parcheMem))
+                quadruples.list.append(newQuadruple)
+                operands.append(MemoryDirection(type: .Decimal, address: parcheMem))
+            case .Flag:
+                let parcheMem = temporalMemory.newFlagDirection()
+                let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Flag, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Flag, address: parcheMem))
+                quadruples.list.append(newQuadruple)
+                operands.append(MemoryDirection(type: .Flag, address: parcheMem))
+            case .Text:
+                let parcheMem = temporalMemory.newTextDirection()
+                let newQuadruple = Quadruple(op: "=", opLeft: MemoryDirection(type: .Text, address: globalModuleResult?.memoryDirection), opRight: nil, result: MemoryDirection(type: .Text, address: parcheMem))
+                quadruples.list.append(newQuadruple)
+                operands.append(MemoryDirection(type: .Text, address: parcheMem))
+            case .none:
+                break
+            case .some(_):
+                break
+            }
+            
+            
+            
+        }
         override func enterIfs(_ ctx: ProgryParser.IfsContext) {
             
             currentCicle = "IF";
             
         }
         
-        
+        override func enterElses(_ ctx: ProgryParser.ElsesContext) {
+            
+            let goToFIndex = jumpsStack.popLast()
+            //quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+            
+            let goToFalseNewIndex = quadruples.list.count + 1
+            quadruples.list[goToFIndex!].result?.quadruple = goToFalseNewIndex
+            
+            //Go To
+            let goToQuadruple = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
+            quadruples.list.append(goToQuadruple)
+            jumpsStack.append(quadruples.list.count - 1)
+            
+        }
         
         
         override func exitIfs(_ ctx: ProgryParser.IfsContext) {
             currentCicle = ""
             
-            let goToFIndex = jumpsStack.popLast()
-            //quadruples.list[goToFIndex!].result?.quadruple = quadruples.list.count
+            let goToIndex = jumpsStack.popLast()
             
-            let goToFalseNewIndex = quadruples.list.count
-            quadruples.list[goToFIndex!].result?.quadruple = goToFalseNewIndex
+            let quadrupleNo = quadruples.list.count
+            quadruples.list[goToIndex!].result?.quadruple = quadrupleNo
+            
         }
         
         override func enterDos(_ ctx: ProgryParser.DosContext) {
