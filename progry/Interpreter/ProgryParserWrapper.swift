@@ -333,7 +333,7 @@ struct ProgryParserWrapper : ParserType {
             var pStack : [MemoryDirection] = []
             let virtMemFake = Memory(start: 8000, end: 1000, type: .FUNCTION)
             
-            let operandsStackSize = operands.count
+            let operandsStackSize = ctx.expr().count
             
             if mod?.parametersNumber != 0 {
                 if operandsStackSize == mod?.parametersNumber {
