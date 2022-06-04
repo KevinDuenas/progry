@@ -76,6 +76,7 @@ struct ProgryParserWrapper : ParserType {
             var memoryDir = 0
             
             let totalIds = ctx.ID().count
+            print("ENTER MODULE IDS => \(totalIds)")
             
             // Necesitamos guardar en la tabla de funciones que
             // esta en el cuadruplo
@@ -89,6 +90,7 @@ struct ProgryParserWrapper : ParserType {
             // String
             currentModule = id
             
+            // Se crea en la lista de modulos el modulo
             let result = modules.addElement(Module.init(name: id, returnType: .VOID, key: id, forQuadruple: quadruples.list.count), forKey: id)
             
             if (result == .collision){
@@ -97,8 +99,8 @@ struct ProgryParserWrapper : ParserType {
             
             let mod = modules.getElement(forKey: currentModule)!
             
+            
             if moduleVoid == "void" {
-                
                 if totalIds > 1 { // Tengo uno o mÃ¡s parametros
                     
                     let paramNumbers = ctx.ID().count - 1
@@ -145,7 +147,6 @@ struct ProgryParserWrapper : ParserType {
                     mod.parametersNumber = 0
                 }
                 
-                
             } else {
                 // tipado
                 guard let moduleType = ctx.type(0)?.getText() else {
@@ -157,20 +158,19 @@ struct ProgryParserWrapper : ParserType {
                 switch moduleType {
                 case "number":
                     memoryDir = globalMemory.newNumberDirection()
-                    modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
+                    let _ = modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Number, direction: memoryDir), forKey: currentModule)
                 case "decimal":
                     memoryDir = globalMemory.newDecimalDirection()
-                    modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Decimal, direction: memoryDir), forKey: currentModule)
+                    let _ = modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Decimal, direction: memoryDir), forKey: currentModule)
                 case "text":
                     memoryDir = globalMemory.newTextDirection()
-                    modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Text, direction: memoryDir), forKey: currentModule)
+                    let _ = modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Text, direction: memoryDir), forKey: currentModule)
                 case "flag":
                     memoryDir = globalMemory.newFlagDirection()
-                    modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Flag, direction: memoryDir), forKey: currentModule)
+                    let _ = modGlobal?.varsTable.addElement(Variable(id: currentModule, type: .Flag, direction: memoryDir), forKey: currentModule)
                 default:
                     print("no type found it")
                 }
-                
                 
                 var modType : Types?
                 
@@ -197,9 +197,7 @@ struct ProgryParserWrapper : ParserType {
                     
                     mod.parametersNumber = paramNumbers
                     
-                    print("param numbers", paramNumbers)
                     for p in 1...paramNumbers {
-                        
                         guard let paramType = ctx.type(p)?.getText() else {
                             return
                         }
@@ -308,9 +306,7 @@ struct ProgryParserWrapper : ParserType {
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
-            
-            
-            guard let id = ctx.ID()?.getText() else{
+            guard let id = ctx.ID()?.getText() else{ // nombre dle modulo
                 return //regresar errror
             }
             guard let mod = modules.getElement(forKey: id) else {
@@ -323,15 +319,13 @@ struct ProgryParserWrapper : ParserType {
             modSizes = "\(mod.numbers)-\(mod.decimals)-\(mod.flags)-\(mod.texts)"
             let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
             quadruples.list.append(newQuadruple)
-            
-            
         }
         
         override func exitModule_call(_ ctx: ProgryParser.Module_callContext) {
             // Aquí no reviso ID => eso es en enterModule
             
             let globalModule = modules.getElement(forKey: "global")
-            let globalModuleResult = globalModule?.varsTable.getElement(forKey: (ctx.ID()?.getText())!)
+            let globalModuleResult = globalModule?.varsTable.getElement(forKey: (ctx.ID()?.getText())!) // variable modulo en tabla global
             
             
             let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
@@ -344,9 +338,6 @@ struct ProgryParserWrapper : ParserType {
             if mod?.parametersNumber != 0 {
                 if operandsStackSize == mod?.parametersNumber {
                     //print("Parametros numero coinciden")
-                    
-                    print("mod ->", mod?.parametersNumber)
-                    
                     
                     for i in 0...mod!.parametersNumber - 1 {
                         
@@ -372,7 +363,6 @@ struct ProgryParserWrapper : ParserType {
                             
                         }
                     }
-                    
                     
                     // LLenamos el nuevo stack de temporales al reves
                     // vaciamos el stack de expresion => operands_
