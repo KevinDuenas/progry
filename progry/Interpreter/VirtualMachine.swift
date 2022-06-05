@@ -43,8 +43,11 @@ struct VirtualMachine : VirtualMachineType {
                     l = memory.getValueFromDir(dir: Int(l!.1)!)
                     memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
                 }else {
-                    print("left", l!.1, "res", result?.address)
-                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                    if memory.moduleStack.count > 1 {
+                        memory.moduleStack[0].assignData(dir: result!.address!, data: l!.1)
+                    }else{
+                        memory.addValueToDir(dir: result!.address!, data: l!.1)
+                    }
                 }
                 
                 pointer += 1
@@ -443,7 +446,7 @@ struct VirtualMachine : VirtualMachineType {
                     aux += 1;
                 }
                 memory.moduleStack.append(newModMemory)
-                print("ERA QUADRUPLE")
+                print("ERA QUADRUPLE", result?.data)
                 pointer += 1
             case "GOSUB":
                 print("GOSUB QUADRUPLE", quadruple.result?.quadruple)
@@ -459,18 +462,29 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 
             case "PARAM":
+                var l : (Types, String)
                 
-         
-                var l = memory.getValueFromDir(dir: (left?.address)!)
+                if(memory.moduleStack.count > 1){
+                    print("ENTRA A PRIMER CONDICION PARAM")
+                    l = memory.moduleStack[memory.moduleStack.count - 2].getData(dir: (left?.address)!)
+                    print("PRIMER", l)
+                }else{
+                    print("ENTRA A ELSEE CONDICION PARAM")
+                    l = memory.getValueFromDir(dir: (left?.address)!)!
+                    print("ELSE", l)
+                }
+                
+                // var l = memory.getValueFromDir(dir: (left?.address)!)
+                // var l = memory.moduleStack[memory.moduleStack.count - 2].getData(dir: (left?.address)!)
                 if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
-                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l.1)
                 } else {
-                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                    memory.addValueToDir(dir: result!.address!, data: l.1)
                 }
-                print("PARAM QUADRUPLE",l!.1 )
-                pointer += 1
                 
+                print("PARAM QUADRUPLE",l.1 )
+                pointer += 1
             case "RETURN":
                 print("RETURN QUADRUPLE")
                 var l = memory.getValueFromDir(dir: (left?.address)!)
