@@ -258,6 +258,28 @@ class ViewController: UIViewController, UITextViewDelegate{
     PROGRAM_END
     """
     
+    let factorialCode = """
+    PROGRAM_START
+        var number prueba
+
+    module fact : number (number n){
+        var number ret
+        if(n == 1) do {
+            ret = n
+        } else {
+            ret = n * fact(n - 1)
+        }
+        return ret
+    }
+
+    main {
+        prueba = fact(10)
+        write(prueba)
+    }
+
+    PROGRAM_END
+    """
+    
     
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard

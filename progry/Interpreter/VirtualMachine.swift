@@ -16,7 +16,6 @@ struct VirtualMachine : VirtualMachineType {
         let topController: UIViewController =  UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
         let topVc = topController as! ViewController;
         var lastPointers = [Int]()
-        var onFunction = false
         
 
         while pointer < quadruples.count {
@@ -34,7 +33,7 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 topVc.clearCommandView()
             case "=":
-                print("= QUADRUPLE", left?.address , result?.address)
+                print("= QUADRUPLE")
                 var l = memory.getValueFromDir(dir: (left?.address)!)
                 if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
@@ -43,11 +42,7 @@ struct VirtualMachine : VirtualMachineType {
                     l = memory.getValueFromDir(dir: Int(l!.1)!)
                     memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
                 }else {
-                    if memory.moduleStack.count > 1 {
-                        memory.moduleStack[0].assignData(dir: result!.address!, data: l!.1)
-                    }else{
-                        memory.addValueToDir(dir: result!.address!, data: l!.1)
-                    }
+                    memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
                 
                 pointer += 1
@@ -418,13 +413,8 @@ struct VirtualMachine : VirtualMachineType {
             case "ERA":
                 
                 let newModMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
-                
-                // 3 number -> //
-    
                 let quantities = result?.data?.components(separatedBy: "-")
-                
                 var aux = 0;
-                
                 while (aux < Int(quantities![0])! ){
                     print("entra al numero")
                     let _ = newModMemory.newNumberDirection()
@@ -462,20 +452,14 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 
             case "PARAM":
+                print("PARAM QUADRUPLE")
                 var l : (Types, String)
-                
                 if(memory.moduleStack.count > 1){
-                    print("ENTRA A PRIMER CONDICION PARAM")
                     l = memory.moduleStack[memory.moduleStack.count - 2].getData(dir: (left?.address)!)
-                    print("PRIMER", l)
                 }else{
-                    print("ENTRA A ELSEE CONDICION PARAM")
                     l = memory.getValueFromDir(dir: (left?.address)!)!
-                    print("ELSE", l)
                 }
-                
-                // var l = memory.getValueFromDir(dir: (left?.address)!)
-                // var l = memory.moduleStack[memory.moduleStack.count - 2].getData(dir: (left?.address)!)
+
                 if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
                     memory.addValueToDir(dir: Int(dir!.1)!, data: l.1)
@@ -483,7 +467,6 @@ struct VirtualMachine : VirtualMachineType {
                     memory.addValueToDir(dir: result!.address!, data: l.1)
                 }
                 
-                print("PARAM QUADRUPLE",l.1 )
                 pointer += 1
             case "RETURN":
                 print("RETURN QUADRUPLE")
@@ -495,7 +478,6 @@ struct VirtualMachine : VirtualMachineType {
                     l = memory.getValueFromDir(dir: Int(l!.1)!)
                     memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
                 }else {
-                    print("left", l!.1, "res", result?.address)
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
                 pointer += 1
@@ -511,14 +493,11 @@ struct VirtualMachine : VirtualMachineType {
                     topVc.addComand(cmd: data!.1)
                     print("data", data!.1)
                 }
-                
                 pointer += 1
             default:
                 pointer += 1
                 print("NOT FOUND => \(quadruple.op ?? " ")")
-                
             }
-            
             
         }
         
