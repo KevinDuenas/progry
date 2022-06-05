@@ -15,7 +15,7 @@ struct VirtualMachine : VirtualMachineType {
         var pointer = 0;
         let topController: UIViewController =  UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
         let topVc = topController as! ViewController;
-        var lastPointer  = 0
+        var lastPointers = [Int]()
         var onFunction = false
         
 
@@ -352,13 +352,54 @@ struct VirtualMachine : VirtualMachineType {
                     print("void cannot compare")
                 }
                 pointer += 1
+            case "||":
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
+                
+                
+                let prod = Bool(l!.1)! || Bool(r!.1)!
+                print("|| QUADRUPLE ->", prod)
+                memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                
+                pointer += 1
+                
+            case "&&":
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
+                
+                
+                let prod = Bool(l!.1)! && Bool(r!.1)!
+                print("&& QUADRUPLE ->", prod)
+                memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                
+                pointer += 1
                 
             case "GOTO":
                 print("GOTO QUADRUPLE", (quadruple.result?.quadruple))
                 pointer = (quadruple.result?.quadruple)!
                 
             case "GOTOF":
-                print("GOTOF QUADRUPLE")
+                print("GOTOF QUADRUPLE", (result?.quadruple)!)
                 let data = memory.getValueFromDir(dir: (left?.address) as! Int)
                 let condition = Bool(data!.1)
                 if condition == false{
@@ -369,9 +410,8 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "ENDFUNC":
                 print("ENDFUNC QUADRUPLE")
-                
                 memory.moduleStack.popLast()
-                pointer = lastPointer
+                pointer = lastPointers.popLast()!
             case "ERA":
                 
                 let newModMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
@@ -407,7 +447,7 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
             case "GOSUB":
                 print("GOSUB QUADRUPLE", quadruple.result?.quadruple)
-                lastPointer = pointer + 1
+                lastPointers.append(pointer + 1)
                 pointer = (quadruple.result?.quadruple)!
                 
             case "READ":
@@ -420,7 +460,6 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "PARAM":
                 
-                print("PARAM QUADRUPLE")
          
                 var l = memory.getValueFromDir(dir: (left?.address)!)
                 if result?.data == "POINTER"{
@@ -429,7 +468,7 @@ struct VirtualMachine : VirtualMachineType {
                 } else {
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
-                
+                print("PARAM QUADRUPLE",l!.1 )
                 pointer += 1
                 
             case "RETURN":
@@ -445,19 +484,18 @@ struct VirtualMachine : VirtualMachineType {
                     print("left", l!.1, "res", result?.address)
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
-                
                 pointer += 1
             case "WRITE":
                 print("WRITE QUADRUPLE")
                 if result?.data == "POINTER" {
                     let dataPointer = memory.getValueFromDir(dir: (result?.address)!)
                     let data = memory.getValueFromDir(dir: Int(dataPointer!.1)!)
-                    print("data pointer", dataPointer)
+                    print("data pointer", data!.1)
                     topVc.addComand(cmd: data!.1)
                 } else {
                     let data = memory.getValueFromDir(dir: (result?.address)!)
                     topVc.addComand(cmd: data!.1)
-                    print("data", result?.address)
+                    print("data", data!.1)
                 }
                 
                 pointer += 1

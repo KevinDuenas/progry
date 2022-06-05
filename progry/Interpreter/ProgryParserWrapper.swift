@@ -303,32 +303,30 @@ struct ProgryParserWrapper : ParserType {
             tempCount = 0;
             
             //mod.print()
+            moduleMemory = nil
         }
         
         override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
-            guard let id = ctx.ID()?.getText() else{ // nombre dle modulo
-                return //regresar errror
-            }
-            guard let mod = modules.getElement(forKey: id) else {
-                //print("No existe el modulo en el directorio")
-                return
-            }
-            
-            // pasarle numero de cada cosa
-            var modSizes : String;
-            modSizes = "\(mod.numbers)-\(mod.decimals)-\(mod.flags)-\(mod.texts)"
-            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
-            quadruples.list.append(newQuadruple)
+
         }
         
         override func exitModule_call(_ ctx: ProgryParser.Module_callContext) {
-            // Aquí no reviso ID => eso es en enterModule
             
+            guard let id = ctx.ID()?.getText() else{ // nombre dle modulo
+                return //regresar errror
+            }
+            let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
+            // pasarle numero de cada cosa
+            var modSizes : String;
+            modSizes = "\(mod!.numbers)-\(mod!.decimals)-\(mod!.flags)-\(mod!.texts)"
+            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
+            quadruples.list.append(newQuadruple)
+            
+            
+            // Aquí no reviso ID => eso es en enterModule
             let globalModule = modules.getElement(forKey: "global")
             let globalModuleResult = globalModule?.varsTable.getElement(forKey: (ctx.ID()?.getText())!) // variable modulo en tabla global
             
-            
-            let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
             var newStack : [MemoryDirection] = []
             var pStack : [MemoryDirection] = []
             let virtMemFake = Memory(start: 8000, end: 1000, type: .FUNCTION)
@@ -1462,7 +1460,8 @@ struct ProgryParserWrapper : ParserType {
         }
         override func exitWrite(_ ctx: ProgryParser.WriteContext) {
             
-            let count = ctx.COMMA().count
+            var count = ctx.m_expr().count
+                count  = count - 1
             
             
             for i in 0...count {

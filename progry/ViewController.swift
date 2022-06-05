@@ -211,19 +211,47 @@ class ViewController: UIViewController, UITextViewDelegate{
     """
     
     
-    let moduleCode = """
+    let aux = """
     PROGRAM_START
         var number prueba
     
-    module pelos : number (number age){
-      
-        return age
+    module fibo : number (number n){
+        var number ret
+        ret = 10
+    
+        return ret
+    
     }
     
     main {
-        prueba = pelos(10)
+        prueba = 2 + fibo(2)
         write(prueba)
-        prueba = pelos(5) + pelos(10)
+    }
+
+    PROGRAM_END
+    """
+    
+    let moduleCode  = """
+    PROGRAM_START
+        var number prueba
+    
+    module fibo : number (number n){
+        var number ret
+        if(n == 0) do {
+            ret = 0
+        }else{
+            if(n == 1 || n == 2) do {
+                ret = 1
+            }else{
+                ret = fibo(n - 2) + fibo(n - 1)
+            }
+        }
+    
+        return ret
+    }
+    
+    main {
+        prueba = fibo(9)
         write(prueba)
     }
 
