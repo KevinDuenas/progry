@@ -50,7 +50,7 @@ class Module{
     }
     
     func print() {
-        Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex) paramnum \(parametersNumber) locavar \(localVarNumber) temporals \(temporalVars) number \(numbers)")
+        Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex) paramnum \(parametersNumber) locavar \(localVarNumber) temporals \(temporalVars) number \(numbers) TEMP NUMBER \(tempNumbers)")
     }
     
 }

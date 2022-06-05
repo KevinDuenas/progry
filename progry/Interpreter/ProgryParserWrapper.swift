@@ -77,7 +77,6 @@ struct ProgryParserWrapper : ParserType {
             var memoryDir = 0
             
             let totalIds = ctx.ID().count
-            print("ENTER MODULE IDS => \(totalIds)")
             
             // Necesitamos guardar en la tabla de funciones que
             // esta en el cuadruplo
@@ -318,9 +317,10 @@ struct ProgryParserWrapper : ParserType {
             }
             let mod = modules.getElement(forKey: (ctx.ID()?.getText())!)
             // pasarle numero de cada cosa
-            var modSizes : String;
-            modSizes = "\(mod!.numbers + mod!.tempNumbers)-\(mod!.decimals + mod!.tempDecimals)-\(mod!.texts)-\(mod!.flags + mod!.tempFlags)"
-            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
+            //            var modSizes : String;
+            //            modSizes = "\(mod!.numbers + mod!.tempNumbers)-\(mod!.decimals + mod!.tempDecimals)-\(mod!.texts)-\(mod!.flags + mod!.tempFlags)"
+            //            print("\(mod!.numbers) + \(mod!.tempNumbers)-\(mod!.decimals) + \(mod!.tempDecimals)-\(mod!.texts)-\(mod!.flags) + \(mod!.tempFlags)")
+            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: id))
             quadruples.list.append(newQuadruple)
             
             
@@ -1092,13 +1092,13 @@ struct ProgryParserWrapper : ParserType {
                     } else {
                         switch element?.type {
                         case .Number:
-                            opDirection = MemoryDirection(data: nil, type: .Number, address: element?.memoryDirection, quadruple: nil)
+                            opDirection = MemoryDirection(data: element?.id, type: .Number, address: element?.memoryDirection, quadruple: nil)
                         case .Decimal:
-                            opDirection = MemoryDirection(data: nil, type: .Decimal, address: element?.memoryDirection, quadruple: nil)
+                            opDirection = MemoryDirection(data: element?.id, type: .Decimal, address: element?.memoryDirection, quadruple: nil)
                         case .Text:
-                            opDirection = MemoryDirection(data: nil, type: .Text, address: element?.memoryDirection, quadruple: nil)
+                            opDirection = MemoryDirection(data: element?.id, type: .Text, address: element?.memoryDirection, quadruple: nil)
                         case .Flag:
-                            opDirection = MemoryDirection(data: nil, type: .Flag, address: element?.memoryDirection, quadruple: nil)
+                            opDirection = MemoryDirection(data: element?.id, type: .Flag, address: element?.memoryDirection, quadruple: nil)
                         case .VOID:
                             print("Type not found")
                         case .ERROR:
@@ -1120,25 +1120,25 @@ struct ProgryParserWrapper : ParserType {
                 if let number = ctx.cte()?.DIGIT()?.getText() {
                     let newMemoryDirection = constanteMemory.newNumberDirection()
                     let _ = constanteMemory.assignNumber(dir: newMemoryDirection, value: Int(number)!)
-                    opDirection = MemoryDirection(data: nil, type: .Number, address: newMemoryDirection, quadruple: nil)
+                    opDirection = MemoryDirection(data: number, type: .Number, address: newMemoryDirection, quadruple: nil)
                     
                 }else if let decimal = ctx.cte()?.DECIMAL()?.getText(){
                     
                     let newMemoryDirection = constanteMemory.newDecimalDirection()
                     let _ = constanteMemory.assignDecimal(dir: newMemoryDirection, value: Double(decimal)!)
-                    opDirection = MemoryDirection(data: nil, type: .Decimal, address: newMemoryDirection, quadruple: nil)
+                    opDirection = MemoryDirection(data: decimal, type: .Decimal, address: newMemoryDirection, quadruple: nil)
                     
                 }else if let text = ctx.cte()?.TEXT()?.getText(){
                     
                     let newMemoryDirection = constanteMemory.newTextDirection()
                     let _ = constanteMemory.assignText(dir: newMemoryDirection, value: text)
-                    opDirection = MemoryDirection(data: nil, type: .Text, address: newMemoryDirection, quadruple: nil)
+                    opDirection = MemoryDirection(data: text, type: .Text, address: newMemoryDirection, quadruple: nil)
                     
                 }else if let flag = ctx.cte()?.FLAG()?.getText(){
                     
                     let newMemoryDirection = constanteMemory.newFlagDirection()
                     let _ = constanteMemory.assignFlag(dir: newMemoryDirection, value: Bool(flag)!)
-                    opDirection = MemoryDirection(data: nil, type: .Flag, address: newMemoryDirection, quadruple: nil)
+                    opDirection = MemoryDirection(data: flag, type: .Flag, address: newMemoryDirection, quadruple: nil)
                     
                 }else{
                     //No concuerda con ningun tipo
@@ -1234,12 +1234,7 @@ struct ProgryParserWrapper : ParserType {
                 let rightTypeNum = typeOracle.checkOracle(typeOperand: (rightOperand?.type)!)
                 let leftTypeNum = typeOracle.checkOracle(typeOperand: (leftOperand?.type)!)
                 
-                print("rightty", rightTypeNum)
-                print("lefttty", leftTypeNum)
-                
                 let resTypeOracle = typeOracle.validate(left: leftTypeNum, right: rightTypeNum, op: 0)
-                
-                print("val", resTypeOracle)
                 
                 if resTypeOracle == .Number {
                     
@@ -1577,6 +1572,8 @@ struct ProgryParserWrapper : ParserType {
         override func exitProgram(_ ctx: ProgryParser.ProgramContext) {
             quadruples.print()
             print("op count", operands.count)
+            let mod = modules.getElement(forKey: "fibo")
+            print("GLOB", mod?.print())
         }
         
     }
