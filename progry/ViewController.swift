@@ -71,6 +71,10 @@ class ViewController: UIViewController, UITextViewDelegate{
         if (age < 30) do {
     
             write("Es menor que 30")
+        }else{
+    
+            write("Es mayor que 30")
+    
         }
     
     }
@@ -149,7 +153,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
         for i = 0 to 4 do {
             for j = 0 to 4 do {
-                if (find == mat[i,j]) {
+                if (find == mat[i,j]) do {
                     write("Encontrado", i , j)
     
                 }
@@ -207,6 +211,76 @@ class ViewController: UIViewController, UITextViewDelegate{
     """
     
     
+    let aux = """
+    PROGRAM_START
+        var number prueba
+    
+    module fibo : number (number n){
+        var number ret
+        ret = 10
+    
+        return ret
+    
+    }
+    
+    main {
+        prueba = 2 + fibo(2)
+        write(prueba)
+    }
+
+    PROGRAM_END
+    """
+    
+    let moduleCode  = """
+    PROGRAM_START
+        var number prueba
+    
+    module fibo : number (number n){
+        var number ret
+        if(n == 0) do {
+            ret = 0
+        }else{
+            if(n == 1 || n == 2) do {
+                ret = 1
+            }else{
+                ret = fibo(n - 2) + fibo(n - 1)
+            }
+        }
+    
+        return ret
+    }
+    
+    main {
+        prueba = fibo(9)
+        write(prueba)
+    }
+
+    PROGRAM_END
+    """
+    
+    let factorialCode = """
+    PROGRAM_START
+        var number prueba
+
+    module fact : number (number n){
+        var number ret
+        if(n == 1) do {
+            ret = n
+        } else {
+            ret = n * fact(n - 1)
+        }
+        return ret
+    }
+
+    main {
+        prueba = fact(10)
+        write(prueba)
+    }
+
+    PROGRAM_END
+    """
+    
+    
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
     var programName = ""
@@ -244,6 +318,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     
     func setupViews(){
+        codePrograms.append(moduleCode)
         codePrograms.append(variablesCode)
         codePrograms.append(whileCode)
         codePrograms.append(ifCode)

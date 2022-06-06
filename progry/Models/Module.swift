@@ -24,6 +24,10 @@ class Module{
     var texts : Int;
     var flags : Int;
     
+    var tempNumbers : Int;
+    var tempDecimals : Int;
+    var tempFlags : Int;
+    
     
     var nextNode: Module?
     
@@ -40,6 +44,9 @@ class Module{
         self.parametersNumber = 0;
         self.localVarNumber = 0;
         self.temporalVars = 0;
+        self.tempFlags = 0;
+        self.tempDecimals = 0;
+        self.tempNumbers = 0;
     }
     
     func print() {

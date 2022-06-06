@@ -6,13 +6,12 @@
 //
 
 protocol ParserType {
-
-    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory)
+    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory, modules : HashTable<Module>)
 }
 
 protocol VirtualMachineType {
 
-    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory) throws -> Double
+    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory, modules : HashTable<Module>) throws -> Double
 }
 
 protocol InstructionType {
@@ -45,7 +44,7 @@ struct Interpreter {
     /// Evaluates the input string and returns resulting number or an error
     func evaluate(_ input: String) -> Result<Double, Error> {
         
-        let result : ([Quadruple], CoreMemory)
+        let result : ([Quadruple], CoreMemory, HashTable<Module>)
 
         do {
             result = try parser.parseExpression(input)
@@ -56,7 +55,7 @@ struct Interpreter {
         }
 
         do {
-            let resultValue = try  virtualMachine.execute(result.0, withMemory: result.1) //mandar la memoria
+            let resultValue = try  virtualMachine.execute(result.0, withMemory: result.1, modules: result.2) //mandar la memoria
             return .success(resultValue)
         }
         catch {

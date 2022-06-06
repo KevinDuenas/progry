@@ -14,6 +14,7 @@ class CoreMemory {
     let temporal : Memory?
     let global : Memory?
     let constant : Memory?
+    var moduleStack = [Memory]()
     
     
     init(temporal : Memory, global : Memory, constant: Memory){
@@ -24,15 +25,17 @@ class CoreMemory {
 
     func addValueToDir(dir : Int, data: String)  {
         
-        if((temporal?.start!)! <= dir && dir <= (temporal?.end!)! ){
+        if((temporal?.start!)! <= dir && dir < (temporal?.end!)! ){
 
             temporal?.assignData(dir: dir, data: data)
-        }else if ((global?.start!)! <= dir && dir <= (global?.end!)! ){
+        }else if ((global?.start!)! <= dir && dir < (global?.end!)! ){
 
             global?.assignData(dir: dir, data: data)
-        }else if ((constant?.start!)! <= dir && dir <= (constant?.end!)! ){
+        }else if ((constant?.start!)! <= dir && dir < (constant?.end!)! ){
 
             constant?.assignData(dir: dir, data: data)
+        }else {
+            moduleStack[moduleStack.count-1].assignData(dir: dir, data: data)
         }
         
     }
@@ -44,33 +47,22 @@ class CoreMemory {
         var val : (Types, String)?
 
          
-        if((temporal?.start!)! <= dir && dir <= (temporal?.end!)! ){
+        if((temporal?.start!)! <= dir && dir < (temporal?.end!)! ){
 
             val = temporal?.getData(dir: dir)
             
-        }else if ((global?.start!)! <= dir && dir <= (global?.end!)! ){
+        }else if ((global?.start!)! <= dir && dir < (global?.end!)! ){
 
             val = global?.getData(dir: dir)
-        }else if ((constant?.start!)! <= dir && dir <= (constant?.end!)! ){
+        }else if ((constant?.start!)! <= dir && dir < (constant?.end!)! ){
 
             val = constant?.getData(dir: dir)
+        }else{
+            val = moduleStack[moduleStack.count-1].getData(dir: dir)
         }
          
         
         return val
-//        switch val!.0 {
-//        case .Number:
-//            return Int(val!.1)
-//        case.Decimal:
-//
-//        case .Text:
-//
-//        case .Flag:
-//        case .ERROR:
-//            <#code#>
-//        case .VOID:
-//            <#code#>
-//        }
         
     }
     

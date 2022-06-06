@@ -8,17 +8,16 @@
 import UIKit
 
 struct VirtualMachine : VirtualMachineType {
-    
-    
-    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory)  throws -> Double  {
+
+
+    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory, modules: HashTable<Module>)  throws -> Double  {
         
         var pointer = 0;
         let topController: UIViewController =  UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
         let topVc = topController as! ViewController;
-        var moduleMemory : Memory?
+        var lastPointers = [Int]()
         
-        
-        
+
         while pointer < quadruples.count {
             
             let quadruple = quadruples[pointer]
@@ -34,6 +33,7 @@ struct VirtualMachine : VirtualMachineType {
                 pointer += 1
                 topVc.clearCommandView()
             case "=":
+                print("= QUADRUPLE")
                 var l = memory.getValueFromDir(dir: (left?.address)!)
                 if result?.data == "POINTER"{
                     let dir = memory.getValueFromDir(dir: (result?.address)!)
@@ -44,6 +44,7 @@ struct VirtualMachine : VirtualMachineType {
                 }else {
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }
+                
                 pointer += 1
             case "+":
                 var l = memory.getValueFromDir(dir: (left?.address)!)
@@ -349,13 +350,69 @@ struct VirtualMachine : VirtualMachineType {
                     print("void cannot compare")
                 }
                 pointer += 1
+            case "||":
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
                 
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
+                
+                
+                let prod = Bool(l!.1)! || Bool(r!.1)!
+                print("|| QUADRUPLE ->", prod)
+                memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                
+                pointer += 1
+                
+            case "&&":
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                var r = memory.getValueFromDir(dir: (right?.address)!)
+                
+                if left?.data == "POINTER" {
+                    let leftPointer = memory.getValueFromDir(dir: (left?.address)!)
+                    l = memory.getValueFromDir(dir: Int(leftPointer!.1)!)
+                }
+                
+                if right?.data == "POINTER" {
+                    let rightPointer = memory.getValueFromDir(dir: (right?.address)!)
+                    r = memory.getValueFromDir(dir: Int(rightPointer!.1)!)
+                }
+                
+                
+                let prod = Bool(l!.1)! && Bool(r!.1)!
+                print("&& QUADRUPLE ->", prod)
+                memory.addValueToDir(dir: (result?.address)!, data: String(prod))
+                
+                pointer += 1
+            
+            case "VER":
+                print("VER QUADRUPLE")
+                
+                let l = memory.getValueFromDir(dir: (left?.address)!)
+                let res = memory.getValueFromDir(dir: Int(((result?.data)!))!)
+                
+                if( 0 <= Int(l!.1)! && Int(l!.1)! < Int(res!.1)!){
+                    
+                }else{
+                    let errorString = "Index \(l!.1) is out of range."
+                    topVc.addComand(cmd:errorString)
+                    pointer = quadruples.count
+                }
+                
+                pointer += 1
             case "GOTO":
-                print("GOTO QUADRUPLE")
+                print("GOTO QUADRUPLE", (quadruple.result?.quadruple))
                 pointer = (quadruple.result?.quadruple)!
                 
             case "GOTOF":
-                print("GOTOF QUADRUPLE")
+                print("GOTOF QUADRUPLE", (result?.quadruple)!)
                 let data = memory.getValueFromDir(dir: (left?.address) as! Int)
                 let condition = Bool(data!.1)
                 if condition == false{
@@ -366,19 +423,44 @@ struct VirtualMachine : VirtualMachineType {
                 
             case "ENDFUNC":
                 print("ENDFUNC QUADRUPLE")
-                moduleMemory = nil;
-                pointer += 1
+                memory.moduleStack.popLast()
+                pointer = lastPointers.popLast()!
+                
             case "ERA":
-                
-                moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
-                
-                // 3 number
-                
                 print("ERA QUADRUPLE")
+                let mod = modules.getElement(forKey: (result?.data)!)
+                let newModMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
+                let numbers = (mod?.numbers ?? 0) + (mod?.parametersNumber ?? 0) + (mod?.tempNumbers  ?? 0)
+                let decimals = (mod?.decimals ?? 0) + (mod?.tempDecimals  ?? 0)
+                let texts = (mod?.texts ?? 0)
+                let flags = (mod?.flags ?? 0) + (mod?.tempFlags  ?? 0)
+                var aux = 0;
+                
+                while (aux < numbers){
+                    let _ = newModMemory.newNumberDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < decimals){
+                    let _ = newModMemory.newDecimalDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < texts){
+                    let _ = newModMemory.newTextDirection()
+                    aux += 1;
+                }
+                aux = 0;
+                while (aux < flags){
+                    let _ = newModMemory.newFlagDirection()
+                    aux += 1;
+                }
+                memory.moduleStack.append(newModMemory)
                 pointer += 1
             case "GOSUB":
-                print("GOSUB QUADRUPLE")
-                pointer += 1
+                print("GOSUB QUADRUPLE", quadruple.result?.quadruple)
+                lastPointers.append(pointer + 1)
+                pointer = (quadruple.result?.quadruple)!
                 
             case "READ":
                 print("READ QUADRUPLE")
@@ -388,27 +470,57 @@ struct VirtualMachine : VirtualMachineType {
                 //await ReadPopUpViewController.newTask
                 pointer += 1
                 
+            case "PARAM":
+                print("PARAM QUADRUPLE")
+                var l : (Types, String)
+                if(memory.moduleStack.count > 1){
+                    l = memory.moduleStack[memory.moduleStack.count - 2].getData(dir: (left?.address)!)
+                }else{
+                    l = memory.getValueFromDir(dir: (left?.address)!)!
+                }
+
+                if result?.data == "POINTER"{
+                    let dir = memory.getValueFromDir(dir: (result?.address)!)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l.1)
+                } else {
+                    memory.addValueToDir(dir: result!.address!, data: l.1)
+                }
+                
+                pointer += 1
+            case "RETURN":
+                print("RETURN QUADRUPLE")
+                var l = memory.getValueFromDir(dir: (left?.address)!)
+                if result?.data == "POINTER"{
+                    let dir = memory.getValueFromDir(dir: (result?.address)!)
+                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
+                }else if left?.data == "POINTER"{
+                    l = memory.getValueFromDir(dir: Int(l!.1)!)
+                    memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
+                }else {
+                    memory.addValueToDir(dir: result!.address!, data: l!.1)
+                }
+                pointer += 1
             case "WRITE":
                 print("WRITE QUADRUPLE")
                 if result?.data == "POINTER" {
                     let dataPointer = memory.getValueFromDir(dir: (result?.address)!)
                     let data = memory.getValueFromDir(dir: Int(dataPointer!.1)!)
+                    print("data pointer", data!.1)
                     topVc.addComand(cmd: data!.1)
                 } else {
                     let data = memory.getValueFromDir(dir: (result?.address)!)
                     topVc.addComand(cmd: data!.1)
+                    print("data", data!.1)
                 }
                 pointer += 1
             default:
                 pointer += 1
                 print("NOT FOUND => \(quadruple.op ?? " ")")
-                
             }
-            
             
         }
         
-        
+        //   return uno(2) + uno(2)
         
         
         
