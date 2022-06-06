@@ -8,9 +8,9 @@
 import UIKit
 
 struct VirtualMachine : VirtualMachineType {
-    
-    
-    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory)  throws -> Double  {
+
+
+    func execute(_ quadruples: [Quadruple], withMemory memory : CoreMemory, modules: HashTable<Module>)  throws -> Double  {
         
         var pointer = 0;
         let topController: UIViewController =  UIApplication.shared.keyWindow!.rootViewController!.presentedViewController!.childViewControllerForPointerLock!
@@ -391,7 +391,22 @@ struct VirtualMachine : VirtualMachineType {
                 memory.addValueToDir(dir: (result?.address)!, data: String(prod))
                 
                 pointer += 1
+            
+            case "VER":
+                print("VER QUADRUPLE")
                 
+                let l = memory.getValueFromDir(dir: (left?.address)!)
+                let res = memory.getValueFromDir(dir: Int(((result?.data)!))!)
+                
+                if( 0 <= Int(l!.1)! && Int(l!.1)! < Int(res!.1)!){
+                    
+                }else{
+                    let errorString = "Index \(l!.1) is out of range."
+                    topVc.addComand(cmd:errorString)
+                    pointer = quadruples.count
+                }
+                
+                pointer += 1
             case "GOTO":
                 print("GOTO QUADRUPLE", (quadruple.result?.quadruple))
                 pointer = (quadruple.result?.quadruple)!
@@ -410,33 +425,37 @@ struct VirtualMachine : VirtualMachineType {
                 print("ENDFUNC QUADRUPLE")
                 memory.moduleStack.popLast()
                 pointer = lastPointers.popLast()!
-            case "ERA":
                 
+            case "ERA":
+                print("ERA QUADRUPLE")
+                let mod = modules.getElement(forKey: (result?.data)!)
                 let newModMemory = Memory(start: 8000, end: 10000, type: .FUNCTION) //Instanciando nueva memoria
-                let quantities = result?.data?.components(separatedBy: "-")
+                let numbers = (mod?.numbers ?? 0) + (mod?.parametersNumber ?? 0) + (mod?.tempNumbers  ?? 0)
+                let decimals = (mod?.decimals ?? 0) + (mod?.tempDecimals  ?? 0)
+                let texts = (mod?.texts ?? 0)
+                let flags = (mod?.flags ?? 0) + (mod?.tempFlags  ?? 0)
                 var aux = 0;
-                while (aux < Int(quantities![0])! ){
-                    print("entra al numero")
+                
+                while (aux < numbers){
                     let _ = newModMemory.newNumberDirection()
                     aux += 1;
                 }
                 aux = 0;
-                while (aux < Int(quantities![1])! ){
+                while (aux < decimals){
                     let _ = newModMemory.newDecimalDirection()
                     aux += 1;
                 }
                 aux = 0;
-                while (aux < Int(quantities![2])! ){
+                while (aux < texts){
                     let _ = newModMemory.newTextDirection()
                     aux += 1;
                 }
                 aux = 0;
-                while (aux < Int(quantities![3])! ){
+                while (aux < flags){
                     let _ = newModMemory.newFlagDirection()
                     aux += 1;
                 }
                 memory.moduleStack.append(newModMemory)
-                print("ERA QUADRUPLE", result?.data)
                 pointer += 1
             case "GOSUB":
                 print("GOSUB QUADRUPLE", quadruple.result?.quadruple)

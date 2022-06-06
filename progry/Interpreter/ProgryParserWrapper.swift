@@ -293,7 +293,7 @@ struct ProgryParserWrapper : ParserType {
             // pasarle numero de cada cosa
             var modSizes : String;
             modSizes = "10-10-10-10"
-            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: modSizes))
+            let newQuadruple = Quadruple(op: "ERA", opLeft: nil, opRight: nil, result: MemoryDirection(data: id))
             quadruples.list.append(newQuadruple)
             
             
@@ -1532,7 +1532,7 @@ struct ProgryParserWrapper : ParserType {
         
     }
     
-    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory) {
+    func parseExpression(_ input: String) throws -> ([Quadruple], CoreMemory, modules: HashTable<Module>) {
         //print("parse Expression", input)
         let parser = try buildParser(input)
         let programContext = try parser.program()
@@ -1540,7 +1540,7 @@ struct ProgryParserWrapper : ParserType {
         let listener = Listener()
         try ParseTreeWalker().walk(listener, programContext)
         
-        return (listener.quadruples.list, CoreMemory(temporal: listener.temporalMemory, global: listener.globalMemory, constant: listener.constanteMemory))
+        return (listener.quadruples.list, CoreMemory(temporal: listener.temporalMemory, global: listener.globalMemory, constant: listener.constanteMemory), listener.modules)
     }
     
     
