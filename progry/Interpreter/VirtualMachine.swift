@@ -35,12 +35,17 @@ struct VirtualMachine : VirtualMachineType {
             case "=":
                 print("= QUADRUPLE")
                 var l = memory.getValueFromDir(dir: (left?.address)!)
-                if result?.data == "POINTER"{
-                    let dir = memory.getValueFromDir(dir: (result?.address)!)
-                    memory.addValueToDir(dir: Int(dir!.1)!, data: l!.1)
-                }else if left?.data == "POINTER"{
-                    l = memory.getValueFromDir(dir: Int(l!.1)!)
-                    memory.addValueToDir(dir: Int((result?.address)!), data: l!.1)
+                var res : Int
+
+                if result?.data == "POINTER" || left?.data == "POINTER"{
+                    res = (result?.address)!
+                    if result?.data == "POINTER" {
+                        res = Int(memory.getValueFromDir(dir: (result?.address)!)!.1)!
+                    }
+                    if left?.data == "POINTER" {
+                        l = memory.getValueFromDir(dir: Int(l!.1)!)
+                    }
+                    memory.addValueToDir(dir: res, data: l!.1)
                 }else {
                     memory.addValueToDir(dir: result!.address!, data: l!.1)
                 }

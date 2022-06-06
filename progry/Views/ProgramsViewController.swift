@@ -16,7 +16,8 @@ class ProgramsViewController: UIViewController {
     var selectedProgram = ""
     var showExamples = false
     var selectedExample : Int?
-    var examplePrograms = ["Modules","Variables", "Ciclo While", "Condicional If", "Ciclo For", "Find on array", "Multi mat", "Find on matrix"]
+    var examplePrograms = ExamplePrograms()
+    //["Modules","Variables", "Ciclo While", "Condicional If", "Ciclo For", "Find on array", "Multi mat", "Find on matrix"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +72,11 @@ extension ProgramsViewController {
     }
     
     func loadExamples() {
-        programs = examplePrograms
+        
+        for program in examplePrograms.programs {
+            print("entra", program)
+            programs.append(program.name)
+        }
     }
     
     func deleteProgram(index : Int){
@@ -79,7 +84,6 @@ extension ProgramsViewController {
         var name = programs[index]
         name = "PROGRY-\(name)"
         UserDefaults.standard.removeObject(forKey: name)
-        
         
     }
 }

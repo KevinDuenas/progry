@@ -23,6 +23,9 @@ class CoreMemory {
         self.constant = constant
     }
 
+    // Función encargada de añadir un valor a
+    // una dirección especifica. Validando
+    // los limites de cada memoria que tenemos
     func addValueToDir(dir : Int, data: String)  {
         
         if((temporal?.start!)! <= dir && dir < (temporal?.end!)! ){
@@ -40,7 +43,9 @@ class CoreMemory {
         
     }
     
- 
+    // Función que retorna un un valor y su tipo
+    // dada una dirección específica. Validando
+    // los limites de cada memoria que tenemos
     
      func getValueFromDir(dir : Int) -> (Types, String)? {
          

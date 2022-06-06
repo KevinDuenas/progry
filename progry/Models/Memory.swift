@@ -38,7 +38,8 @@ class Memory {
     var flagMemory : [Bool] = []
     
         
-    
+    // Inicializador de clase Memory, requiere limite inferior, superior
+    // y tipo de memoria
     init(start : Int, end :Int, type: MemoryType){
         
         self.start = start
@@ -83,7 +84,8 @@ class Memory {
         
     }
     
-    
+    // Funcion que asigna un valor a la direccion
+    // indicada respetando su tipo del dato
     public func assignData(dir: Int, data: String)  {
         switch getDirType(dir: dir){
         case .Number:
@@ -103,6 +105,8 @@ class Memory {
         
     }
     
+    // Funcion que regresa el tipo y valor de un espacio
+    // de memoria especifico dentro del rango de memoria
     public func getData(dir: Int) -> (Types, String) {
         switch getDirType(dir: dir){
            
@@ -123,6 +127,8 @@ class Memory {
         
     }
     
+    // Funcion encargada de obtener el tipo de memoria
+    // de acuerdo a una direccion
     public func getDirType(dir: Int) -> Types {
         if self.type == .TEMPORAL {
 
@@ -158,13 +164,17 @@ class Memory {
         
     }
 
+    // Funcion encargda de assignar un valor de tipo
+    // number
     public func assignNumber(dir: Int, value: Int) -> Bool{
         
         let arrayDir = dir - startNumber
         numberMemory[arrayDir] = value
         return true
     }
-
+    
+    // Funcion encargda de assignar un valor de tipo
+    // decimal
     public func assignDecimal(dir: Int, value: Double) -> Bool {
         
         let arrayDir = dir - startDecimal
@@ -172,6 +182,8 @@ class Memory {
         return true
     }
 
+    // Funcion encargda de assignar un valor de tipo
+    // text
     public func assignText(dir: Int, value: String) -> Bool {
 
         let arrayDir = dir - startText
@@ -180,6 +192,8 @@ class Memory {
 
     }
 
+    // Funcion encargda de assignar un valor de tipo
+    // flag
     public func assignFlag(dir: Int, value: Bool) -> Bool {
 
         let arrayDir = dir - startFlag
@@ -188,18 +202,24 @@ class Memory {
 
     }
     
+    // Funcion encargda de retornar un valor de tipo
+    // number dada una direccion
     public func getNumber(dir: Int) -> Int{
         
         let arrayDir = dir - startNumber
         return numberMemory[arrayDir]
     }
 
+    // Funcion encargda de retornar un valor de tipo
+    // decimal dada una direccion
     public func getDecimal(dir: Int) -> Double {
         
         let arrayDir = dir - startDecimal
         return   decimalMemory[arrayDir]
     }
 
+    // Funcion encargda de retornar un valor de tipo
+    // text dada una direccion
     public func getText(dir: Int) -> String {
 
         let arrayDir = dir - startText
@@ -207,6 +227,8 @@ class Memory {
 
     }
 
+    // Funcion encargda de retornar un valor de tipo
+    // flag dada una direccion
     public func getFlag(dir: Int) -> Bool {
 
         let arrayDir = dir - startFlag
@@ -215,14 +237,17 @@ class Memory {
     }
     
     
-
+    // Funcion que crea un nuevo espacio en memoria
+    // de tipo number y regresa la direccion con el offset
     public func newNumberDirection() -> Int{
         let direction = startNumber + countNumber;
         numberMemory.append(0)
         countNumber += 1
         return direction
     }
-    
+
+    // Funcion que crea un nuevo espacio en memoria
+    // de tipo decimal y regresa la direccion con el offset
     public func newDecimalDirection() -> Int {
 
         let direction = startDecimal + countDecimal;
@@ -232,6 +257,8 @@ class Memory {
 
     }
 
+    // Funcion que crea un nuevo espacio en memoria
+    // de tipo text y regresa la direccion con el offset
     public func newTextDirection() -> Int {
 
         let direction = startText + countText;
@@ -241,6 +268,8 @@ class Memory {
 
     }
 
+    // Funcion que crea un nuevo espacio en memoria
+    // de tipo flag y regresa la direccion con el offset
     public func newFlagDirection() -> Int {
 
         let direction = startFlag + countFlag;
@@ -250,6 +279,8 @@ class Memory {
 
     }
     
+    // Funcion que imprime los limite de cada tipo
+    // de la memoria junto con su contador
     public func printMemory() {
 
         print("NUMBER: \(startNumber) -  \(startNumber + arraySize - 1)  COUNTER -> \(countNumber)")

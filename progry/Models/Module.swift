@@ -49,6 +49,7 @@ class Module{
         self.tempNumbers = 0;
     }
     
+    //Funcion utilizada para imprimir toda la informacion del modulo
     func print() {
         Swift.print("name: \(name) returnType \(returnType) index \(quadrupleIndex) paramnum \(parametersNumber) locavar \(localVarNumber) temporals \(temporalVars) number \(numbers)")
     }

@@ -20,8 +20,14 @@ enum Types {
 class TypeMatch {
     
     private var oracle = Array(repeating: Array(repeating: Array(repeating: Types.ERROR, count: 10), count: 10), count: 10)
+    
+    init(){
+        setOracle()
+    }
 
-
+    // Función para rellenar el cúbo semántico
+    // segun las reglas creadas por nuestro
+    // lenguage PROGRY
     private func setOracle(){
         
         // 0 - Number
@@ -115,15 +121,14 @@ class TypeMatch {
         
     }
     
-    
-    init(){
-        setOracle()
-    }
-    
+    // Función para validar el tipo resultante entre
+    // dos operandos y un operador
     public func validate(left: Int, right: Int, op: Int) -> Types {
         return oracle[left][right][op]
     }
     
+    // Función para relacionar el un valor de tipo
+    // Type con el indice del cúbo semántico
     public func checkOracle(typeOperand : Types) -> Int {
         switch typeOperand {
         case .Number:

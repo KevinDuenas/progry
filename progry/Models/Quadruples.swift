@@ -7,6 +7,9 @@
 
 import Foundation
 
+
+// Struct que utilizaremos en cada
+// cuadruplo
 struct MemoryDirection {
     var data : String?
     var type : Types?
@@ -39,12 +42,15 @@ class Quadruples {
     
     var list = [Quadruple]()
     
+    // Función que inicializa la lista de quadruplos
     init(){
         let initQuadruple = Quadruple.init(op: "START", opLeft: nil, opRight: nil, result: nil)
         list.append(initQuadruple)
     }
     
     
+    // Función para imprimir la lista de cuadruplos
+    // OPERADOR - ADDRESS - ADDRESS - ADDRESS
     public func print(){
         
         for (index, quadruple) in list.enumerated() {

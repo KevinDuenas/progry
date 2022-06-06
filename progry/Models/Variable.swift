@@ -21,10 +21,8 @@ class Variable {
     var vector : size?
     var matrix : size?
     var cteDir : Int?;
-//    var key: String;
-//    var nextNode: Variable?
     
-    
+    //Inicializador de clase Variable
     init(id: String, type: Types, direction: Int){
         self.id = id;
         self.type = type;

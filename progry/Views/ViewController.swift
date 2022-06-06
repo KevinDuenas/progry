@@ -26,261 +26,6 @@ class ViewController: UIViewController, UITextViewDelegate{
     @IBOutlet weak var btnSave: UIBarButtonItem!
     @IBOutlet weak var textView: UITextView!
     
-    let variablesCode = """
-    PROGRAM_START
-    
-    var number myAge
-    var decimal myHeight
-    var text myName
-    var flag imSick
-    
-    main {
-        myHeight = 1.82
-        write("Mi estatura es de ", myHeight)
-    }
-    
-    PROGRAM_END
-    """
-    
-    let whileCode = """
-    PROGRAM_START
-    
-    var decimal limit
-    
-    main {
-        limit = 1.0
-    
-        while (limit < 6) do {
-            write("Entra")
-            limit = limit + 1.0
-        }
-    
-    }
-    
-    PROGRAM_END
-    """
-    
-    let ifCode = """
-    PROGRAM_START
-    
-    var decimal age
-    
-    main {
-        age = 25.0
-        
-        if (age < 30) do {
-    
-            write("Es menor que 30")
-        }else{
-    
-            write("Es mayor que 30")
-    
-        }
-    
-    }
-    
-    PROGRAM_END
-    """;
-    
-    let forCode = """
-    PROGRAM_START
-    
-        var number initial
-        var number end
-    
-    main {
-        initial = 0
-        end = 2
-        for initial to end do {
-            write("Hello", initial)
-        }
-    
-    }
-    
-    PROGRAM_END
-    """;
-    
-    let findCode = """
-    PROGRAM_START
-    
-        var number index
-        var number end
-        var number arr[5]
-        var number find
-        var number curr
-    
-    main {
-        find = 32
-        end = 4
-        arr[0] = 10
-        arr[1] = 23
-        arr[2] = 43
-        arr[3] = 32
-        arr[4] = 34
-    
-        for index = 0 to end do {
-            curr = arr[index]
-            if (curr == find) do {
-                write("Encontrado en el indice", index)
-            }
-        }
-    
-    }
-    
-    PROGRAM_END
-    """
-    
-    let findCodeMatrix = """
-    PROGRAM_START
-    
-        var number i
-        var number iEnd
-        var number j
-        var number jEnd
-        var number mat[5,5]
-        var number find
-    
-    
-    main {
-    
-        find = 6
-
-        for i = 0 to 4 do {
-            for j = 0 to 4 do {
-                mat[i,j] = i * j
-            }
-        }
-    
-        for i = 0 to 4 do {
-            for j = 0 to 4 do {
-                if (find == mat[i,j]) do {
-                    write("Encontrado", i , j)
-    
-                }
-                
-            }
-        }
-    
-    }
-    
-    PROGRAM_END
-    """
-    
-    
-    let matMulti = """
-    PROGRAM_START
-    
-        var number one[2,3]
-        var number two[3,2]
-        var number res[2,2]
-        var number i
-        var number j
-        var number x
-    
-    main {
-    
-        for i = 0 to 1 do {
-            for j = 0 to 2 do {
-                one[i,j] = i + j
-            }
-        }
-    
-        for i = 0 to 2 do {
-            for j = 0 to 1 do {
-                two[i,j] = i + j
-            }
-        }
-    
-        for i = 0 to 1 do {
-            for j = 0 to 1 do {
-                for x = 0 to 2 do {
-                    res[i,j] = res[i,j] + one[i,x] * two[x,j]
-                }
-            }
-        }
-    
-        for i = 0 to 1 do {
-            for j = 0 to 1 do {
-                write(res[i,j])
-            }
-        }
-    
-    }
-
-    PROGRAM_END
-    """
-    
-    
-    let aux = """
-    PROGRAM_START
-        var number prueba
-    
-    module fibo : number (number n){
-        var number ret
-        ret = 10
-    
-        return ret
-    
-    }
-    
-    main {
-        prueba = 2 + fibo(2)
-        write(prueba)
-    }
-
-    PROGRAM_END
-    """
-    
-    let moduleCode  = """
-    PROGRAM_START
-        var number prueba
-    
-    module fibo : number (number n){
-        var number ret
-        if(n == 0) do {
-            ret = 0
-        }else{
-            if(n == 1 || n == 2) do {
-                ret = 1
-            }else{
-                ret = fibo(n - 2) + fibo(n - 1)
-            }
-        }
-    
-        return ret
-    }
-    
-    main {
-        prueba = fibo(9)
-        write(prueba)
-    }
-
-    PROGRAM_END
-    """
-    
-    let factorialCode = """
-    PROGRAM_START
-        var number prueba
-
-    module fact : number (number n){
-        var number ret
-        if(n == 1) do {
-            ret = n
-        } else {
-            ret = n * fact(n - 1)
-        }
-        return ret
-    }
-
-    main {
-        prueba = fact(10)
-        write(prueba)
-    }
-
-    PROGRAM_END
-    """
-    
-    
     let pullUpController = SOPullUpControl()
     let userDefaults = UserDefaults.standard
     var programName = ""
@@ -289,6 +34,7 @@ class ViewController: UIViewController, UITextViewDelegate{
     var delegate : UpdateCommandsProtocol?
     var commands = [String]()
     var codePrograms = [String]()
+    var examplePrograms = ExamplePrograms()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -318,15 +64,6 @@ class ViewController: UIViewController, UITextViewDelegate{
     
     
     func setupViews(){
-        codePrograms.append(moduleCode)
-        codePrograms.append(variablesCode)
-        codePrograms.append(whileCode)
-        codePrograms.append(ifCode)
-        codePrograms.append(forCode)
-        codePrograms.append(findCode)
-        codePrograms.append(matMulti)
-        codePrograms.append(findCodeMatrix)
-        
         pullUpController.dataSource = self
         pullUpController.setupCard(from: view)
         setUpTextView()
@@ -344,7 +81,7 @@ class ViewController: UIViewController, UITextViewDelegate{
                 new = false
             }
         }else{
-            textView.text = codePrograms[exampleIndex!]
+            textView.text = examplePrograms.programs[exampleIndex!].code
             btnSave.isEnabled = false
         }
         

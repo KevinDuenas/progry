@@ -36,8 +36,9 @@ struct ProgryParserWrapper : ParserType {
         var i: Int = 0 // OPONER NOMBNRE DE DONDE ES
         
         
+        // Función encargada de declarar el modulo global
+        // y asignar el primer cuadruplo de GOTO al main
         override func enterProgram(_ ctx: ProgryParser.ProgramContext){
-            
             jumpsStack.append(quadruples.list.count) //migajita de pan
             let goToMain = Quadruple(op: "GOTO", opLeft: nil, opRight: nil, result: MemoryDirection())
             quadruples.list.append(goToMain)
@@ -47,9 +48,10 @@ struct ProgryParserWrapper : ParserType {
             currentModule = "global";
         }
         
+        // Función encargada de asignar el numero de cuadruplo
+        // al GOTO main despues de cualquier declaracion de modulos
+        // o variables globales
         override func enterMain(_ ctx: ProgryParser.MainContext) {
-            
-            
             let quadrupleIndex = jumpsStack.popLast()
             let quadrupleNo = quadruples.list.count
             quadruples.list[quadrupleIndex!].result?.quadruple = quadrupleNo
@@ -57,6 +59,11 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        
+        // Función encargada de crear el modulo en la tabla de modulos
+        // y respectivamente crea una variable global con el mismo id
+        // admas de crear los cuadruplos correspondientes al entrar a una
+        // declaración de módulos
         override func enterModule(_ ctx: ProgryParser.ModuleContext) {
             moduleMemory = Memory(start: 8000, end: 10000, type: .FUNCTION)
             var memoryDir = 0
@@ -244,6 +251,7 @@ struct ProgryParserWrapper : ParserType {
             }
         }
         
+        
         override func exitRead(_ ctx: ProgryParser.ReadContext) {
             
             let lastOperand = operands.popLast()
@@ -252,6 +260,10 @@ struct ProgryParserWrapper : ParserType {
             
             
         }
+        
+        // Función encargada de crear los cuadruplos correspondientes
+        // al terminar los estatuos en la declaración de un modulo
+        // y restablecer nuestras variables helpers
         
         override func exitModule(_ ctx: ProgryParser.ModuleContext) {
             
@@ -280,10 +292,10 @@ struct ProgryParserWrapper : ParserType {
             moduleMemory = nil
         }
         
-        override func enterModule_call(_ ctx: ProgryParser.Module_callContext) {
-            
-        }
-        
+
+        // Función encargada de crear cuadruplos ERA PARAM y GOSUB
+        // correspondientes de la llamada a un modulo
+        // con o sin parametros
         override func exitModule_call(_ ctx: ProgryParser.Module_callContext) {
             
             guard let id = ctx.ID()?.getText() else{ // nombre dle modulo
@@ -409,6 +421,8 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        // Función encargada de crear el cuadruplo correspondiente
+        // al ser un ciclo if else
         override func enterElses(_ ctx: ProgryParser.ElsesContext) {
             
             let goToFIndex = jumpsStack.popLast()
@@ -425,6 +439,9 @@ struct ProgryParserWrapper : ParserType {
         }
         
         
+        // Función encargada de colocar los indices del
+        // contrador del cuadruplo al salir de un ciclo
+        // if
         override func exitIfs(_ ctx: ProgryParser.IfsContext) {
             currentCicle = ""
             
@@ -459,8 +476,8 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
-        
-        
+        // Función que coloca los puntos neuralgicos
+        // al entrar a un ciclo for
         override func enterFors(_ ctx: ProgryParser.ForsContext) {
             currentCicle = "FOR";
             let curr = modules.getElement(forKey: currentModule)
@@ -519,8 +536,8 @@ struct ProgryParserWrapper : ParserType {
             jumpsStack.append(quadruples.list.count - 1)
         }
         
-        
-        
+        // Función que coloca los puntos neuralgicos
+        // al salir de un ciclo for
         override func exitFors(_ ctx: ProgryParser.ForsContext) {
             
             let curr = modules.getElement(forKey: currentModule)
@@ -558,6 +575,9 @@ struct ProgryParserWrapper : ParserType {
             
             currentCicle = "";
         }
+        
+        // Función que coloca los puntos neuralgicos
+        // de la declaración de variables
         override func exitVars(_ ctx: ProgryParser.VarsContext) {
             
             guard let type = ctx.type()?.getText() else{
@@ -1387,7 +1407,7 @@ struct ProgryParserWrapper : ParserType {
                     let newTemporalDirection1 = temporalMemory.newNumberDirection()
                     let temp1 = MemoryDirection(type: .Number ,address: newTemporalDirection1)
                     
-                    let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(data: String(offM1!)), result: temp1)
+                    let newQuadrupleSM = Quadruple(op: "*", opLeft: leftSize, opRight: MemoryDirection(address: Int(offM1!)), result: temp1)
                     quadruples.list.append(newQuadrupleSM)
                     
                     let newQuadruple2 = Quadruple(op: "VER", opLeft: rightSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM2!)))
@@ -1442,7 +1462,7 @@ struct ProgryParserWrapper : ParserType {
                     let offM1 = globalModuleResult?.vector?.off
                     let limSupM2 = globalModuleResult?.matrix?.sup
                     
-                    let newQuadruple = Quadruple(op: "Ver", opLeft: leftSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM1!)))
+                    let newQuadruple = Quadruple(op: "VER", opLeft: leftSize, opRight: MemoryDirection(data: "0"), result: MemoryDirection(data: String(limSupM1!)))
                     quadruples.list.append(newQuadruple)
                     
                     let newTemporalDirection1 = temporalMemory.newNumberDirection()
@@ -1478,6 +1498,8 @@ struct ProgryParserWrapper : ParserType {
             quadruples.list.append(assignQuadruple)
         }
         
+        // Función encargada de dejar un indice (migajita de pan)
+        // en el goToF del while
         override func enterWhiles(_ ctx: ProgryParser.WhilesContext) {
             
             currentCicle = "WHILE"
@@ -1487,6 +1509,9 @@ struct ProgryParserWrapper : ParserType {
             
         }
         
+        // Función encargada de crear cuadruplo GOTO al finalizar
+        // los estatutos dentro del ciclo while y ademas relleanr
+        // el GOTOF puesto al inicio del ciclo
         override func exitWhiles(_ ctx: ProgryParser.WhilesContext) {
             //sacamos el inice del goToF que tenemos pendiente
             let goToFalseIndex = jumpsStack.popLast()
@@ -1503,23 +1528,13 @@ struct ProgryParserWrapper : ParserType {
         }
         
         
-        override func enterStatute(_ ctx: ProgryParser.StatuteContext) {
-            
-            
-        }
-        
-        override func enterWrite(_ ctx: ProgryParser.WriteContext) {
-            
-            
-        }
+        // Función encargada de crar cuadruplos
+        // WRITE por cada m_expr data
         override func exitWrite(_ ctx: ProgryParser.WriteContext) {
-            
-            var count = ctx.m_expr().count
-            count  = count - 1
-            
-            
-            for i in 0...count {
-                let operand = operands[i]
+            let count = ctx.m_expr().count
+
+            for _ in 0...count - 1 {
+                let operand = operands[0]
                 let newWriteQuadruple = Quadruple(op: "WRITE", opLeft: nil, opRight: nil, result: operand)
                 operands.removeFirst()
                 quadruples.list.append(newWriteQuadruple)
