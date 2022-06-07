@@ -1,0 +1,556 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C47C8FBB3A3997B36367DDD0DE5AA2F /* SOPullUpView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1895F031B818F6190673DA55F5B075C9 /* SOPullUpView-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		81FA90FCF96E072E485BCC223752E425 /* SOPullUpView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3779F1BC361CF33A6EFF61974BA0C111 /* SOPullUpView-dummy.m */; };
+		8DF4B55F4236C1A49ACB62CFE41808DA /* SOPullUpViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835916FBD53888B2C13EB0F572C85474 /* SOPullUpViewDataSource.swift */; };
+		8EC02E7EC43E32E7C4D6FFB52AD5EB81 /* Pods-progry-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464969CE81A45B68325113F6DB11763 /* Pods-progry-dummy.m */; };
+		94CCAC45BB91BF2AA1B2B8A02066A984 /* Pods-progry-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E3E7CD55F53EF3D81EFCFB699A7BC94C /* Pods-progry-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		988412F0FB52318CFFD436EDB18C90CA /* PullUpControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592B91BDEB8D8975BA962850B8B63F8B /* PullUpControl.swift */; };
+		B029A4D9B3EE04328BC85B1075C320C1 /* PullUpController+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66F190BD67D2ED74323E56E7FC0DFBA /* PullUpController+Animation.swift */; };
+		EF20C330CF478205120630114285CFE4 /* SOPullUpViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DEA508F25DC2CB46D886CE46708A92 /* SOPullUpViewDelegate.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		40BF027E985EBD50F617FDB9FAC453DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9DA64666855445F369880827C54B2D9D;
+			remoteInfo = SOPullUpView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1895F031B818F6190673DA55F5B075C9 /* SOPullUpView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SOPullUpView-umbrella.h"; sourceTree = "<group>"; };
+		285D605907BA4333BD01A53CC734DCBD /* Pods-progry.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-progry.debug.xcconfig"; sourceTree = "<group>"; };
+		3779F1BC361CF33A6EFF61974BA0C111 /* SOPullUpView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SOPullUpView-dummy.m"; sourceTree = "<group>"; };
+		462556DA642C4E7B792FABB813094048 /* Pods-progry-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-progry-acknowledgements.plist"; sourceTree = "<group>"; };
+		592B91BDEB8D8975BA962850B8B63F8B /* PullUpControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PullUpControl.swift; path = SOPullUpView/Classes/PullUpControl.swift; sourceTree = "<group>"; };
+		670B30DA6873802460BA7ECA6247104F /* Pods-progry.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-progry.modulemap"; sourceTree = "<group>"; };
+		6D018144E1B857A27A84AEE8FEDB066B /* SOPullUpView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SOPullUpView.debug.xcconfig; sourceTree = "<group>"; };
+		7540C06227A2F21E3276A4E5B739B657 /* Pods-progry */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "Pods-progry"; path = "libPods-progry.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		835916FBD53888B2C13EB0F572C85474 /* SOPullUpViewDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SOPullUpViewDataSource.swift; path = SOPullUpView/Classes/Protocols/SOPullUpViewDataSource.swift; sourceTree = "<group>"; };
+		8464969CE81A45B68325113F6DB11763 /* Pods-progry-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-progry-dummy.m"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A66F190BD67D2ED74323E56E7FC0DFBA /* PullUpController+Animation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PullUpController+Animation.swift"; path = "SOPullUpView/Classes/PullUpController+Animation.swift"; sourceTree = "<group>"; };
+		C3883011C797398D87F99A8BE9AFE804 /* Pods-progry.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-progry.release.xcconfig"; sourceTree = "<group>"; };
+		C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSOPullUpView.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD4D280B681EBEB1DF104066B1B9C0D5 /* SOPullUpView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SOPullUpView-prefix.pch"; sourceTree = "<group>"; };
+		DED11487EB2790CB3879214E14F8500A /* SOPullUpView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SOPullUpView.modulemap; sourceTree = "<group>"; };
+		E3E7CD55F53EF3D81EFCFB699A7BC94C /* Pods-progry-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-progry-umbrella.h"; sourceTree = "<group>"; };
+		E4DEA508F25DC2CB46D886CE46708A92 /* SOPullUpViewDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SOPullUpViewDelegate.swift; path = SOPullUpView/Classes/Protocols/SOPullUpViewDelegate.swift; sourceTree = "<group>"; };
+		F93541D31858A311E3DCD9A66E63A49A /* SOPullUpView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SOPullUpView.release.xcconfig; sourceTree = "<group>"; };
+		FB72DFA983AF79BAB9217219C034F2BA /* Pods-progry-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-progry-acknowledgements.markdown"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C935A7ED88BF7DA44EA09DA79B63BAD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ECFE0E5E969B0EBB15D0BD6C7F5926B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		65DF55B45769738D955C88DECF00756D /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B63C7C5165409D5249BAEFF34D3E1206 /* Pods-progry */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		8108313B364AE49372B87E04EFE32FB9 /* SOPullUpView */ = {
+			isa = PBXGroup;
+			children = (
+				592B91BDEB8D8975BA962850B8B63F8B /* PullUpControl.swift */,
+				A66F190BD67D2ED74323E56E7FC0DFBA /* PullUpController+Animation.swift */,
+				835916FBD53888B2C13EB0F572C85474 /* SOPullUpViewDataSource.swift */,
+				E4DEA508F25DC2CB46D886CE46708A92 /* SOPullUpViewDelegate.swift */,
+				CCBD995181C92A1AF2C1AC41873485B9 /* Support Files */,
+			);
+			path = SOPullUpView;
+			sourceTree = "<group>";
+		};
+		B142E394D6805F89587A55A9AC2E56C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7540C06227A2F21E3276A4E5B739B657 /* Pods-progry */,
+				C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B63C7C5165409D5249BAEFF34D3E1206 /* Pods-progry */ = {
+			isa = PBXGroup;
+			children = (
+				670B30DA6873802460BA7ECA6247104F /* Pods-progry.modulemap */,
+				FB72DFA983AF79BAB9217219C034F2BA /* Pods-progry-acknowledgements.markdown */,
+				462556DA642C4E7B792FABB813094048 /* Pods-progry-acknowledgements.plist */,
+				8464969CE81A45B68325113F6DB11763 /* Pods-progry-dummy.m */,
+				E3E7CD55F53EF3D81EFCFB699A7BC94C /* Pods-progry-umbrella.h */,
+				285D605907BA4333BD01A53CC734DCBD /* Pods-progry.debug.xcconfig */,
+				C3883011C797398D87F99A8BE9AFE804 /* Pods-progry.release.xcconfig */,
+			);
+			name = "Pods-progry";
+			path = "Target Support Files/Pods-progry";
+			sourceTree = "<group>";
+		};
+		CCBD995181C92A1AF2C1AC41873485B9 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				DED11487EB2790CB3879214E14F8500A /* SOPullUpView.modulemap */,
+				3779F1BC361CF33A6EFF61974BA0C111 /* SOPullUpView-dummy.m */,
+				CD4D280B681EBEB1DF104066B1B9C0D5 /* SOPullUpView-prefix.pch */,
+				1895F031B818F6190673DA55F5B075C9 /* SOPullUpView-umbrella.h */,
+				6D018144E1B857A27A84AEE8FEDB066B /* SOPullUpView.debug.xcconfig */,
+				F93541D31858A311E3DCD9A66E63A49A /* SOPullUpView.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/SOPullUpView";
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D89477F20FB1DE18A04690586D7808C4 /* Frameworks */,
+				DEE8FF88EA4F064D95E57EE2660202A8 /* Pods */,
+				B142E394D6805F89587A55A9AC2E56C6 /* Products */,
+				65DF55B45769738D955C88DECF00756D /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D89477F20FB1DE18A04690586D7808C4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DEE8FF88EA4F064D95E57EE2660202A8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8108313B364AE49372B87E04EFE32FB9 /* SOPullUpView */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1248E3EC94269A966C5B031795D6B44B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94CCAC45BB91BF2AA1B2B8A02066A984 /* Pods-progry-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1DEC2353B104A2648C5BE31AF02DCB8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C47C8FBB3A3997B36367DDD0DE5AA2F /* SOPullUpView-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4ECD19B92B5A51D2E9362FEA04283492 /* Pods-progry */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 049C69E327988ECBBB0712FF3241256C /* Build configuration list for PBXNativeTarget "Pods-progry" */;
+			buildPhases = (
+				1248E3EC94269A966C5B031795D6B44B /* Headers */,
+				77ED1232D9050B1243E09FD81EEA95A0 /* Sources */,
+				4C935A7ED88BF7DA44EA09DA79B63BAD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4FCD37D03903F731721256E2975F0D01 /* PBXTargetDependency */,
+			);
+			name = "Pods-progry";
+			productName = "Pods-progry";
+			productReference = 7540C06227A2F21E3276A4E5B739B657 /* Pods-progry */;
+			productType = "com.apple.product-type.library.static";
+		};
+		9DA64666855445F369880827C54B2D9D /* SOPullUpView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A69155740965EEB549166862D48EF9E /* Build configuration list for PBXNativeTarget "SOPullUpView" */;
+			buildPhases = (
+				D1DEC2353B104A2648C5BE31AF02DCB8 /* Headers */,
+				009021410DCFB1308E799A46A9D88A02 /* Sources */,
+				ECFE0E5E969B0EBB15D0BD6C7F5926B1 /* Frameworks */,
+				4E39D78921D8D9F7964F2D76350EC991 /* Copy generated compatibility header */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SOPullUpView;
+			productName = SOPullUpView;
+			productReference = C7A90F89E2732CA4176620ACFA4C47CD /* libSOPullUpView.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1310;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = B142E394D6805F89587A55A9AC2E56C6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4ECD19B92B5A51D2E9362FEA04283492 /* Pods-progry */,
+				9DA64666855445F369880827C54B2D9D /* SOPullUpView */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4E39D78921D8D9F7964F2D76350EC991 /* Copy generated compatibility header */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h",
+				"${PODS_ROOT}/Headers/Public/SOPullUpView/SOPullUpView.modulemap",
+				"${PODS_ROOT}/Headers/Public/SOPullUpView/SOPullUpView-umbrella.h",
+			);
+			name = "Copy generated compatibility header";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap",
+				"${BUILT_PRODUCTS_DIR}/SOPullUpView-umbrella.h",
+				"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "COMPATIBILITY_HEADER_PATH=\"${BUILT_PRODUCTS_DIR}/Swift Compatibility Header/${PRODUCT_MODULE_NAME}-Swift.h\"\nMODULE_MAP_PATH=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_MODULE_NAME}.modulemap\"\n\nditto \"${DERIVED_SOURCES_DIR}/${PRODUCT_MODULE_NAME}-Swift.h\" \"${COMPATIBILITY_HEADER_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/SOPullUpView/SOPullUpView.modulemap\" \"${MODULE_MAP_PATH}\"\nditto \"${PODS_ROOT}/Headers/Public/SOPullUpView/SOPullUpView-umbrella.h\" \"${BUILT_PRODUCTS_DIR}\"\nprintf \"\\n\\nmodule ${PRODUCT_MODULE_NAME}.Swift {\\n  header \\\"${COMPATIBILITY_HEADER_PATH}\\\"\\n  requires objc\\n}\\n\" >> \"${MODULE_MAP_PATH}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		009021410DCFB1308E799A46A9D88A02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				988412F0FB52318CFFD436EDB18C90CA /* PullUpControl.swift in Sources */,
+				B029A4D9B3EE04328BC85B1075C320C1 /* PullUpController+Animation.swift in Sources */,
+				81FA90FCF96E072E485BCC223752E425 /* SOPullUpView-dummy.m in Sources */,
+				8DF4B55F4236C1A49ACB62CFE41808DA /* SOPullUpViewDataSource.swift in Sources */,
+				EF20C330CF478205120630114285CFE4 /* SOPullUpViewDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77ED1232D9050B1243E09FD81EEA95A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8EC02E7EC43E32E7C4D6FFB52AD5EB81 /* Pods-progry-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4FCD37D03903F731721256E2975F0D01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SOPullUpView;
+			target = 9DA64666855445F369880827C54B2D9D /* SOPullUpView */;
+			targetProxy = 40BF027E985EBD50F617FDB9FAC453DB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		33D7AA8917FDACE86C0216B461117DA3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F93541D31858A311E3DCD9A66E63A49A /* SOPullUpView.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SOPullUpView/SOPullUpView-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MODULEMAP_FILE = Headers/Public/SOPullUpView/SOPullUpView.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SOPullUpView;
+				PRODUCT_NAME = SOPullUpView;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		891551C80DE09483FBF0EFEF26357923 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C3883011C797398D87F99A8BE9AFE804 /* Pods-progry.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-progry/Pods-progry.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		9553C89E183877A5CB2F3C6801BEC129 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		D360C2934C5527E58FD68411440E4C20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 285D605907BA4333BD01A53CC734DCBD /* Pods-progry.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-progry/Pods-progry.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FDB865170B9A1256FACBEF6496F32750 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D018144E1B857A27A84AEE8FEDB066B /* SOPullUpView.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SOPullUpView/SOPullUpView-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MODULEMAP_FILE = Headers/Public/SOPullUpView/SOPullUpView.modulemap;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SOPullUpView;
+				PRODUCT_NAME = SOPullUpView;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		049C69E327988ECBBB0712FF3241256C /* Build configuration list for PBXNativeTarget "Pods-progry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D360C2934C5527E58FD68411440E4C20 /* Debug */,
+				891551C80DE09483FBF0EFEF26357923 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0A69155740965EEB549166862D48EF9E /* Build configuration list for PBXNativeTarget "SOPullUpView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDB865170B9A1256FACBEF6496F32750 /* Debug */,
+				33D7AA8917FDACE86C0216B461117DA3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */,
+				9553C89E183877A5CB2F3C6801BEC129 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}
