@@ -76,6 +76,15 @@ class ViewController: UIViewController, UITextViewDelegate{
             let code = UserDefaults.standard.string(forKey: "PROGRY-\(programName)")
             if programName == "" {
                 new = true
+                textView.text = """
+            PROGRAM_START
+
+            main{
+
+            }
+            
+            PROGRAM_END
+            """
             }else{
                 textView.text = code
                 new = false

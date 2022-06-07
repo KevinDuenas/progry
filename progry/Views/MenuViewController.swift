@@ -63,15 +63,19 @@ class MenuViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let nav = segue.destination as! UINavigationController
-        let vc = nav.topViewController as! ProgramsViewController
-        let senderBtn = sender as! UIButton
         
-        if senderBtn == btnMyPrograms {
-            vc.showExamples = false
-        }else if senderBtn == btnExamples {
-            vc.showExamples = true
+        if segue.identifier != "showCreditsSegue"{
+            let nav = segue.destination as! UINavigationController
+            let vc = nav.topViewController as! ProgramsViewController
+            let senderBtn = sender as! UIButton
+            
+            if senderBtn == btnMyPrograms {
+                vc.showExamples = false
+            }else if senderBtn == btnExamples {
+                vc.showExamples = true
+            }
         }
+       
         
         
     }
